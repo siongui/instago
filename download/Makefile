@@ -1,0 +1,38 @@
+# cannot use relative path in GOROOT, otherwise 6g not found. For example,
+#   export GOROOT=../go  (=> 6g not found)
+# it is also not allowed to use relative path in GOPATH
+export GOROOT=$(realpath ../../go)
+export GOPATH=$(realpath .)
+export PATH := $(GOROOT)/bin:$(GOPATH)/bin:$(PATH)
+
+ALL_GO_SOURCES=$(shell /bin/sh -c "find *.go | grep -v _test.go")
+
+default: highlight
+
+highlight: fmt
+	@echo "\033[92mDownload story highlights of all following users ...\033[0m"
+	@go run example/download.go -downloadtype=highlight
+
+story: fmt
+	@echo "\033[92mDownload stories and post lives ...\033[0m"
+	@go run example/download.go -downloadtype=story
+
+timeline: fmt
+	@echo "\033[92mDownload timeline ...\033[0m"
+	@go run example/download.go -downloadtype=timeline
+
+post_test: fmt
+	@echo "\033[92mDownload timeline ...\033[0m"
+	@go test -v $(ALL_GO_SOURCES) post_test.go
+
+test: fmt
+	@echo "\033[92mRun testing code...\033[0m"
+	@go test -v path.go path_test.go util.go util_test.go
+
+fmt:
+	@echo "\033[92mGo fmt source code...\033[0m"
+	@go fmt *.go
+
+install:
+	go get -u github.com/siongui/instago
+	go get -u github.com/fatih/color
