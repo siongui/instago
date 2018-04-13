@@ -2,6 +2,7 @@ package instago
 
 import (
 	"encoding/json"
+	"regexp"
 	"strings"
 )
 
@@ -12,12 +13,25 @@ const urlUserInfo = `https://www.instagram.com/{{USERNAME}}/?__a=1`
 const urlGraphql = `https://instagram.com/graphql/query/?query_id=17888483320059182&variables=`
 
 // used to decode the JSON data
+// https://www.instagram.com/{{USERNAME}}/?__a=1
 type rawUserResp struct {
 	LoggingPageId         string `json:"logging_page_id"`
 	ShowSuggestedProfiles bool   `json:"show_suggested_profiles"`
 	GraphQL               struct {
 		User UserInfo `json:"user"`
 	} `json:"graphql"`
+}
+
+// used to decode the JSON data
+// https://www.instagram.com/{{USERNAME}}/
+type sharedData struct {
+	EntryData struct {
+		ProfilePage []struct {
+			GraphQL struct {
+				User UserInfo `json:"user"`
+			} `json:"graphql"`
+		} `json:"ProfilePage"`
+	} `json:"entry_data"`
 }
 
 type UserInfo struct {
@@ -67,41 +81,52 @@ type dataUserMedia struct {
 	} `json:"data"`
 }
 
+func getJsonBytes(b []byte) []byte {
+	pattern := regexp.MustCompile(`<script type="text\/javascript">window\._sharedData = (.*?);<\/script>`)
+	m := string(pattern.Find(b))
+	m1 := strings.TrimPrefix(m, `<script type="text/javascript">window._sharedData = `)
+	return []byte(strings.TrimSuffix(m1, `;</script>`))
+}
+
 // Given user name, return information of the user name without login.
 func GetUserInfoNoLogin(username string) (ui UserInfo, err error) {
-	url := strings.Replace(urlUserInfo, "{{USERNAME}}", username, 1)
+	//url := strings.Replace(urlUserInfo, "{{USERNAME}}", username, 1)
+	url := "https://www.instagram.com/" + username + "/"
 	b, err := getHTTPResponseNoLogin(url)
 	if err != nil {
 		return
 	}
 
-	r := rawUserResp{}
-	if err = json.Unmarshal(b, &r); err != nil {
+	//r := rawUserResp{}
+	r := sharedData{}
+	if err = json.Unmarshal(getJsonBytes(b), &r); err != nil {
 		return
 	}
-	ui = r.GraphQL.User
+	//ui = r.GraphQL.User
+	ui = r.EntryData.ProfilePage[0].GraphQL.User
 	return
 }
 
 // Given user name, return information of the user name.
 func (m *IGApiManager) GetUserInfo(username string) (ui UserInfo, err error) {
-	url := strings.Replace(urlUserInfo, "{{USERNAME}}", username, 1)
+	//url := strings.Replace(urlUserInfo, "{{USERNAME}}", username, 1)
+	url := "https://www.instagram.com/" + username + "/"
 	b, err := getHTTPResponse(url, m.dsUserId, m.sessionid, m.csrftoken)
 	if err != nil {
 		return
 	}
 
-	r := rawUserResp{}
-	if err = json.Unmarshal(b, &r); err != nil {
+	//r := rawUserResp{}
+	r := sharedData{}
+	if err = json.Unmarshal(getJsonBytes(b), &r); err != nil {
 		return
 	}
-	ui = r.GraphQL.User
+	//ui = r.GraphQL.User
+	ui = r.EntryData.ProfilePage[0].GraphQL.User
 	return
 }
 
 // Given user name, return codes of all posts of the user.
-// TODO: add sleep at the end of forloop. If the number of posts is over 2400,
-// Instagram API will return http response code 429 (Too Many Requests)
 func (m *IGApiManager) GetAllPostCode(username string) (codes []string, err error) {
 	ui, err := m.GetUserInfo(username)
 	if err != nil {
