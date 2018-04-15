@@ -36,17 +36,19 @@ The following three values are must to access the Instagram API.
 - ``sessionid``
 - ``csrftoken``
 
-First login to Instagram_ from Chrome browser, and there are two ways to get the
-above information:
+First login to Instagram_ from Chrome browser, and there are three ways to get
+the above information:
 
-1. From `Chrome Developer Tools`_: See this `SO answer`_ or `Obtain cookies`_
+1. Use `Chrome extension in this repo <crx-cookies>`_ to get the cookies.
+
+2. From `Chrome Developer Tools`_: See this `SO answer`_ or `Obtain cookies`_
    section in `instastories-backup`_ repo.
 
 .. image:: https://i.stack.imgur.com/psJLZ.png
    :align: center
    :alt: ds_user_id sessionid csrftoken
 
-2. From Chrome extension: Use EditThisCookie_ or `cookie-txt-export`_ or other
+3. From Chrome extension: Use EditThisCookie_ or `cookie-txt-export`_ or other
    cookie tools.
 
 

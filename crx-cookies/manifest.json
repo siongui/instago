@@ -1,0 +1,17 @@
+{
+  "manifest_version": 2,
+
+  "name": "igcookies",
+  "description": "Get cookies to access Instagram API",
+  "version": "0.1",
+
+  "browser_action": {
+    "default_title": "get IG cookies",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "cookies",
+    "tabs",
+    "*://www.instagram.com/"
+  ]
+}
