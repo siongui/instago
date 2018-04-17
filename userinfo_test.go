@@ -16,7 +16,7 @@ func ExampleGetUserInfoNoLogin() {
 	fmt.Println(user.Biography)
 	// Output:
 	// 25025320
-	// Discovering — and telling — stories from around the world.
+	// Discovering — and telling — stories from around the world. Founded in 2010 by @kevin and @mikeyk.
 }
 
 func ExampleGetUserId() {

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"regexp"
 	"strings"
+	"time"
 )
 
 // no need to login or cookie to access this URL. But if login to Instagram,
@@ -138,7 +139,8 @@ func (m *IGApiManager) GetAllPostCode(username string) (codes []string, err erro
 	}
 
 	hasNextPage := ui.EdgeOwnerToTimelineMedia.PageInfo.HasNextPage
-	vartmpl := strings.Replace(`{"id":"<ID>","first":300,"after":"<ENDCURSOR>"}`, "<ID>", ui.Id, 1)
+	// "first" cannot be 300 now. cannot be 100 either. 50 is ok.
+	vartmpl := strings.Replace(`{"id":"<ID>","first":50,"after":"<ENDCURSOR>"}`, "<ID>", ui.Id, 1)
 	variables := strings.Replace(vartmpl, "<ENDCURSOR>", ui.EdgeOwnerToTimelineMedia.PageInfo.EndCursor, 1)
 
 	for hasNextPage == true {
@@ -161,6 +163,9 @@ func (m *IGApiManager) GetAllPostCode(username string) (codes []string, err erro
 		variables = strings.Replace(vartmpl, "<ENDCURSOR>", d.Data.User.EdgeOwnerToTimelineMedia.PageInfo.EndCursor, 1)
 
 		printPostCount(len(codes), url)
+
+		// sleep 10 seconds to prevent http 429 (too many requests)
+		time.Sleep(10 * time.Second)
 	}
 	return
 }
