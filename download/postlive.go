@@ -69,17 +69,13 @@ func DownloadPostLive(pl instago.IGPostLive) {
 			}
 
 			mpath := getPostLiveMergedFilePath(vpath, apath)
-			// If video file is too big, and download is not yet
-			// finished, next DownloadPostLive will create merged
-			// file from unfinished downloaded files, which is not
-			// correct.
+			// FIXME: If video file is too big, and download is not
+			// yet finished, next DownloadPostLive will create
+			// merged file from unfinished downloaded files, which
+			// is not correct.
 			// check if file exist
-			if _, err := os.Stat(mpath); err == nil {
-				// file exists, delete it and create new one
-				err = os.Remove(mpath)
-				if err != nil {
-					fmt.Println(err)
-				}
+			if _, err := os.Stat(mpath); os.IsNotExist(err) {
+				// file not exists
 				mergePostliveVideoAndAudio(vpath, apath)
 			}
 		}
