@@ -37,3 +37,20 @@ func (m *IGApiManager) GetPostInfo(code string) (em IGMedia, err error) {
 	em = pi.GraphQL.ShortcodeMedia
 	return
 }
+
+// Given code of post, return information of the post without login status.
+func GetPostInfoNoLogin(code string) (em IGMedia, err error) {
+	url := strings.Replace(urlPost, "{{CODE}}", code, 1)
+	b, err := getHTTPResponseNoLogin(url)
+	if err != nil {
+		return
+	}
+
+	pi := postInfo{}
+	err = json.Unmarshal(b, &pi)
+	if err != nil {
+		return
+	}
+	em = pi.GraphQL.ShortcodeMedia
+	return
+}

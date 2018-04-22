@@ -22,3 +22,17 @@ func ExampleGetPostInfo(t *testing.T) {
 		t.Log(url)
 	}
 }
+
+func ExampleGetPostInfoNoLogin(t *testing.T) {
+	em, err := GetPostInfoNoLogin(os.Getenv("IG_TEST_CODE"))
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	t.Log(em.GetPostUrl())
+	t.Log(em.GetUsername())
+	t.Log(em.GetTimestamp())
+	for _, url := range em.GetMediaUrls() {
+		t.Log(url)
+	}
+}
