@@ -21,13 +21,25 @@ func printPostDownloadInfo(em instago.IGMedia, url, filepath string) {
 	cc.Println(filepath)
 }
 
+func DownloadPostNoLogin(code string) {
+	em, err := instago.GetPostInfoNoLogin(code)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	DownloadIGMedia(em)
+}
+
 func DownloadPost(code string, mgr *instago.IGApiManager) {
 	em, err := mgr.GetPostInfo(code)
 	if err != nil {
 		log.Println(err)
 		return
 	}
+	DownloadIGMedia(em)
+}
 
+func DownloadIGMedia(em instago.IGMedia) {
 	urls := em.GetMediaUrls()
 
 	for index, url := range urls {

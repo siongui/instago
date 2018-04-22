@@ -13,3 +13,7 @@ func ExampleDownloadPost(t *testing.T) {
 		os.Getenv("IG_CSRFTOKEN"))
 	DownloadPost(os.Getenv("IG_TEST_CODE"), mgr)
 }
+
+func ExampleDownloadPostNoLogin(t *testing.T) {
+	DownloadPostNoLogin(os.Getenv("IG_TEST_CODE"))
+}
