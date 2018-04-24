@@ -141,6 +141,11 @@ func (em *IGMedia) GetUsername() string {
 	return em.Owner.Username
 }
 
+// Get id of the post owner
+func (em *IGMedia) GetUserId() string {
+	return em.Owner.Id
+}
+
 // Get timestamp of the post
 func (em *IGMedia) GetTimestamp() int64 {
 	return em.TakenAtTimestamp

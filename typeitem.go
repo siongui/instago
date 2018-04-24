@@ -2,6 +2,7 @@ package instago
 
 import (
 	"errors"
+	"strconv"
 	"strings"
 )
 
@@ -120,6 +121,10 @@ func (i *IGItem) IsRegularMedia() bool {
 
 func (i *IGItem) GetUsername() string {
 	return i.User.Username
+}
+
+func (i *IGItem) GetUserId() string {
+	return strconv.FormatInt(i.User.Pk, 10)
 }
 
 func (i *IGItem) GetPostUrl() string {
