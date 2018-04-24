@@ -27,6 +27,7 @@ func getStoryItem(item instago.IGItem) {
 
 	filepath := getStoryFilePath(
 		item.GetUsername(),
+		item.GetUserId(),
 		url,
 		item.GetTimestamp())
 

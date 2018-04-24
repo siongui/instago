@@ -18,31 +18,31 @@ func formatTimestamp(timestamp int64) string {
 	return t.Format(time.RFC3339)
 }
 
-func buildFilepath(url, dir, username, middle string, timestamp int64) string {
+func buildFilepath(url, dir, username, id, middle string, timestamp int64) string {
 	ext := path.Ext(path.Base(url))
-	return path.Join(dir, username+
+	return path.Join(dir, username+"-"+id+
 		middle+
 		formatTimestamp(timestamp)+"-"+
 		strconv.FormatInt(timestamp, 10)+
 		ext)
 }
 
-func getPostFilePath(username, url string, timestamp int64) string {
+func getPostFilePath(username, id, url string, timestamp int64) string {
 	userDir := path.Join(outputDir, username)
 	userPostsDir := path.Join(userDir, "posts")
-	return buildFilepath(url, userPostsDir, username, "-post-", timestamp)
+	return buildFilepath(url, userPostsDir, username, id, "-post-", timestamp)
 }
 
-func getStoryFilePath(username, url string, timestamp int64) string {
+func getStoryFilePath(username, id, url string, timestamp int64) string {
 	userDir := path.Join(outputDir, username)
 	userStoriesDir := path.Join(userDir, "stories")
-	return buildFilepath(url, userStoriesDir, username, "-story-", timestamp)
+	return buildFilepath(url, userStoriesDir, username, id, "-story-", timestamp)
 }
 
-func getPostLiveFilePath(username, url, typ string, timestamp int64) string {
+func getPostLiveFilePath(username, id, url, typ string, timestamp int64) string {
 	userDir := path.Join(outputDir, username)
 	userPostLiveDir := path.Join(userDir, "postlives")
-	return buildFilepath(url, userPostLiveDir, username, "-postlive-"+typ+"-", timestamp)
+	return buildFilepath(url, userPostLiveDir, username, id, "-postlive-"+typ+"-", timestamp)
 }
 
 func getPostLiveMergedFilePath(vpath, apath string) string {

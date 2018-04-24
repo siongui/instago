@@ -2,6 +2,7 @@ package instago
 
 import (
 	"regexp"
+	"strconv"
 )
 
 // Live videos that users share to their stories
@@ -23,6 +24,10 @@ type IGPostLiveItem struct {
 
 func (i *IGPostLiveItem) GetUsername() string {
 	return i.User.Username
+}
+
+func (i *IGPostLiveItem) GetUserId() string {
+	return strconv.FormatInt(i.User.Pk, 10)
 }
 
 func (i *IGPostLiveItem) GetBroadcasts() []IGBroadcast {

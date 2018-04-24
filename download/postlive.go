@@ -34,6 +34,7 @@ func DownloadPostLive(pl instago.IGPostLive) {
 			}
 
 			username := item.GetUsername()
+			id := item.GetUserId()
 			timestamp := broadcast.GetPublishedTime()
 			filepath := ""
 			vpath := ""
@@ -42,6 +43,7 @@ func DownloadPostLive(pl instago.IGPostLive) {
 				if index == 0 {
 					filepath = getPostLiveFilePath(
 						username,
+						id,
 						url,
 						"video",
 						timestamp)
@@ -49,6 +51,7 @@ func DownloadPostLive(pl instago.IGPostLive) {
 				} else {
 					filepath = getPostLiveFilePath(
 						username,
+						id,
 						url,
 						"audio",
 						timestamp)
