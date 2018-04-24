@@ -36,6 +36,7 @@ func getTimelineItems(items []instago.IGItem) {
 			filepath := getPostFilePath(
 				item.GetUsername(),
 				item.GetUserId(),
+				item.GetPostCode(),
 				url,
 				item.GetTimestamp())
 			if index > 0 {

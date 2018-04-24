@@ -27,16 +27,16 @@ func buildFilepath(url, dir, username, id, middle string, timestamp int64) strin
 		ext)
 }
 
-func getPostFilePath(username, id, url string, timestamp int64) string {
+func getPostFilePath(username, id, code, url string, timestamp int64) string {
 	userDir := path.Join(outputDir, username)
 	userPostsDir := path.Join(userDir, "posts")
-	return buildFilepath(url, userPostsDir, username, id, "-post-", timestamp)
+	return buildFilepath(url, userPostsDir, username, id, "-post-"+code+"-", timestamp)
 }
 
-func getStoryFilePath(username, id, url string, timestamp int64) string {
+func getStoryFilePath(username, id, code, url string, timestamp int64) string {
 	userDir := path.Join(outputDir, username)
 	userStoriesDir := path.Join(userDir, "stories")
-	return buildFilepath(url, userStoriesDir, username, id, "-story-", timestamp)
+	return buildFilepath(url, userStoriesDir, username, id, "-story-"+code+"-", timestamp)
 }
 
 func getPostLiveFilePath(username, id, url, typ string, timestamp int64) string {

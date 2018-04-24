@@ -46,6 +46,7 @@ func DownloadIGMedia(em instago.IGMedia) {
 		filepath := getPostFilePath(
 			em.GetUsername(),
 			em.GetUserId(),
+			em.GetPostCode(),
 			url,
 			em.GetTimestamp())
 		if index > 0 {
