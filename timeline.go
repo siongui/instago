@@ -50,6 +50,10 @@ func (m *IGApiManager) GetTimelineUntilPageN(pageN int) (items []IGItem, err err
 			return items, err
 		}
 		items = append(items, tl.Items...)
+		tl = IGTimeline{
+			MoreAvailable: tl.MoreAvailable,
+			NextMaxId:     tl.NextMaxId,
+		}
 	}
 
 	return
