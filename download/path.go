@@ -27,7 +27,7 @@ func buildFilepath(url, dir, username, middle string, timestamp int64) string {
 		ext)
 }
 
-func GetPostFilePath(username, url string, timestamp int64) string {
+func getPostFilePath(username, url string, timestamp int64) string {
 	userDir := path.Join(outputDir, username)
 	userPostsDir := path.Join(userDir, "posts")
 	return buildFilepath(url, userPostsDir, username, "-post-", timestamp)

@@ -33,7 +33,7 @@ func getTimelineItems(items []instago.IGItem) {
 			continue
 		}
 		for index, url := range urls {
-			filepath := GetPostFilePath(
+			filepath := getPostFilePath(
 				item.GetUsername(),
 				url,
 				item.GetTimestamp())
