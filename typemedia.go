@@ -177,3 +177,7 @@ func (em *IGMedia) GetMediaUrls() (urls []string) {
 func (em *IGMedia) GetPostUrl() string {
 	return "https://www.instagram.com/p/" + em.Shortcode + "/"
 }
+
+func (em *IGMedia) GetPostCode() string {
+	return em.Shortcode
+}

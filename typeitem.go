@@ -135,6 +135,10 @@ func (i *IGItem) GetPostUrl() string {
 		1)
 }
 
+func (i *IGItem) GetPostCode() string {
+	return i.Code
+}
+
 func (i *IGItem) GetTimestamp() int64 {
 	return i.TakenAt
 }
