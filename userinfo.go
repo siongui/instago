@@ -164,8 +164,8 @@ func (m *IGApiManager) GetAllPostCode(username string) (codes []string, err erro
 
 		printPostCount(len(codes), url)
 
-		// sleep 10 seconds to prevent http 429 (too many requests)
-		time.Sleep(10 * time.Second)
+		// sleep 20 seconds to prevent http 429 (too many requests)
+		time.Sleep(20 * time.Second)
 	}
 	return
 }
