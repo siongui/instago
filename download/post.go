@@ -77,3 +77,17 @@ func DownloadAllPosts(username string, mgr *instago.IGApiManager) {
 		DownloadPost(code, mgr)
 	}
 }
+
+// Given user name, download recent posts (usually 12 posts) of the user without
+// login status.
+func DownloadRecentPostsNoLogin(username string) {
+	codes, err := instago.GetRecentPostCodeNoLogin(username)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	for _, code := range codes {
+		DownloadPostNoLogin(code)
+	}
+}

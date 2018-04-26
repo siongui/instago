@@ -17,3 +17,7 @@ func ExampleDownloadPost(t *testing.T) {
 func ExampleDownloadPostNoLogin(t *testing.T) {
 	DownloadPostNoLogin(os.Getenv("IG_TEST_CODE"))
 }
+
+func ExampleDownloadRecentPostsNoLogin(t *testing.T) {
+	DownloadRecentPostsNoLogin(os.Getenv("IG_TEST_USERNAME"))
+}
