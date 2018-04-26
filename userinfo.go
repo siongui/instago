@@ -207,3 +207,13 @@ func GetUserId(username string) (id string, err error) {
 	id = ui.Id
 	return
 }
+
+// Given user name, return the URL of user profile hd pic
+func GetUserProfilePicUrlHd(username string) (url string, err error) {
+	ui, err := GetUserInfoNoLogin(username)
+	if err != nil {
+		return
+	}
+	url = ui.ProfilePicUrlHd
+	return
+}
