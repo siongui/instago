@@ -127,7 +127,7 @@ func (m *IGApiManager) GetUserInfo(username string) (ui UserInfo, err error) {
 	return
 }
 
-// Given user name, return codes of all posts of the user.
+// Given user name, return codes of all posts of the user with logged in status.
 func (m *IGApiManager) GetAllPostCode(username string) (codes []string, err error) {
 	ui, err := m.GetUserInfo(username)
 	if err != nil {
@@ -174,6 +174,20 @@ func (m *IGApiManager) GetAllPostCode(username string) (codes []string, err erro
 // without login status.
 func GetRecentPostCodeNoLogin(username string) (codes []string, err error) {
 	ui, err := GetUserInfoNoLogin(username)
+	if err != nil {
+		return
+	}
+
+	for _, node := range ui.EdgeOwnerToTimelineMedia.Edges {
+		codes = append(codes, node.Node.Shortcode)
+	}
+	return
+}
+
+// Given user name, return codes of recent posts (usually 12 posts) of the user
+// with logged in status.
+func (m *IGApiManager) GetRecentPostCode(username string) (codes []string, err error) {
+	ui, err := m.GetUserInfo(username)
 	if err != nil {
 		return
 	}
