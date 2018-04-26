@@ -40,6 +40,17 @@ func ExampleGetAllPostCode(t *testing.T) {
 	}
 }
 
+func ExampleGetRecentPostCodeNoLogin(t *testing.T) {
+	codes, err := GetRecentPostCodeNoLogin(os.Getenv("IG_TEST_USERNAME"))
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	for _, code := range codes {
+		fmt.Printf("URL: https://www.instagram.com/p/%s/\n", code)
+	}
+}
+
 func ExampleGetUserInfo(t *testing.T) {
 	mgr := NewInstagramApiManager(
 		os.Getenv("IG_DS_USER_ID"),
