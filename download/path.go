@@ -65,3 +65,10 @@ func CreateFilepathDirIfNotExist(filepath string) {
 		panic(err)
 	}
 }
+
+func getUserProfilPicFilePath(username, id, url string, timestamp int64) string {
+	ext := path.Ext(url)
+	userDir := path.Join(outputDir, username)
+	filename := username + "-" + id + "-profile_pic-" + strconv.FormatInt(timestamp, 10) + ext
+	return path.Join(userDir, filename)
+}

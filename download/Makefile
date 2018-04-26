@@ -25,6 +25,10 @@ post_test: fmt
 	@echo "\033[92mDownload timeline ...\033[0m"
 	@go test -v $(ALL_GO_SOURCES) post_test.go
 
+profile_pic_test: fmt
+	@echo "\033[92mDownload timeline ...\033[0m"
+	@go test -v $(ALL_GO_SOURCES) profilepic_test.go
+
 test: fmt
 	@echo "\033[92mRun testing code...\033[0m"
 	@go test -v path.go path_test.go util.go util_test.go

@@ -48,3 +48,11 @@ func TestAppendIndexToFilename(t *testing.T) {
 		t.Error(nf)
 	}
 }
+
+func TestGetUserProfilPicFilePath(t *testing.T) {
+	path := getUserProfilPicFilePath("instagram", "25025320", "https://instagram.fkhh1-2.fna.fbcdn.net/vp/893534d61bdc5ea6911593d3ee0a1922/5B6363AB/t51.2885-19/s320x320/14719833_310540259320655_1605122788543168512_a.jpg", 1520056661)
+	if path != "Instagram/instagram/instagram-25025320-profile_pic-1520056661.jpg" {
+		t.Error(path)
+		return
+	}
+}
