@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"regexp"
 	"strings"
-	"time"
 )
 
 // no need to login or cookie to access this URL. But if login to Instagram,
@@ -124,49 +123,6 @@ func (m *IGApiManager) GetUserInfo(username string) (ui UserInfo, err error) {
 	}
 	//ui = r.GraphQL.User
 	ui = r.EntryData.ProfilePage[0].GraphQL.User
-	return
-}
-
-// Given user name, return codes of all posts of the user with logged in status.
-func (m *IGApiManager) GetAllPostCode(username string) (codes []string, err error) {
-	ui, err := m.GetUserInfo(username)
-	if err != nil {
-		return
-	}
-
-	for _, node := range ui.EdgeOwnerToTimelineMedia.Edges {
-		codes = append(codes, node.Node.Shortcode)
-	}
-
-	hasNextPage := ui.EdgeOwnerToTimelineMedia.PageInfo.HasNextPage
-	// "first" cannot be 300 now. cannot be 100 either. 50 is ok.
-	vartmpl := strings.Replace(`{"id":"<ID>","first":50,"after":"<ENDCURSOR>"}`, "<ID>", ui.Id, 1)
-	variables := strings.Replace(vartmpl, "<ENDCURSOR>", ui.EdgeOwnerToTimelineMedia.PageInfo.EndCursor, 1)
-
-	for hasNextPage == true {
-		url := urlGraphql + variables
-
-		b, err := getHTTPResponse(url, m.dsUserId, m.sessionid, m.csrftoken)
-		if err != nil {
-			return codes, err
-		}
-
-		d := dataUserMedia{}
-		if err = json.Unmarshal(b, &d); err != nil {
-			return codes, err
-		}
-
-		for _, node := range d.Data.User.EdgeOwnerToTimelineMedia.Edges {
-			codes = append(codes, node.Node.Shortcode)
-		}
-		hasNextPage = d.Data.User.EdgeOwnerToTimelineMedia.PageInfo.HasNextPage
-		variables = strings.Replace(vartmpl, "<ENDCURSOR>", d.Data.User.EdgeOwnerToTimelineMedia.PageInfo.EndCursor, 1)
-
-		printPostCount(len(codes), url)
-
-		// sleep 20 seconds to prevent http 429 (too many requests)
-		time.Sleep(20 * time.Second)
-	}
 	return
 }
 

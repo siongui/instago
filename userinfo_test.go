@@ -29,22 +29,6 @@ func ExampleGetUserProfilePicUrlHd() {
 	// Output: https://instagram.fkhh1-2.fna.fbcdn.net/vp/893534d61bdc5ea6911593d3ee0a1922/5B6363AB/t51.2885-19/s320x320/14719833_310540259320655_1605122788543168512_a.jpg <nil>
 }
 
-func ExampleGetAllPostCode(t *testing.T) {
-	mgr := NewInstagramApiManager(
-		os.Getenv("IG_DS_USER_ID"),
-		os.Getenv("IG_SESSIONID"),
-		os.Getenv("IG_CSRFTOKEN"))
-
-	codes, err := mgr.GetAllPostCode(os.Getenv("IG_TEST_USERNAME"))
-	if err != nil {
-		t.Error(err)
-		return
-	}
-	for _, code := range codes {
-		fmt.Printf("URL: https://www.instagram.com/p/%s/\n", code)
-	}
-}
-
 func ExampleGetRecentPostCodeNoLogin(t *testing.T) {
 	codes, err := GetRecentPostCodeNoLogin(os.Getenv("IG_TEST_USERNAME"))
 	if err != nil {

@@ -23,8 +23,13 @@ follow: fmt
 	@go test -v $(ALL_GO_SOURCES) follow_test.go
 
 userinfo: fmt
-	@echo "\033[92mTest user info from .../username/?__a=1 ...\033[0m"
+	@#echo "\033[92mTest user info from .../username/?__a=1 ...\033[0m"
+	@echo "\033[92mTest user info from html embedded json ...\033[0m"
 	@go test -v $(ALL_GO_SOURCES) userinfo_test.go
+
+getall: fmt
+	@echo "\033[92mTest user info *get all* features ...\033[0m"
+	@go test -v $(ALL_GO_SOURCES) getall_test.go
 
 postlive: fmt
 	@echo "\033[92mTest Post Live Data in Reels Tray Feed ...\033[0m"
