@@ -26,7 +26,7 @@ type rawUserResp struct {
 // https://www.instagram.com/{{USERNAME}}/
 type sharedData struct {
 	EntryData struct {
-		ProfilePage []struct {
+		ProfilePage struct {
 			GraphQL struct {
 				User UserInfo `json:"user"`
 			} `json:"graphql"`
@@ -82,10 +82,11 @@ type dataUserMedia struct {
 }
 
 func getJsonBytes(b []byte) []byte {
-	pattern := regexp.MustCompile(`<script type="text\/javascript">window\._sharedData = (.*?);<\/script>`)
+	pattern := regexp.MustCompile(`<script type="text\/javascript">window\._sharedData=(.+?);\s+`)
 	m := string(pattern.Find(b))
-	m1 := strings.TrimPrefix(m, `<script type="text/javascript">window._sharedData = `)
-	return []byte(strings.TrimSuffix(m1, `;</script>`))
+	m1 := strings.TrimPrefix(m, `<script type="text/javascript">window._sharedData=`)
+	m2 := strings.TrimSpace(m1)
+	return []byte(strings.TrimSuffix(m2, `;`))
 }
 
 // Given user name, return information of the user name without login.
@@ -103,7 +104,7 @@ func GetUserInfoNoLogin(username string) (ui UserInfo, err error) {
 		return
 	}
 	//ui = r.GraphQL.User
-	ui = r.EntryData.ProfilePage[0].GraphQL.User
+	ui = r.EntryData.ProfilePage.GraphQL.User
 	return
 }
 
@@ -122,7 +123,7 @@ func (m *IGApiManager) GetUserInfo(username string) (ui UserInfo, err error) {
 		return
 	}
 	//ui = r.GraphQL.User
-	ui = r.EntryData.ProfilePage[0].GraphQL.User
+	ui = r.EntryData.ProfilePage.GraphQL.User
 	return
 }
 
