@@ -2,6 +2,8 @@ package igdl
 
 import (
 	"fmt"
+	"strconv"
+
 	"github.com/siongui/instago"
 )
 
@@ -14,6 +16,16 @@ func DownloadStoryHighlights(mgr *instago.IGApiManager) {
 	}
 
 	for _, user := range users {
-		fmt.Println(user.Username, ": ", user.Pk)
+		//fmt.Println(user.Username, ": ", user.Pk)
+		userid := strconv.FormatInt(user.Pk, 10)
+		trays, err := mgr.GetAllStoryHighlights(userid)
+		if err != nil {
+			panic(err)
+		}
+		for _, tray := range trays {
+			for _, item := range tray.GetItems() {
+				getStoryItem(item)
+			}
+		}
 	}
 }
