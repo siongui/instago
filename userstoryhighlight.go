@@ -52,7 +52,9 @@ func (t *IGStoryHighlightsTray) GetItems() []IGItem {
 	return t.Items
 }
 
-// Return story highlights of a specific user
+// Return story highlight trays of a specific user. Sometimes items in a
+// highlight tray are empty. Call *IGApiManager.GetReelsMedia to get items of
+// the tray. See *IGApiManager.GetAllStoryHighlights
 func (m *IGApiManager) GetUserStoryHighlights(id string) (trays []IGStoryHighlightsTray, err error) {
 	url := strings.Replace(urlUserHighlightStories, "{{USERID}}", id, 1)
 	b, err := getHTTPResponse(url, m.dsUserId, m.sessionid, m.csrftoken)
