@@ -73,6 +73,8 @@ type UserInfo struct {
 			Node IGMedia `json:"node"`
 		} `json:"edges"`
 	} `json:"edge_owner_to_timeline_media"`
+
+	QueryHash string // from js file for fetching posts in user profile page
 }
 
 type dataUserMedia struct {
@@ -86,6 +88,25 @@ func getJsonBytes(b []byte) []byte {
 	m := string(pattern.Find(b))
 	m1 := strings.TrimPrefix(m, `<script type="text/javascript">window._sharedData = `)
 	return []byte(strings.TrimSuffix(m1, `;</script>`))
+}
+
+// Given the HTML source code of the user profile page without logged in, return
+// query_hash for Instagram GraphQL API.
+func GetQueryHashNoLogin(b []byte) (qh string, err error) {
+	// find JavaScript file which contains the query hash
+	patternJs := regexp.MustCompile(`\/static\/bundles\/base\/ProfilePageContainer\.js\/[a-zA-Z0-9]+?\.js`)
+	jsPath := string(patternJs.Find(b))
+	jsUrl := "https://www.instagram.com" + jsPath
+	bJs, err := getHTTPResponseNoLogin(jsUrl)
+	if err != nil {
+		return
+	}
+
+	patternQh := regexp.MustCompile(`e\.profilePosts\.byUserId\.get\(t\)\)\?n\.pagination:n},queryId:"([a-zA-Z0-9]+)",`)
+	qhtmp := string(patternQh.Find(bJs))
+	qhtmp = strings.TrimPrefix(qhtmp, `e.profilePosts.byUserId.get(t))?n.pagination:n},queryId:"`)
+	qh = strings.TrimSuffix(qhtmp, `",`)
+	return
 }
 
 // Given user name, return information of the user name without login.
@@ -104,6 +125,8 @@ func GetUserInfoNoLogin(username string) (ui UserInfo, err error) {
 	}
 	//ui = r.GraphQL.User
 	ui = r.EntryData.ProfilePage[0].GraphQL.User
+
+	ui.QueryHash, err = GetQueryHashNoLogin(b)
 	return
 }
 

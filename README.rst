@@ -91,6 +91,9 @@ Tricks
 
 - `Web scraping: instagram.com | Shiori <https://kaijento.github.io/2017/05/17/web-scraping-instagram.com/>`_
 
+- | `query_hash on instagram graphql - Google search <https://www.google.com/search?q=query_hash+on+instagram+graphql>`_
+  | `How to scrape pages with infinite scroll: extracting data from Instagram - Diggernaut <https://www.diggernaut.com/blog/how-to-scrape-pages-infinite-scroll-extracting-data-from-instagram/>`_
+
 
 Private API
 +++++++++++
