@@ -11,7 +11,7 @@ type highlightMedia struct {
 	Trays []IGStoryHighlightsTray `json:"reels_media"`
 }
 
-func (m *IGApiManager) GetReelsMedia(id string) (tray IGStoryHighlightsTray, err error) {
+func (m *IGApiManager) GetHighlightsReelsMedia(id string) (tray IGStoryHighlightsTray, err error) {
 	url := urlReelsMedia + "?user_ids=" + id
 	b, err := getHTTPResponse(url, m.dsUserId, m.sessionid, m.csrftoken)
 	if err != nil {

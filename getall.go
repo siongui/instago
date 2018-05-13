@@ -72,7 +72,7 @@ func (m *IGApiManager) GetAllStoryHighlights(userid string) (trays []IGStoryHigh
 	}
 	for _, tray := range subtrays {
 		if len(tray.GetItems()) == 0 {
-			tt, err := m.GetReelsMedia(tray.Id)
+			tt, err := m.GetHighlightsReelsMedia(tray.Id)
 			if err != nil {
 				return trays, err
 			}
