@@ -58,11 +58,11 @@ func getTimelineItems(items []instago.IGItem) {
 }
 
 // download timeline until page n
-func DownloadTimeline(mgr *instago.IGApiManager, n int) {
+func (m *IGDownloadManager) DownloadTimeline(n int) {
 	sleepInterval := 15 // seconds
 
 	for {
-		items, err := mgr.GetTimelineUntilPageN(n)
+		items, err := m.apimgr.GetTimelineUntilPageN(n)
 		if err != nil {
 			fmt.Println(err)
 		} else {

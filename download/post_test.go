@@ -1,17 +1,21 @@
 package igdl
 
 import (
-	"github.com/siongui/instago"
 	"os"
 	"testing"
 )
 
 func ExampleDownloadPost(t *testing.T) {
-	mgr := instago.NewInstagramApiManager(
+	mgr, err := NewInstagramDownloadManager(
 		os.Getenv("IG_DS_USER_ID"),
 		os.Getenv("IG_SESSIONID"),
 		os.Getenv("IG_CSRFTOKEN"))
-	DownloadPost(os.Getenv("IG_TEST_CODE"), mgr)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	mgr.DownloadPost(os.Getenv("IG_TEST_CODE"))
 }
 
 func ExampleDownloadPostNoLogin(t *testing.T) {

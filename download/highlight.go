@@ -3,13 +3,11 @@ package igdl
 import (
 	"fmt"
 	"strconv"
-
-	"github.com/siongui/instago"
 )
 
 // Download story highlights of all following users
-func DownloadStoryHighlights(mgr *instago.IGApiManager) {
-	users, err := mgr.GetFollowing(mgr.GetSelfId())
+func (m *IGDownloadManager) DownloadStoryHighlights() {
+	users, err := m.apimgr.GetFollowing(m.apimgr.GetSelfId())
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -18,7 +16,7 @@ func DownloadStoryHighlights(mgr *instago.IGApiManager) {
 	for _, user := range users {
 		//fmt.Println(user.Username, ": ", user.Pk)
 		userid := strconv.FormatInt(user.Pk, 10)
-		trays, err := mgr.GetAllStoryHighlights(userid)
+		trays, err := m.apimgr.GetAllStoryHighlights(userid)
 		if err != nil {
 			panic(err)
 		}

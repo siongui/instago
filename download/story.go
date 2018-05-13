@@ -54,8 +54,8 @@ func DownloadUnreadStory(trays []instago.IGReelTray) {
 	}
 }
 
-func fetchUserStory(userId int64, username string, mgr *instago.IGApiManager, c chan int) {
-	tray, err := mgr.GetUserStory(strconv.FormatInt(userId, 10))
+func (m *IGDownloadManager) fetchUserStory(userId int64, username string, c chan int) {
+	tray, err := m.apimgr.GetUserStory(strconv.FormatInt(userId, 10))
 	if err != nil {
 		fmt.Println("In fetchUserStorie: fail to fetch " + username)
 		c <- 1
@@ -67,14 +67,14 @@ func fetchUserStory(userId int64, username string, mgr *instago.IGApiManager, c 
 	c <- 1
 }
 
-func DownloadAllStory(trays []instago.IGReelTray, mgr *instago.IGApiManager) {
+func (m *IGDownloadManager) DownloadAllStory(trays []instago.IGReelTray) {
 	c := make(chan int)
 	numOfStoryUser := 0
 	for _, tray := range trays {
 		items := tray.GetItems()
 		if len(items) == 0 {
 			numOfStoryUser++
-			go fetchUserStory(tray.Id, tray.GetUsername(), mgr, c)
+			go m.fetchUserStory(tray.Id, tray.GetUsername(), c)
 		} else {
 			for _, item := range items {
 				getStoryItem(item)

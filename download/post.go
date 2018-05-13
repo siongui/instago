@@ -30,8 +30,8 @@ func DownloadPostNoLogin(code string) {
 	DownloadIGMedia(em)
 }
 
-func DownloadPost(code string, mgr *instago.IGApiManager) {
-	em, err := mgr.GetPostInfo(code)
+func (m *IGDownloadManager) DownloadPost(code string) {
+	em, err := m.apimgr.GetPostInfo(code)
 	if err != nil {
 		log.Println(err)
 		return
@@ -66,15 +66,15 @@ func DownloadIGMedia(em instago.IGMedia) {
 	}
 }
 
-func DownloadAllPosts(username string, mgr *instago.IGApiManager) {
-	codes, err := mgr.GetAllPostCode(username)
+func (m *IGDownloadManager) DownloadAllPosts(username string) {
+	codes, err := m.apimgr.GetAllPostCode(username)
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
 	for _, code := range codes {
-		DownloadPost(code, mgr)
+		m.DownloadPost(code)
 	}
 }
 

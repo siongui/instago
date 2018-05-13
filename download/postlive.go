@@ -85,17 +85,17 @@ func DownloadPostLive(pl instago.IGPostLive) {
 	}
 }
 
-func DownloadStoryAndPostLive(mgr *instago.IGApiManager) {
+func (m *IGDownloadManager) DownloadStoryAndPostLive() {
 	sleepInterval := 30 // seconds
 	count := 0
 	for {
-		rt, err := mgr.GetReelsTray()
+		rt, err := m.apimgr.GetReelsTray()
 		if err != nil {
 			fmt.Println(err)
 		} else {
 			go DownloadPostLive(rt.PostLive)
 			if count == 0 {
-				DownloadAllStory(rt.Trays, mgr)
+				m.DownloadAllStory(rt.Trays)
 				cc.Println("Download all stories finished")
 			} else {
 				DownloadUnreadStory(rt.Trays)
