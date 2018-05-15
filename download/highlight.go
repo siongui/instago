@@ -3,6 +3,7 @@ package igdl
 import (
 	"fmt"
 	"strconv"
+	"time"
 )
 
 // Download story highlights of all following users
@@ -14,7 +15,7 @@ func (m *IGDownloadManager) DownloadStoryHighlights() {
 	}
 
 	for _, user := range users {
-		//fmt.Println(user.Username, ": ", user.Pk)
+		fmt.Println("Fetching", user.Username, user.Pk, "stroy highlights ...")
 		userid := strconv.FormatInt(user.Pk, 10)
 		trays, err := m.apimgr.GetAllStoryHighlights(userid)
 		if err != nil {
@@ -25,5 +26,9 @@ func (m *IGDownloadManager) DownloadStoryHighlights() {
 				getStoryItem(item)
 			}
 		}
+		fmt.Println("Fetching", user.Username, user.Pk, "stroy highlights done!")
+
+		// sleep 3 seconds to prevent http 429
+		time.Sleep(3 * time.Second)
 	}
 }
