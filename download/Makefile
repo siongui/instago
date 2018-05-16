@@ -21,6 +21,10 @@ timeline: fmt
 	@echo "\033[92mDownload timeline ...\033[0m"
 	@go run example/download.go -downloadtype=timeline
 
+userstory: fmt
+	@echo "\033[92mDownload user $(id) unexpired stories ...\033[0m"
+	@go run example/downloaduserstory.go -id=$(id)
+
 post_test: fmt
 	@echo "\033[92mDownload timeline ...\033[0m"
 	@go test -v $(ALL_GO_SOURCES) post_test.go
