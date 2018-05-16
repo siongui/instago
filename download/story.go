@@ -55,16 +55,16 @@ func DownloadUnreadStory(trays []instago.IGReelTray) {
 }
 
 func (m *IGDownloadManager) fetchUserStory(userId int64, username string, c chan int) {
+	defer func() { c <- 1 }()
+
 	tray, err := m.apimgr.GetUserStory(strconv.FormatInt(userId, 10))
 	if err != nil {
 		fmt.Println("In fetchUserStorie: fail to fetch " + username)
-		c <- 1
 		return
 	}
 	for _, item := range tray.GetItems() {
 		getStoryItem(item)
 	}
-	c <- 1
 }
 
 func (m *IGDownloadManager) DownloadAllStory(trays []instago.IGReelTray) {
