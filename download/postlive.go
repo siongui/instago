@@ -20,7 +20,9 @@ func printPostLiveDownloadInfo(username, url, filepath string, timestamp int64) 
 	cc.Println(filepath)
 }
 
-func DownloadPostLive(pl instago.IGPostLive) {
+func DownloadPostLive(pl instago.IGPostLive, cpl chan int) {
+	defer func() { cpl <- 1 }()
+
 	for _, item := range pl.PostLiveItems {
 		for _, broadcast := range item.GetBroadcasts() {
 			urls, err := broadcast.GetBaseUrls()
@@ -72,10 +74,6 @@ func DownloadPostLive(pl instago.IGPostLive) {
 			}
 
 			mpath := getPostLiveMergedFilePath(vpath, apath)
-			// FIXME: If video file is too big, and download is not
-			// yet finished, next DownloadPostLive will create
-			// merged file from unfinished downloaded files, which
-			// is not correct.
 			// check if file exist
 			if _, err := os.Stat(mpath); os.IsNotExist(err) {
 				// file not exists
@@ -86,29 +84,36 @@ func DownloadPostLive(pl instago.IGPostLive) {
 }
 
 func (m *IGDownloadManager) DownloadStoryAndPostLive() {
+	// channel for waiting DownloadPostLive completed
+	cpl := make(chan int)
+
 	sleepInterval := 30 // seconds
 	count := 0
 	for {
 		rt, err := m.apimgr.GetReelsTray()
 		if err != nil {
 			fmt.Println(err)
-		} else {
-			go DownloadPostLive(rt.PostLive)
-			if count == 0 {
-				m.DownloadAllStory(rt.Trays)
-				cc.Println("Download all stories finished")
-			} else {
-				DownloadUnreadStory(rt.Trays)
-				cc.Println("Download unread stories finished")
-			}
-			count++
-			count %= 5
+			continue
 		}
+
+		go DownloadPostLive(rt.PostLive, cpl)
+		if count == 0 {
+			m.DownloadAllStory(rt.Trays)
+			cc.Println("Download all stories finished")
+		} else {
+			DownloadUnreadStory(rt.Trays)
+			cc.Println("Download unread stories finished")
+		}
+		count++
+		count %= 5
 
 		rc.Print(time.Now().Format(time.RFC3339))
 		fmt.Print(": sleep ")
 		cc.Print(sleepInterval)
 		fmt.Println(" second")
 		time.Sleep(time.Duration(sleepInterval) * time.Second)
+
+		// wait DownloadPostLive completed
+		<-cpl
 	}
 }
