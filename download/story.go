@@ -45,6 +45,18 @@ func getStoryItem(item instago.IGItem) {
 	}
 }
 
+// Given user id, download unexpired stories (last 24 hours) of the user.
+func (m *IGDownloadManager) DownloadUserStory(userId int64) (err error) {
+	tray, err := m.apimgr.GetUserStory(strconv.FormatInt(userId, 10))
+	if err != nil {
+		return
+	}
+	for _, item := range tray.GetItems() {
+		getStoryItem(item)
+	}
+	return
+}
+
 func DownloadUnreadStory(trays []instago.IGReelTray) {
 	for _, tray := range trays {
 		//fmt.Println(tray.GetUsername())
@@ -57,13 +69,10 @@ func DownloadUnreadStory(trays []instago.IGReelTray) {
 func (m *IGDownloadManager) fetchUserStory(userId int64, username string, c chan int) {
 	defer func() { c <- 1 }()
 
-	tray, err := m.apimgr.GetUserStory(strconv.FormatInt(userId, 10))
+	err := m.DownloadUserStory(userId)
 	if err != nil {
 		fmt.Println("In fetchUserStorie: fail to fetch " + username)
-		return
-	}
-	for _, item := range tray.GetItems() {
-		getStoryItem(item)
+		fmt.Println(err)
 	}
 }
 
