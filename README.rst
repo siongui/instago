@@ -69,7 +69,7 @@ Usage
 
 This package *instago* only access the Instagram public and private API and get
 data from the API. If you want to download media (photos/videos), stories, or
-story highlights. See `download <download>` directory.
+story highlights. See `download <download>`_ directory.
 
 Install the package by ``go get``:
 
@@ -115,7 +115,7 @@ For complete examples, see test files (files ends with *_test.go*). The
 following are some examples you may be interested in:
 
 - Get post information: See `post_test.go <post_test.go>`_
-- Get URLs of all posts of a specific user: See `userinfo_test.go <getall_test.go>`_
+- Get URLs of all posts of a specific user: See `getall_test.go <getall_test.go>`_
 - Get id by username: See `userinfo_test.go <userinfo_test.go>`_
 - Discover top live: See `toplive_test.go <toplive_test.go>`_
 - Top searches of Instagram web: See `topsearch_test.go <topsearch_test.go>`_
