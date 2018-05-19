@@ -64,11 +64,58 @@ Given the URL of the post as follows:
 The *code* of the post is **BfJzG64BZVY**.
 
 
-Examples
-++++++++
+Usage
++++++
+
+This package *instago* only access the Instagram public and private API and get
+data from the API. If you want to download media (photos/videos), stories, or
+story highlights. See `download <download>` directory.
+
+Install the package by ``go get``:
+
+.. code-block:: bash
+
+  $ go get -u github.com/siongui/instago
+
+You can use the following methods without cookies
+
+- `GetUserInfoNoLogin <https://godoc.org/github.com/siongui/instago#GetUserInfoNoLogin>`_
+- `GetRecentPostCodeNoLogin <https://godoc.org/github.com/siongui/instago#GetRecentPostCodeNoLogin>`_
+- `GetUserId <https://godoc.org/github.com/siongui/instago#GetUserId>`_
+- `GetPostInfoNoLogin <https://godoc.org/github.com/siongui/instago#GetPostInfoNoLogin>`_
+- `GetUserProfilePicUrlHd <https://godoc.org/github.com/siongui/instago#GetUserProfilePicUrlHd>`_
+
+For the other methods which need cookies to access Instagram API, you must call
+NewInstagramApiManager_ first:
+
+.. code-block:: go
+
+  import (
+  	"github.com/siongui/instago"
+  )
+
+  mgr := instago.NewInstagramApiManager("IG_DS_USER_ID", "IG_SESSIONID", "IG_CSRFTOKEN")
+
+Then you can use *mgr* to get data from Instagram API. For example, you can get
+all post codes of the user `instagram <https://www.instagram.com/instagram/>`__
+as follows:
+
+.. code-block:: go
+
+  codes, err := mgr.GetAllPostCode("instagram")
+  if err != nil {
+  	panic(err)
+  }
+
+  for _, code := range codes {
+  	println("URL: https://www.instagram.com/p/%s/\n", code)
+  }
+
+For complete examples, see test files (files ends with *_test.go*). The
+following are some examples you may be interested in:
 
 - Get post information: See `post_test.go <post_test.go>`_
-- Get URLs of all posts of a specific user: See `userinfo_test.go <userinfo_test.go>`_
+- Get URLs of all posts of a specific user: See `userinfo_test.go <getall_test.go>`_
 - Get id by username: See `userinfo_test.go <userinfo_test.go>`_
 - Discover top live: See `toplive_test.go <toplive_test.go>`_
 - Top searches of Instagram web: See `topsearch_test.go <topsearch_test.go>`_
@@ -129,3 +176,4 @@ References
 .. _UNLICENSE: http://unlicense.org/
 .. _replay.py: https://github.com/ping/instagram_private_api_extensions/blob/master/instagram_private_api_extensions/replay.py
 .. _instagram_private_api_extensions: https://github.com/ping/instagram_private_api_extensions
+.. _NewInstagramApiManager: https://godoc.org/github.com/siongui/instago#NewInstagramApiManager
