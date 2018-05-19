@@ -32,7 +32,7 @@ type reelsTray struct {
 type IGReelTray struct {
 	Id                 int64   `json:"id"`
 	LatestReelMedia    int64   `json:"latest_reel_media"`
-	ExpiringAt         int64   `json:"expiring_at"`
+	ExpiringAt         float64 `json:"expiring_at"`
 	Seen               float64 `json:"seen"`
 	CanReply           bool    `json:"can_reply"`
 	CanReshare         bool    `json:"can_reshare"`
