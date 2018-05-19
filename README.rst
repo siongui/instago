@@ -23,8 +23,8 @@ Instagram Photo, Video, Story, Following, and Follower in Go_
    :target: https://twitter.com/intent/tweet?text=Wow:&url=%5Bobject%20Object%5D
 
 
-Get Instagram_ media (photos and videos), stories, following and followers in
-Go.
+Get Instagram_ media (photos and videos), stories, story highlights, following
+and followers in Go.
 
 
 Obtain Cookies
