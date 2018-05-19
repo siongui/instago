@@ -92,6 +92,12 @@ following users every 30 seconds.
 *download highlights* will run once and download story highlights of your
 following users.
 
+`func (m *IGDownloadManager) DownloadAllPosts(username string) <https://godoc.org/github.com/siongui/instago/download#IGDownloadManager.DownloadAllPosts>`__
+helps you download all posts of the user.
+
+See `godoc <https://godoc.org/github.com/siongui/instago/download>`__ for more
+downloading methods.
+
 
 UNLICENSE
 +++++++++
