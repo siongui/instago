@@ -166,9 +166,11 @@ func (em *IGMedia) GetMediaUrls() (urls []string) {
 		panic(em.Typename)
 	}
 
-	for i, _ := range urls {
-		urls[i], _ = stripQueryString(urls[i])
-	}
+	/*
+		for i, _ := range urls {
+			urls[i], _ = StripQueryString(urls[i])
+		}
+	*/
 
 	return
 }

@@ -170,11 +170,13 @@ func (i *IGItem) GetMediaUrls() (urls []string, err error) {
 		return
 	}
 
-	for i, url := range urls {
-		urls[i], err = stripQueryString(url)
-		if err != nil {
-			return
+	/*
+		for i, url := range urls {
+			urls[i], err = StripQueryString(url)
+			if err != nil {
+				return
+			}
 		}
-	}
+	*/
 	return
 }

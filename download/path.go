@@ -5,6 +5,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/siongui/instago"
 )
 
 var outputDir = "Instagram"
@@ -19,6 +21,11 @@ func formatTimestamp(timestamp int64) string {
 }
 
 func buildFilepath(url, dir, username, id, middle, last string, timestamp int64) string {
+	url, err := instago.StripQueryString(url)
+	if err != nil {
+		panic(err)
+	}
+
 	ext := path.Ext(path.Base(url))
 	return path.Join(dir, username+"-"+id+
 		middle+
@@ -68,6 +75,11 @@ func CreateFilepathDirIfNotExist(filepath string) {
 }
 
 func getUserProfilPicFilePath(username, id, url string, timestamp int64) string {
+	url, err := instago.StripQueryString(url)
+	if err != nil {
+		panic(err)
+	}
+
 	ext := path.Ext(url)
 	userDir := path.Join(outputDir, username)
 	filename := username + "-" + id + "-profile_pic-" + strconv.FormatInt(timestamp, 10) + ext

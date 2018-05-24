@@ -5,8 +5,8 @@ import (
 )
 
 func TestGetPostFilePath(t *testing.T) {
-	path := getPostFilePath("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661)
-	if path != "Instagram/instagram/posts/instagram-25025320-post-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {
+	path := getPostFilePath("instagram", "25025320", "Bh7kySfDYq8", "https://instagram.fkhh1-2.fna.fbcdn.net/vp/893534d61bdc5ea6911593d3ee0a1922/5B6363AB/t51.2885-19/s320x320/14719833_310540259320655_1605122788543168512_a.jpg?abc=1", 1520056661)
+	if path != "Instagram/instagram/posts/instagram-25025320-post-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.jpg" {
 		t.Error(path)
 		return
 	}

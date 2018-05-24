@@ -11,7 +11,7 @@ func formatTimestamp(timestamp int64) string {
 }
 
 // Remove query string in the URL
-func stripQueryString(inputUrl string) (su string, err error) {
+func StripQueryString(inputUrl string) (su string, err error) {
 	u, err := url.Parse(inputUrl)
 	if err != nil {
 		return
