@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"os"
 
@@ -18,7 +17,9 @@ func main() {
 		return
 	}
 
-	id := flag.String("id", "25025320", "user id")
-	flag.Parse()
-	mgr.DownloadUserStoryHighlights(*id)
+	fmt.Println("Download timeline")
+	// This method will run forever and donwload posts in your timeline
+	// every 15 seconds. The argument `1` means download only 1 page. If you
+	// can download more pages by changing this argument.
+	mgr.DownloadTimeline(1)
 }

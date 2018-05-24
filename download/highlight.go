@@ -4,7 +4,27 @@ import (
 	"fmt"
 	"strconv"
 	"time"
+
+	"github.com/siongui/instago"
 )
+
+// Given username, download story highlights of the user.
+func (m *IGDownloadManager) DownloadUserStoryHighlightsByName(username string) {
+	id, err := instago.GetUserId(username)
+	if err != nil {
+		panic(err)
+	}
+
+	trays, err := m.apimgr.GetAllStoryHighlights(id)
+	if err != nil {
+		panic(err)
+	}
+	for _, tray := range trays {
+		for _, item := range tray.GetItems() {
+			getStoryItem(item)
+		}
+	}
+}
 
 // Download story highlights of a single user.
 func (m *IGDownloadManager) DownloadUserStoryHighlights(userid string) {

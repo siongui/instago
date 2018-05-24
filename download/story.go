@@ -45,6 +45,23 @@ func getStoryItem(item instago.IGItem) {
 	}
 }
 
+// Given user name, download unexpired stories (last 24 hours) of the user.
+func (m *IGDownloadManager) DownloadUserStoryByName(username string) {
+	id, err := instago.GetUserId(username)
+	if err != nil {
+		panic(err)
+	}
+
+	tray, err := m.apimgr.GetUserStory(id)
+	if err != nil {
+		panic(err)
+	}
+	for _, item := range tray.GetItems() {
+		getStoryItem(item)
+	}
+	return
+}
+
 // Given user id, download unexpired stories (last 24 hours) of the user.
 func (m *IGDownloadManager) DownloadUserStory(userId int64) (err error) {
 	tray, err := m.apimgr.GetUserStory(strconv.FormatInt(userId, 10))

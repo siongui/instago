@@ -80,23 +80,22 @@ Then you can install this package:
 
   $ go get -u github.com/siongui/instago/download
 
-The name of this package is *igdl*. See
-`example/download.go <example/download.go>`_ for how to use this package.
+The name of this package is *igdl*.
 
-In the example, *download timeline* will run forever and download posts in your
-timeline every 15 seconds.
+The following are examples that you may be interested in:
 
-*download story* will also run forever and download stories/postlives of your
-following users every 30 seconds.
+- `timeline.go <example/timeline.go>`_: download posts in your timeline.
+- `storypostlive.go <example/storypostlive.go>`_: download stories and postlives
+  of your following users.
+- `highlights.go <example/highlights.go>`_: download story highlights of all
+  following users.
+- `allposts.go <example/allposts.go>`_: download all posts of a single user.
+- `userstory.go <example/userstory.go>`_: given username, download unexpired
+  stories of the user.
+- `userstoryhighlight.go <example/userstoryhighlight.go>`_: given username,
+  download story highlights of the user.
 
-*download highlights* will run once and download story highlights of your
-following users.
-
-`func (m *IGDownloadManager) DownloadAllPosts(username string) <https://godoc.org/github.com/siongui/instago/download#IGDownloadManager.DownloadAllPosts>`__
-helps you download all posts of the user.
-
-See `godoc <https://godoc.org/github.com/siongui/instago/download>`__ for more
-downloading methods.
+See godoc_ for complete list of download methods.
 
 
 UNLICENSE
@@ -116,3 +115,4 @@ Released in public domain. See UNLICENSE_.
 .. _UNLICENSE: http://unlicense.org/
 .. _wget: https://www.gnu.org/software/wget/
 .. _ffmpeg: https://www.ffmpeg.org/
+.. _godoc: https://godoc.org/github.com/siongui/instago/download

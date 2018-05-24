@@ -46,6 +46,7 @@ test: fmt
 fmt:
 	@echo "\033[92mGo fmt source code...\033[0m"
 	@go fmt *.go
+	@go fmt example/*.go
 
 install:
 	go get -u github.com/siongui/instago/download

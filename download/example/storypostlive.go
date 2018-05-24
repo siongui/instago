@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"os"
 
@@ -18,7 +17,8 @@ func main() {
 		return
 	}
 
-	id := flag.Int64("id", 25025320, "user id")
-	flag.Parse()
-	mgr.DownloadUserStory(*id)
+	fmt.Println("Download stories and postlives of following users")
+	// This method will run forever and donwload stories and postlives of
+	// your following users every 30 seconds.
+	mgr.DownloadStoryAndPostLive()
 }
