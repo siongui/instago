@@ -26,7 +26,7 @@ func ExampleGetUserId() {
 
 func ExampleGetUserProfilePicUrlHd() {
 	fmt.Println(GetUserProfilePicUrlHd("instagram"))
-	// Output: https://instagram.fkhh1-2.fna.fbcdn.net/vp/dd951c1b2aa7190db0a77e296c132203/5B8AF0AB/t51.2885-19/s320x320/14719833_310540259320655_1605122788543168512_a.jpg <nil>
+	// Output: https://instagram.fkhh1-1.fna.fbcdn.net/vp/dd951c1b2aa7190db0a77e296c132203/5B8AF0AB/t51.2885-19/s320x320/14719833_310540259320655_1605122788543168512_a.jpg <nil>
 }
 
 func ExampleGetRecentPostCodeNoLogin(t *testing.T) {

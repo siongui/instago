@@ -24,7 +24,7 @@ type rawUserResp struct {
 
 // used to decode the JSON data
 // https://www.instagram.com/{{USERNAME}}/
-type sharedData struct {
+type SharedData struct {
 	EntryData struct {
 		ProfilePage []struct {
 			GraphQL struct {
@@ -32,6 +32,8 @@ type sharedData struct {
 			} `json:"graphql"`
 		} `json:"ProfilePage"`
 	} `json:"entry_data"`
+
+	RhxGis string `json:"rhx_gis"`
 }
 
 type UserInfo struct {
@@ -88,22 +90,25 @@ func getJsonBytes(b []byte) []byte {
 	return []byte(strings.TrimSuffix(m1, `;</script>`))
 }
 
-// Given user name, return information of the user name without login.
-func GetUserInfoNoLogin(username string) (ui UserInfo, err error) {
-	//url := strings.Replace(urlUserInfo, "{{USERNAME}}", username, 1)
+// Given username, get the sharedData embedded in the HTML of user profile page.
+func GetSharedDataNoLogin(username string) (sd SharedData, err error) {
 	url := "https://www.instagram.com/" + username + "/"
 	b, err := getHTTPResponseNoLogin(url)
 	if err != nil {
 		return
 	}
 
-	//r := rawUserResp{}
-	r := sharedData{}
-	if err = json.Unmarshal(getJsonBytes(b), &r); err != nil {
+	err = json.Unmarshal(getJsonBytes(b), &sd)
+	return
+}
+
+// Given user name, return information of the user name without login.
+func GetUserInfoNoLogin(username string) (ui UserInfo, err error) {
+	sd, err := GetSharedDataNoLogin(username)
+	if err != nil {
 		return
 	}
-	//ui = r.GraphQL.User
-	ui = r.EntryData.ProfilePage[0].GraphQL.User
+	ui = sd.EntryData.ProfilePage[0].GraphQL.User
 	return
 }
 
@@ -117,7 +122,7 @@ func (m *IGApiManager) GetUserInfo(username string) (ui UserInfo, err error) {
 	}
 
 	//r := rawUserResp{}
-	r := sharedData{}
+	r := SharedData{}
 	if err = json.Unmarshal(getJsonBytes(b), &r); err != nil {
 		return
 	}
