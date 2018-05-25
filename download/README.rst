@@ -91,6 +91,8 @@ The following are examples that you may be interested in:
 - `highlights.go <example/highlights.go>`_: download story highlights of all
   following users.
 - `allposts.go <example/allposts.go>`_: download all posts of a single user.
+- `allpostsnologin.go <example/allpostsnologin.go>`_: download all posts of a
+  single user without login
 - `userstory.go <example/userstory.go>`_: given username, download unexpired
   stories of the user.
 - `userstoryhighlight.go <example/userstoryhighlight.go>`_: given username,

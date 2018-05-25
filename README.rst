@@ -84,6 +84,7 @@ You can use the following methods without cookies
 - `GetUserId <https://godoc.org/github.com/siongui/instago#GetUserId>`_
 - `GetPostInfoNoLogin <https://godoc.org/github.com/siongui/instago#GetPostInfoNoLogin>`_
 - `GetUserProfilePicUrlHd <https://godoc.org/github.com/siongui/instago#GetUserProfilePicUrlHd>`_
+- `GetAllPostMediaNoLogin <https://godoc.org/github.com/siongui/instago#GetAllPostMediaNoLogin>`_
 
 For the other methods which need cookies to access Instagram API, you must call
 NewInstagramApiManager_ first:
