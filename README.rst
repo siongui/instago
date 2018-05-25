@@ -141,6 +141,9 @@ Tricks
 - | `query_hash on instagram graphql - Google search <https://www.google.com/search?q=query_hash+on+instagram+graphql>`_
   | `How to scrape pages with infinite scroll: extracting data from Instagram - Diggernaut <https://www.diggernaut.com/blog/how-to-scrape-pages-infinite-scroll-extracting-data-from-instagram/>`_
 
+- Do not remove query string in the URLs of photo/viedo/story/highlight. It may
+  cause 403 Forbidden when downloading the URL. See `issue #2`_ for more info.
+
 
 Private API
 +++++++++++
@@ -177,3 +180,4 @@ References
 .. _replay.py: https://github.com/ping/instagram_private_api_extensions/blob/master/instagram_private_api_extensions/replay.py
 .. _instagram_private_api_extensions: https://github.com/ping/instagram_private_api_extensions
 .. _NewInstagramApiManager: https://godoc.org/github.com/siongui/instago#NewInstagramApiManager
+.. _issue #2: https://github.com/siongui/instago/issues/2
