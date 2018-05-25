@@ -38,7 +38,7 @@ The following three values are must to access the Instagram API.
 First login to Instagram_ from Chrome browser, and there are three ways to get
 the above information:
 
-1. Use `Chrome extension in this repo <crx-cookies>`_ to get the cookies.
+1. Use `Chrome extension in this repo <../crx-cookies>`_ to get the cookies.
 
 2. From `Chrome Developer Tools`_: See this `SO answer`_ or `Obtain cookies`_
    section in `instastories-backup`_ repo.
