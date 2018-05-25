@@ -45,7 +45,8 @@ func getStoryItem(item instago.IGItem) {
 	}
 }
 
-// Given user name, download unexpired stories (last 24 hours) of the user.
+// DownloadUserStoryByName downloads unexpired stories (last 24 hours) of the
+// given user name.
 func (m *IGDownloadManager) DownloadUserStoryByName(username string) {
 	id, err := instago.GetUserId(username)
 	if err != nil {
@@ -62,7 +63,8 @@ func (m *IGDownloadManager) DownloadUserStoryByName(username string) {
 	return
 }
 
-// Given user id, download unexpired stories (last 24 hours) of the user.
+// DownloadUserStory downloads unexpired stories (last 24 hours) of the given
+// user id.
 func (m *IGDownloadManager) DownloadUserStory(userId int64) (err error) {
 	tray, err := m.apimgr.GetUserStory(strconv.FormatInt(userId, 10))
 	if err != nil {
@@ -74,6 +76,7 @@ func (m *IGDownloadManager) DownloadUserStory(userId int64) (err error) {
 	return
 }
 
+// DownloadUnreadStory downloads all available stories in IGReelTray.
 func DownloadUnreadStory(trays []instago.IGReelTray) {
 	for _, tray := range trays {
 		//fmt.Println(tray.GetUsername())
@@ -93,6 +96,7 @@ func (m *IGDownloadManager) fetchUserStory(userId int64, username string, c chan
 	}
 }
 
+// DownloadAllStory downloads all unexpired stories of all users in IGReelTray.
 func (m *IGDownloadManager) DownloadAllStory(trays []instago.IGReelTray) {
 	c := make(chan int)
 	numOfStoryUser := 0

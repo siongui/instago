@@ -23,7 +23,8 @@ func printProfilePicDownloadInfo(username, url, filepath string, timestamp int64
 	cc.Println(filepath)
 }
 
-// Given user name, download user profile pic hd (usually 320x320)
+// DownloadUserProfilePicUrlHd downloads user profile pic of the given user
+// name. (usually 320x320)
 func DownloadUserProfilePicUrlHd(username string) {
 	ui, err := instago.GetUserInfoNoLogin(username)
 	if err != nil {
