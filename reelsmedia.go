@@ -15,6 +15,8 @@ type highlightMedia struct {
 	Status string `json:"status"`
 }
 
+// GetHighlightsReelsMedia returns the content of the highlight tray, which
+// contains metadata of story highlights of a specific title.
 func (m *IGApiManager) GetHighlightsReelsMedia(id string) (tray IGStoryHighlightsTray, err error) {
 	url := urlReelsMedia + "?user_ids=" + id
 	b, err := getHTTPResponse(url, m.dsUserId, m.sessionid, m.csrftoken)

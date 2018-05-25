@@ -10,7 +10,7 @@ func formatTimestamp(timestamp int64) string {
 	return t.Format(time.RFC3339)
 }
 
-// Remove query string in the URL
+// StripQueryString removes query string in the URL
 func StripQueryString(inputUrl string) (su string, err error) {
 	u, err := url.Parse(inputUrl)
 	if err != nil {

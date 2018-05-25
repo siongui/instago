@@ -12,7 +12,7 @@ import (
 var userAgent = "Instagram 10.26.0 (iPhone8,1; iOS 10_2; en_US; en-US; " +
 	"scale=2.00; gamut=normal; 750x1334) AppleWebKit/420+"
 
-// Set User-Agent header in HTTP requests.
+// SetUserAgent let you set User-Agent header in HTTP requests.
 func SetUserAgent(s string) {
 	userAgent = s
 }

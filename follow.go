@@ -18,13 +18,13 @@ type rawFollow struct {
 	NextMaxId string   `json:"next_max_id"` // used for pagination if list is too big
 }
 
-// id: Id of the Instagram user whose followers to be retrieved.
+// GetFollowers returns all followers of the given user id.
 func (m *IGApiManager) GetFollowers(id string) (users []IGUser, err error) {
 	url := strings.Replace(urlFollowers, "{{USERID}}", id, 1)
 	return m.getFollow(url)
 }
 
-// id: Id of the Instagram user whose following to be retrieved.
+// GetFollowing returns all following users of the given user id.
 func (m *IGApiManager) GetFollowing(id string) (users []IGUser, err error) {
 	url := strings.Replace(urlFollowing, "{{USERID}}", id, 1)
 	return m.getFollow(url)
