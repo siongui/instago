@@ -1,46 +1,29 @@
 package instago
 
-// also not working:
-// https://github.com/gocolly/colly/blob/master/_examples/instagram/instagram.go
-
 import (
+	"crypto/md5"
 	"encoding/json"
 	"fmt"
-	"os"
-	"regexp"
 	"strings"
-	"testing"
 	"time"
 )
 
 const urlGraphqlNoLogin = `https://www.instagram.com/graphql/query/?query_hash={{QUERYHASH}}&variables=`
 
-// Given the HTML source code of the user profile page without logged in, return
-// query_hash for Instagram GraphQL API.
-func GetQueryHashNoLogin(b []byte) (qh string, err error) {
-	// find JavaScript file which contains the query hash
-	patternJs := regexp.MustCompile(`\/static\/bundles\/base\/ProfilePageContainer\.js\/[a-zA-Z0-9]+?\.js`)
-	jsPath := string(patternJs.Find(b))
-	jsUrl := "https://www.instagram.com" + jsPath
-	bJs, err := getHTTPResponseNoLogin(jsUrl)
-	if err != nil {
-		return
-	}
-
-	patternQh := regexp.MustCompile(`e\.profilePosts\.byUserId\.get\(t\)\)\?n\.pagination:n},queryId:"([a-zA-Z0-9]+)",`)
-	qhtmp := string(patternQh.Find(bJs))
-	qhtmp = strings.TrimPrefix(qhtmp, `e.profilePosts.byUserId.get(t))?n.pagination:n},queryId:"`)
-	qh = strings.TrimSuffix(qhtmp, `",`)
-	return
+func getGisHash(rhx_gis, variables string) string {
+	h := md5.New()
+	h.Write([]byte(rhx_gis + ":" + variables))
+	return fmt.Sprintf("%x", h.Sum(nil))
 }
 
 // Given user name, return IGMedia struct of all posts of the user without login
 // status. The user account must be public.
 func GetAllPostMediaNoLogin(username string) (medias []IGMedia, err error) {
-	ui, err := GetUserInfoNoLogin(username)
+	sd, qh, err := GetSharedDataQueryHashNoLogin(username)
 	if err != nil {
 		return
 	}
+	ui := sd.EntryData.ProfilePage[0].GraphQL.User
 
 	for _, node := range ui.EdgeOwnerToTimelineMedia.Edges {
 		medias = append(medias, node.Node)
@@ -50,7 +33,7 @@ func GetAllPostMediaNoLogin(username string) (medias []IGMedia, err error) {
 		return
 	}
 
-	urlqh := strings.Replace(urlGraphqlNoLogin, "{{QUERYHASH}}", ui.QueryHash, 1)
+	urlqh := strings.Replace(urlGraphqlNoLogin, "{{QUERYHASH}}", qh, 1)
 	hasNextPage := ui.EdgeOwnerToTimelineMedia.PageInfo.HasNextPage
 	vartmpl := strings.Replace(`{"id":"<ID>","first":50,"after":"<ENDCURSOR>"}`, "<ID>", ui.Id, 1)
 	variables := strings.Replace(vartmpl, "<ENDCURSOR>", ui.EdgeOwnerToTimelineMedia.PageInfo.EndCursor, 1)
@@ -58,7 +41,7 @@ func GetAllPostMediaNoLogin(username string) (medias []IGMedia, err error) {
 	for hasNextPage == true {
 		url := urlqh + variables
 
-		b, err := getHTTPResponseNoLogin(url)
+		b, err := getHTTPResponseNoLoginWithGis(url, getGisHash(sd.RhxGis, variables))
 		if err != nil {
 			return medias, err
 		}
@@ -82,16 +65,4 @@ func GetAllPostMediaNoLogin(username string) (medias []IGMedia, err error) {
 		}
 	}
 	return
-}
-
-func ExampleGetAllPostMediaNoLogin(t *testing.T) {
-	medias, err := GetAllPostMediaNoLogin(os.Getenv("IG_TEST_USERNAME"))
-	if err != nil {
-		t.Error(err)
-		return
-	}
-
-	for _, media := range medias {
-		fmt.Printf("URL: https://www.instagram.com/p/%s/\n", media.Shortcode)
-	}
 }

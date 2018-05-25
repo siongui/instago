@@ -31,6 +31,10 @@ getall: fmt
 	@echo "\033[92mTest user info *get all* features ...\033[0m"
 	@go test -v $(ALL_GO_SOURCES) getall_test.go
 
+getallnologin:
+	@echo "\033[92mTest Getting codes of all user posts no login ...\033[0m"
+	@go test -v $(ALL_GO_SOURCES) getallnologin_test.go
+
 postlive: fmt
 	@echo "\033[92mTest Post Live Data in Reels Tray Feed ...\033[0m"
 	@go test -v $(ALL_GO_SOURCES) typepostlive_test.go

@@ -17,6 +17,33 @@ func SetUserAgent(s string) {
 	userAgent = s
 }
 
+// Send HTTP request and get http response without login and with gis info. Used
+// in get all post codes without login.
+func getHTTPResponseNoLoginWithGis(url, gis string) (b []byte, err error) {
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return
+	}
+
+	req.Header.Set("X-Requested-With", "XMLHttpRequest")
+	req.Header.Set("X-Instagram-GIS", gis)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		err = errors.New(url +
+			"\nresp.StatusCode: " + strconv.Itoa(resp.StatusCode))
+		return
+	}
+
+	return ioutil.ReadAll(resp.Body)
+}
+
 // Send HTTP request and get http response without login.
 func getHTTPResponseNoLogin(url string) (b []byte, err error) {
 	resp, err := http.Get(url)
