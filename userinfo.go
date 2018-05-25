@@ -90,6 +90,45 @@ func getJsonBytes(b []byte) []byte {
 	return []byte(strings.TrimSuffix(m1, `;</script>`))
 }
 
+// Given the HTML source code of the user profile page without logged in, return
+// query_hash for Instagram GraphQL API.
+func GetQueryHashNoLogin(b []byte) (qh string, err error) {
+	// find JavaScript file which contains the query hash
+	patternJs := regexp.MustCompile(`\/static\/bundles\/base\/ProfilePageContainer\.js\/[a-zA-Z0-9]+?\.js`)
+	jsPath := string(patternJs.Find(b))
+	jsUrl := "https://www.instagram.com" + jsPath
+	bJs, err := getHTTPResponseNoLogin(jsUrl)
+	if err != nil {
+		return
+	}
+
+	patternQh := regexp.MustCompile(`e\.profilePosts\.byUserId\.get\(t\)\)\|\|void 0===n\?void 0:n\.pagination},queryId:"([a-zA-Z0-9]+)",`)
+	qhtmp := string(patternQh.Find(bJs))
+	qhtmp = strings.TrimPrefix(qhtmp, `e.profilePosts.byUserId.get(t))||void 0===n?void 0:n.pagination},queryId:"`)
+	qh = strings.TrimSuffix(qhtmp, `",`)
+	return
+}
+
+// Given username, get:
+//
+//   1. sharedData embedded in the HTML of user profile page.
+//   2. query_hash (for get all codes of posts without login)
+func GetSharedDataQueryHashNoLogin(username string) (sd SharedData, qh string, err error) {
+	url := "https://www.instagram.com/" + username + "/"
+	b, err := getHTTPResponseNoLogin(url)
+	if err != nil {
+		return
+	}
+
+	err = json.Unmarshal(getJsonBytes(b), &sd)
+	if err != nil {
+		return
+	}
+
+	qh, err = GetQueryHashNoLogin(b)
+	return
+}
+
 // Given username, get the sharedData embedded in the HTML of user profile page.
 func GetSharedDataNoLogin(username string) (sd SharedData, err error) {
 	url := "https://www.instagram.com/" + username + "/"
