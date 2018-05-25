@@ -1,5 +1,8 @@
 package instago
 
+// also not working:
+// https://github.com/gocolly/colly/blob/master/_examples/instagram/instagram.go
+
 import (
 	"encoding/json"
 	"fmt"
