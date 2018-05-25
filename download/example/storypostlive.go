@@ -17,7 +17,7 @@ func main() {
 	}
 
 	fmt.Println("Download stories and postlives of following users")
-	// This method will run forever and donwload stories and postlives of
+	// This method will run forever and download stories and postlives of
 	// your following users every 30 seconds.
 	mgr.DownloadStoryAndPostLive()
 }

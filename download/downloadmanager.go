@@ -12,7 +12,7 @@ type IGDownloadManager struct {
 	apimgr *instago.IGApiManager
 }
 
-// The arguements here is the same as the NewInstagramApiManager of instago.
+// The arguments here is the same as the NewInstagramApiManager of instago.
 // See README of instago for more informantion
 func NewInstagramDownloadManager(ds_user_id, sessionid, csrftoken string) (mgr *IGDownloadManager, err error) {
 	if !IsCommandAvailable("wget") {

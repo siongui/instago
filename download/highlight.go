@@ -48,10 +48,10 @@ func (m *IGDownloadManager) DownloadStoryHighlights() {
 	}
 
 	for _, user := range users {
-		fmt.Println("Fetching", user.Username, user.Pk, "stroy highlights ...")
+		fmt.Println("Fetching", user.Username, user.Pk, "story highlights ...")
 		userid := strconv.FormatInt(user.Pk, 10)
 		m.DownloadUserStoryHighlights(userid)
-		fmt.Println("Fetching", user.Username, user.Pk, "stroy highlights done!")
+		fmt.Println("Fetching", user.Username, user.Pk, "story highlights done!")
 
 		// sleep 3 seconds to prevent http 429
 		time.Sleep(3 * time.Second)

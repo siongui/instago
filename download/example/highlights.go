@@ -17,7 +17,7 @@ func main() {
 	}
 
 	fmt.Println("Download all story highlights of all following users")
-	// This method will run once and donwload all stories highlights of your
+	// This method will run once and download all stories highlights of your
 	// following users.
 	mgr.DownloadStoryHighlights()
 }
