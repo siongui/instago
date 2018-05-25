@@ -129,7 +129,8 @@ func GetSharedDataQueryHashNoLogin(username string) (sd SharedData, qh string, e
 	return
 }
 
-// Given username, get the sharedData embedded in the HTML of user profile page.
+// GetSharedDataNoLogin returns sharedData embedded in the HTML source code of
+// the profile page of given user name.
 func GetSharedDataNoLogin(username string) (sd SharedData, err error) {
 	url := "https://www.instagram.com/" + username + "/"
 	b, err := getHTTPResponseNoLogin(url)
@@ -141,7 +142,8 @@ func GetSharedDataNoLogin(username string) (sd SharedData, err error) {
 	return
 }
 
-// Given user name, return information of the user name without login.
+// GetUserInfoNoLogin returns information of the given user name without login
+// status.
 func GetUserInfoNoLogin(username string) (ui UserInfo, err error) {
 	sd, err := GetSharedDataNoLogin(username)
 	if err != nil {
@@ -151,7 +153,7 @@ func GetUserInfoNoLogin(username string) (ui UserInfo, err error) {
 	return
 }
 
-// Given user name, return information of the user name.
+// GetUserInfo returns information of the given user name with logged in status.
 func (m *IGApiManager) GetUserInfo(username string) (ui UserInfo, err error) {
 	//url := strings.Replace(urlUserInfo, "{{USERNAME}}", username, 1)
 	url := "https://www.instagram.com/" + username + "/"
@@ -170,8 +172,8 @@ func (m *IGApiManager) GetUserInfo(username string) (ui UserInfo, err error) {
 	return
 }
 
-// Given user name, return codes of recent posts (usually 12 posts) of the user
-// without login status.
+// GetRecentPostCodeNoLogin returns codes of recent posts (usually 12 posts) of
+// the given user name without login status.
 func GetRecentPostCodeNoLogin(username string) (codes []string, err error) {
 	ui, err := GetUserInfoNoLogin(username)
 	if err != nil {
@@ -184,8 +186,8 @@ func GetRecentPostCodeNoLogin(username string) (codes []string, err error) {
 	return
 }
 
-// Given user name, return codes of recent posts (usually 12 posts) of the user
-// with logged in status.
+// GetRecentPostCode returns codes of recent posts (usually 12 posts) of the
+// given user name with logged in status.
 func (m *IGApiManager) GetRecentPostCode(username string) (codes []string, err error) {
 	ui, err := m.GetUserInfo(username)
 	if err != nil {
@@ -198,7 +200,7 @@ func (m *IGApiManager) GetRecentPostCode(username string) (codes []string, err e
 	return
 }
 
-// Given user name, return id of the user name.
+// GetUserId returns id of the given user name.
 func GetUserId(username string) (id string, err error) {
 	ui, err := GetUserInfoNoLogin(username)
 	if err != nil {
@@ -208,7 +210,7 @@ func GetUserId(username string) (id string, err error) {
 	return
 }
 
-// Given user name, return the URL of user profile hd pic
+// GetUserProfilePicUrlHd returns the URL of profile hd pic of given user name.
 func GetUserProfilePicUrlHd(username string) (url string, err error) {
 	ui, err := GetUserInfoNoLogin(username)
 	if err != nil {
