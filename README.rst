@@ -69,7 +69,7 @@ Usage
 
 This package *instago* only access the Instagram public and private API and get
 metadata from the API. If you want to download media (photos/videos), stories,
-or story highlights. See `download <download>`_ directory.
+or story highlights, see `download <download>`_ directory.
 
 Install the package by ``go get``:
 
