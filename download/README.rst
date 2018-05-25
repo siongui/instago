@@ -1,6 +1,6 @@
-===============================================================
-Download Instagram Photo, Video, Story, Story Highlights in Go_
-===============================================================
+===========================================================================================
+Download Instagram Photo, Video, Story, Highlight, Postlive, Following, and Follower in Go_
+===========================================================================================
 
 .. image:: https://img.shields.io/badge/Language-Go-blue.svg
    :target: https://golang.org/
@@ -23,7 +23,8 @@ Download Instagram Photo, Video, Story, Story Highlights in Go_
    :target: https://twitter.com/intent/tweet?text=Wow:&url=%5Bobject%20Object%5D
 
 
-Download Instagram_ media (photos and videos), stories, and story highlights.
+Download Instagram_ media (photos and videos), stories, story highlights,
+postlives (live stream that shared to stories after end) in Go.
 
 
 Obtain Cookies

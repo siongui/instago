@@ -1,6 +1,6 @@
-=============================================================
-Instagram Photo, Video, Story, Following, and Follower in Go_
-=============================================================
+==================================================================================
+Instagram Photo, Video, Story, Highlight, Postlive, Following, and Follower in Go_
+==================================================================================
 
 .. image:: https://img.shields.io/badge/Language-Go-blue.svg
    :target: https://golang.org/
@@ -23,8 +23,8 @@ Instagram Photo, Video, Story, Following, and Follower in Go_
    :target: https://twitter.com/intent/tweet?text=Wow:&url=%5Bobject%20Object%5D
 
 
-Get Instagram_ media (photos and videos), stories, story highlights, following
-and followers in Go.
+Get Instagram_ media (photos and videos), stories, story highlights, postlives
+(live stream that shared to stories after end), following and followers in Go.
 
 
 Obtain Cookies
@@ -69,7 +69,7 @@ Usage
 
 This package *instago* only access the Instagram public and private API and get
 metadata from the API. If you want to download media (photos/videos), stories,
-or story highlights, see `download <download>`_ directory.
+story highlights, or postlives, see `download <download>`_ directory.
 
 Install the package by ``go get``:
 
@@ -96,9 +96,9 @@ NewInstagramApiManager_ first:
 
   mgr := instago.NewInstagramApiManager("IG_DS_USER_ID", "IG_SESSIONID", "IG_CSRFTOKEN")
 
-Then you can use *mgr* to get data from Instagram API. For example, you can get
-all post codes of the user `instagram <https://www.instagram.com/instagram/>`__
-as follows:
+Then you can use *mgr* to get metadata from Instagram API. For example, you can
+get all post codes of the user
+`instagram <https://www.instagram.com/instagram/>`__ as follows:
 
 .. code-block:: go
 
