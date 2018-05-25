@@ -102,9 +102,9 @@ func GetQueryHashNoLogin(b []byte) (qh string, err error) {
 		return
 	}
 
-	patternQh := regexp.MustCompile(`e\.profilePosts\.byUserId\.get\(t\)\)\|\|void 0===n\?void 0:n\.pagination},queryId:"([a-zA-Z0-9]+)",`)
+	patternQh := regexp.MustCompile(`e\.profilePosts\.byUserId\.get.+?queryId:"([a-zA-Z0-9]+)",`)
 	qhtmp := string(patternQh.Find(bJs))
-	qhtmp = strings.TrimPrefix(qhtmp, `e.profilePosts.byUserId.get(t))||void 0===n?void 0:n.pagination},queryId:"`)
+	qhtmp = strings.Split(qhtmp, `queryId:"`)[1]
 	qh = strings.TrimSuffix(qhtmp, `",`)
 	return
 }

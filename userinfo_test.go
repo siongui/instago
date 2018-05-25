@@ -69,3 +69,16 @@ func ExampleGetUserInfo(t *testing.T) {
 	}
 	jsonPrettyPrint(ui)
 }
+
+func ExampleGetSharedDataQueryHashNoLogin() {
+	sd, qh, err := GetSharedDataQueryHashNoLogin("instagram")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(sd.EntryData.ProfilePage[0].GraphQL.User.Id)
+	fmt.Println(qh)
+	// Output:
+	// 25025320
+	// 42323d64886122307be10013ad2dcc44
+}
