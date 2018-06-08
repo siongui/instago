@@ -25,6 +25,10 @@ allpostsnologin:
 	@echo "\033[92mDownload all user posts ...\033[0m"
 	@go run example/allpostsnologin.go
 
+saved:
+	@echo "\033[92mDownload all your saved posts ...\033[0m"
+	@go run example/saved.go
+
 userstory:
 	@echo "\033[92mDownload user $(id) unexpired stories ...\033[0m"
 	@go fmt example/downloaduserstory.go

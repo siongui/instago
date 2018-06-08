@@ -97,6 +97,7 @@ The following are examples that you may be interested in:
   stories of the user.
 - `userstoryhighlight.go <example/userstoryhighlight.go>`_: given username,
   download story highlights of the user.
+- `saved.go <example/saved.go>`_: download all your saved posts.
 
 See godoc_ for complete list of download methods.
 
