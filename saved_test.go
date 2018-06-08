@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestGetSavedPosts(t *testing.T) {
+func ExampleGetSavedPosts(t *testing.T) {
 	mgr := NewInstagramApiManager(
 		os.Getenv("IG_DS_USER_ID"),
 		os.Getenv("IG_SESSIONID"),

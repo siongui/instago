@@ -34,5 +34,23 @@ func (m *IGApiManager) GetSavedPosts() (items []IGItem, err error) {
 	for _, item := range spp.Items {
 		items = append(items, item.Item)
 	}
+
+	for spp.MoreAvailable {
+		url := urlSaved + "?max_id=" + spp.NextMaxId
+		b, err = getHTTPResponse(url, m.dsUserId, m.sessionid, m.csrftoken)
+		if err != nil {
+			return
+		}
+		spp = savedPostsResp{}
+		err = json.Unmarshal(b, &spp)
+		if err != nil {
+			return
+		}
+		for _, item := range spp.Items {
+			items = append(items, item.Item)
+		}
+
+	}
+
 	return
 }
