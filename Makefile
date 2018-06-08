@@ -59,6 +59,10 @@ post: fmt
 	@echo "\033[92mTest getting post information...\033[0m"
 	@go test -v $(ALL_GO_SOURCES) post_test.go
 
+saved: fmt
+	@echo "\033[92mTest getting saved posts ...\033[0m"
+	@go test -v $(ALL_GO_SOURCES) saved_test.go
+
 topsearch: fmt
 	@echo "\033[92mTest Topsearch on web interface...\033[0m"
 	@go test -v $(ALL_GO_SOURCES) topsearch_test.go
