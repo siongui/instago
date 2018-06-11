@@ -18,7 +18,7 @@ func main() {
 		return
 	}
 
-	typ := flag.String("downloadtype", "timeline", "Download 1) timeline 2) story 3) highlight")
+	typ := flag.String("downloadtype", "timeline", "Download 1) timeline 2) story 3) highlight 4) saved posts")
 	flag.Parse()
 
 	switch *typ {
@@ -31,6 +31,9 @@ func main() {
 	case "highlight":
 		fmt.Println("Download all story highlights of all following users")
 		mgr.DownloadStoryHighlights()
+	case "saved":
+		fmt.Println("Download saved posts")
+		mgr.DownloadSavedPosts()
 	default:
 		fmt.Println("You have to choose a download type")
 	}

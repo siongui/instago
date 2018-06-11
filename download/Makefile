@@ -27,7 +27,7 @@ allpostsnologin:
 
 saved:
 	@echo "\033[92mDownload all your saved posts ...\033[0m"
-	@go run example/saved.go
+	@go run example/download.go -downloadtype=saved
 
 userstory:
 	@echo "\033[92mDownload user $(id) unexpired stories ...\033[0m"

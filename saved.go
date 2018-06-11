@@ -4,6 +4,8 @@ package instago
 
 import (
 	"encoding/json"
+	"log"
+	"time"
 )
 
 const urlSaved = `https://i.instagram.com/api/v1/feed/saved/`
@@ -49,7 +51,9 @@ func (m *IGApiManager) GetSavedPosts() (items []IGItem, err error) {
 		for _, item := range spp.Items {
 			items = append(items, item.Item)
 		}
-
+		log.Println("fetched", len(items), "items")
+		// sleep 500ms to prevent http 429
+		time.Sleep(500 * time.Millisecond)
 	}
 
 	return
