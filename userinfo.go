@@ -94,7 +94,7 @@ func getJsonBytes(b []byte) []byte {
 // query_hash for Instagram GraphQL API.
 func GetQueryHashNoLogin(b []byte) (qh string, err error) {
 	// find JavaScript file which contains the query hash
-	patternJs := regexp.MustCompile(`\/static\/bundles\/base\/ProfilePageContainer\.js\/[a-zA-Z0-9]+?\.js`)
+	patternJs := regexp.MustCompile(`\/static\/bundles\/metro\/ProfilePageContainer\.js\/[a-zA-Z0-9]+?\.js`)
 	jsPath := string(patternJs.Find(b))
 	jsUrl := "https://www.instagram.com" + jsPath
 	bJs, err := getHTTPResponseNoLogin(jsUrl)
@@ -102,7 +102,7 @@ func GetQueryHashNoLogin(b []byte) (qh string, err error) {
 		return
 	}
 
-	patternQh := regexp.MustCompile(`e\.profilePosts\.byUserId\.get.+?queryId:"([a-zA-Z0-9]+)",`)
+	patternQh := regexp.MustCompile(`t\.profilePosts\.byUserId\.get.+?queryId:"([a-zA-Z0-9]+)",`)
 	qhtmp := string(patternQh.Find(bJs))
 	qhtmp = strings.Split(qhtmp, `queryId:"`)[1]
 	qh = strings.TrimSuffix(qhtmp, `",`)

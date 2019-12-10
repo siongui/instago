@@ -16,7 +16,7 @@ func ExampleGetUserInfoNoLogin() {
 	fmt.Println(user.Biography)
 	// Output:
 	// 25025320
-	// Discovering and telling stories from around the world. Founded in 2010 by @kevin and @mikeyk.
+	// Bringing you closer to the people and things you love. ❤️
 }
 
 func ExampleGetUserId() {
@@ -26,7 +26,7 @@ func ExampleGetUserId() {
 
 func ExampleGetUserProfilePicUrlHd() {
 	fmt.Println(GetUserProfilePicUrlHd("instagram"))
-	// Output: https://instagram.fkhh1-1.fna.fbcdn.net/vp/dd951c1b2aa7190db0a77e296c132203/5B8AF0AB/t51.2885-19/s320x320/14719833_310540259320655_1605122788543168512_a.jpg <nil>
+	// Output: https://instagram.ftpe1-1.fna.fbcdn.net/v/t51.2885-19/s320x320/59381178_2348911458724961_5863612957363011584_n.jpg?_nc_ht=instagram.ftpe1-1.fna.fbcdn.net&oh=40b5f2e0329d70e72aa8adef38b17291&oe=5E8D1B25 <nil>
 }
 
 func ExampleGetRecentPostCodeNoLogin(t *testing.T) {
@@ -80,5 +80,5 @@ func ExampleGetSharedDataQueryHashNoLogin() {
 	fmt.Println(qh)
 	// Output:
 	// 25025320
-	// 42323d64886122307be10013ad2dcc44
+	// e769aa130647d2354c40ea6a439bfc08
 }
