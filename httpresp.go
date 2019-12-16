@@ -94,3 +94,32 @@ func getHTTPResponse(url, ds_user_id, sessionid, csrftoken string) (b []byte, er
 
 	return ioutil.ReadAll(resp.Body)
 }
+
+// HTTP POST method for getting timeline feed
+func getTimelineHTTPResponse(url, ds_user_id, sessionid, csrftoken string) (b []byte, err error) {
+	req, err := http.NewRequest("POST", url, nil)
+	if err != nil {
+		return
+	}
+
+	req.AddCookie(&http.Cookie{Name: "ds_user_id", Value: ds_user_id})
+	req.AddCookie(&http.Cookie{Name: "sessionid", Value: sessionid})
+	req.AddCookie(&http.Cookie{Name: "csrftoken", Value: csrftoken})
+
+	req.Header.Set("User-Agent", userAgent)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		err = errors.New(url +
+			"\nresp.StatusCode: " + strconv.Itoa(resp.StatusCode))
+		return
+	}
+
+	return ioutil.ReadAll(resp.Body)
+}
