@@ -48,6 +48,10 @@ func (t *IGStoryHighlightsTray) GetTitle() string {
 	return t.Title
 }
 
+func (t *IGStoryHighlightsTray) GetUsername() string {
+	return t.User.Username
+}
+
 func (t *IGStoryHighlightsTray) GetItems() []IGItem {
 	return t.Items
 }

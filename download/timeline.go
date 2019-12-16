@@ -7,9 +7,9 @@ import (
 	"time"
 )
 
-func printDownloadInfo(item instago.IGItem, url, filepath string) {
+func printDownloadInfo(item instago.IGItem, username string, url, filepath string) {
 	fmt.Print("username: ")
-	cc.Println(item.GetUsername())
+	cc.Println(username)
 	fmt.Print("time: ")
 	cc.Println(formatTimestamp(item.GetTimestamp()))
 	fmt.Print("post url: ")
@@ -47,7 +47,7 @@ func getTimelineItems(items []instago.IGItem) {
 			// check if file exist
 			if _, err := os.Stat(filepath); os.IsNotExist(err) {
 				// file not exists
-				printDownloadInfo(item, url, filepath)
+				printDownloadInfo(item, item.GetUsername(), url, filepath)
 				err = Wget(url, filepath)
 				if err != nil {
 					fmt.Println(err)

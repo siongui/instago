@@ -8,7 +8,7 @@ import (
 	"github.com/siongui/instago"
 )
 
-func getStoryItem(item instago.IGItem) {
+func getStoryItem(item instago.IGItem, username string) {
 	if !(item.MediaType == 1 || item.MediaType == 2) {
 		fmt.Println("In getStoryItem: not single photo or video!")
 		return
@@ -26,7 +26,7 @@ func getStoryItem(item instago.IGItem) {
 	url := urls[0]
 
 	filepath := getStoryFilePath(
-		item.GetUsername(),
+		username,
 		item.GetUserId(),
 		item.GetPostCode(),
 		url,
@@ -36,7 +36,7 @@ func getStoryItem(item instago.IGItem) {
 	// check if file exist
 	if _, err := os.Stat(filepath); os.IsNotExist(err) {
 		// file not exists
-		printDownloadInfo(item, url, filepath)
+		printDownloadInfo(item, username, url, filepath)
 		err = Wget(url, filepath)
 		if err != nil {
 			fmt.Println(err)
@@ -58,7 +58,7 @@ func (m *IGDownloadManager) DownloadUserStoryByName(username string) {
 		panic(err)
 	}
 	for _, item := range tray.GetItems() {
-		getStoryItem(item)
+		getStoryItem(item, tray.GetUsername())
 	}
 	return
 }
@@ -71,7 +71,7 @@ func (m *IGDownloadManager) DownloadUserStory(userId int64) (err error) {
 		return
 	}
 	for _, item := range tray.GetItems() {
-		getStoryItem(item)
+		getStoryItem(item, tray.GetUsername())
 	}
 	return
 }
@@ -81,7 +81,7 @@ func DownloadUnreadStory(trays []instago.IGReelTray) {
 	for _, tray := range trays {
 		//fmt.Println(tray.GetUsername())
 		for _, item := range tray.GetItems() {
-			getStoryItem(item)
+			getStoryItem(item, tray.GetUsername())
 		}
 	}
 }
@@ -107,7 +107,7 @@ func (m *IGDownloadManager) DownloadAllStory(trays []instago.IGReelTray) {
 			go m.fetchUserStory(tray.Id, tray.GetUsername(), c)
 		} else {
 			for _, item := range items {
-				getStoryItem(item)
+				getStoryItem(item, tray.GetUsername())
 			}
 		}
 	}
