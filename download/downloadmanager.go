@@ -14,18 +14,18 @@ type IGDownloadManager struct {
 
 // The arguments here is the same as the NewInstagramApiManager of instago.
 // See README of instago for more informantion
-func NewInstagramDownloadManager(ds_user_id, sessionid, csrftoken string) (mgr *IGDownloadManager, err error) {
+func NewInstagramDownloadManager(authFilePath string) (*IGDownloadManager, error) {
+	var m IGDownloadManager
+	var err error
 	if !IsCommandAvailable("wget") {
 		err = errors.New("Please install wget")
-		return
+		return &m, err
 	}
 	if !IsCommandAvailable("ffmpeg") {
 		err = errors.New("Please install ffmpeg")
-		return
+		return &m, err
 	}
 
-	mgr = &IGDownloadManager{
-		apimgr: instago.NewInstagramApiManager(ds_user_id, sessionid, csrftoken),
-	}
-	return
+	m.apimgr, err = instago.NewInstagramApiManager(authFilePath)
+	return &m, err
 }
