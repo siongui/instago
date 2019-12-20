@@ -12,6 +12,6 @@
   "permissions": [
     "cookies",
     "tabs",
-    "*://www.instagram.com/"
+    "*://instagram.com/"
   ]
 }
