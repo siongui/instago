@@ -1,15 +1,15 @@
 package instago
 
 import (
-	"os"
 	"testing"
 )
 
 func ExampleGetReelsTray(t *testing.T) {
-	mgr := NewInstagramApiManager(
-		os.Getenv("IG_DS_USER_ID"),
-		os.Getenv("IG_SESSIONID"),
-		os.Getenv("IG_CSRFTOKEN"))
+	mgr, err := NewInstagramApiManager("auth.json")
+	if err != nil {
+		t.Error(err)
+		return
+	}
 	rt, err := mgr.GetReelsTray()
 	if err != nil {
 		t.Error(err)

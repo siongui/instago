@@ -35,7 +35,7 @@ type IGTopsearchResp struct {
 // actually *topsearch* on Instagram web.
 func (m *IGApiManager) Topsearch(str string) (tr IGTopsearchResp, err error) {
 	url := urlTopsearch + str
-	b, err := getHTTPResponse(url, m.dsUserId, m.sessionid, m.csrftoken)
+	b, err := m.getHTTPResponse(url, "GET")
 	if err != nil {
 		return
 	}

@@ -19,7 +19,7 @@ type highlightMedia struct {
 // contains metadata of story highlights of a specific title.
 func (m *IGApiManager) GetHighlightsReelsMedia(id string) (tray IGStoryHighlightsTray, err error) {
 	url := urlReelsMedia + "?user_ids=" + id
-	b, err := getHTTPResponse(url, m.dsUserId, m.sessionid, m.csrftoken)
+	b, err := m.getHTTPResponse(url, "GET")
 	if err != nil {
 		return
 	}

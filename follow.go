@@ -51,7 +51,7 @@ func (m *IGApiManager) getFollow(url string) (users []IGUser, err error) {
 }
 
 func (m *IGApiManager) getFollowResponse(url string) (rf rawFollow, err error) {
-	b, err := getHTTPResponse(url, m.dsUserId, m.sessionid, m.csrftoken)
+	b, err := m.getHTTPResponse(url, "GET")
 	if err != nil {
 		return
 	}

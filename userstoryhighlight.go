@@ -61,7 +61,7 @@ func (t *IGStoryHighlightsTray) GetItems() []IGItem {
 // items of the tray. See *IGApiManager.GetAllStoryHighlights
 func (m *IGApiManager) GetUserStoryHighlights(id string) (trays []IGStoryHighlightsTray, err error) {
 	url := strings.Replace(urlUserHighlightStories, "{{USERID}}", id, 1)
-	b, err := getHTTPResponse(url, m.dsUserId, m.sessionid, m.csrftoken)
+	b, err := m.getHTTPResponse(url, "GET")
 	if err != nil {
 		return
 	}

@@ -12,7 +12,7 @@ const urlUserStory = `https://i.instagram.com/api/v1/feed/user/{{USERID}}/reel_m
 // GetUserStory returns unexpired stories of the given user id.
 func (m *IGApiManager) GetUserStory(id string) (tray IGReelTray, err error) {
 	url := strings.Replace(urlUserStory, "{{USERID}}", id, 1)
-	b, err := getHTTPResponse(url, m.dsUserId, m.sessionid, m.csrftoken)
+	b, err := m.getHTTPResponse(url, "GET")
 	if err != nil {
 		return
 	}

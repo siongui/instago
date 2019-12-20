@@ -9,7 +9,7 @@ const urlUserReelMedia = `https://i.instagram.com/api/v1/feed/user/{{USERID}}/re
 
 func (m *IGApiManager) GetUserReelMedia(userid string) (tray IGReelTray, err error) {
 	url := strings.Replace(urlUserReelMedia, "{{USERID}}", userid, 1)
-	b, err := getHTTPResponse(url, m.dsUserId, m.sessionid, m.csrftoken)
+	b, err := m.getHTTPResponse(url, "GET")
 	if err != nil {
 		return
 	}

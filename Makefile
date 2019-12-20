@@ -74,10 +74,6 @@ test: fmt
 	@echo "\033[92mTest ...\033[0m"
 	@go test -v
 
-save_reels_tray_json:
-	@echo "\033[92mSave Reels Tray Feed JSON ...\033[0m"
-	@go test -v $(ALL_GO_SOURCES) devsave_test.go -args -jsonKind="reels_tray"
-
 fmt:
 	@echo "\033[92mGo fmt source code...\033[0m"
 	@go fmt *.go

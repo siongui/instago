@@ -25,7 +25,7 @@ func (m *IGApiManager) GetAllPostMedia(username string) (medias []IGMedia, err e
 	for hasNextPage == true {
 		url := urlGraphql + variables
 
-		b, err := getHTTPResponse(url, m.dsUserId, m.sessionid, m.csrftoken)
+		b, err := m.getHTTPResponse(url, "GET")
 		if err != nil {
 			return medias, err
 		}

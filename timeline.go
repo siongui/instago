@@ -18,7 +18,7 @@ type IGTimeline struct {
 
 // Get only one page of timeline
 func (m *IGApiManager) GetTimeline() (tl IGTimeline, err error) {
-	b, err := getTimelineHTTPResponse(urlTimeline, m.dsUserId, m.sessionid, m.csrftoken)
+	b, err := m.getHTTPResponse(urlTimeline, "POST")
 	if err != nil {
 		return
 	}
@@ -40,7 +40,7 @@ func (m *IGApiManager) GetTimelineUntilPageN(pageN int) (items []IGItem, err err
 		} else {
 			url = urlTimeline + "?max_id=" + tl.NextMaxId
 		}
-		b, err := getTimelineHTTPResponse(url, m.dsUserId, m.sessionid, m.csrftoken)
+		b, err := m.getHTTPResponse(url, "POST")
 		if err != nil {
 			return items, err
 		}

@@ -24,7 +24,7 @@ func CodeToUrl(code string) string {
 // Given code of post, return information of the post with login status.
 func (m *IGApiManager) GetPostInfo(code string) (em IGMedia, err error) {
 	url := strings.Replace(urlPost, "{{CODE}}", code, 1)
-	b, err := getHTTPResponse(url, m.dsUserId, m.sessionid, m.csrftoken)
+	b, err := m.getHTTPResponse(url, "GET")
 	if err != nil {
 		return
 	}

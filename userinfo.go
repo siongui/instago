@@ -157,7 +157,7 @@ func GetUserInfoNoLogin(username string) (ui UserInfo, err error) {
 func (m *IGApiManager) GetUserInfo(username string) (ui UserInfo, err error) {
 	//url := strings.Replace(urlUserInfo, "{{USERNAME}}", username, 1)
 	url := "https://www.instagram.com/" + username + "/"
-	b, err := getHTTPResponse(url, m.dsUserId, m.sessionid, m.csrftoken)
+	b, err := m.getHTTPResponse(url, "GET")
 	if err != nil {
 		return
 	}

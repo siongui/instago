@@ -34,7 +34,7 @@ type IGTopliveResp struct {
 // Given a string, return the users that best matches the string. This is
 // actually *topsearch* on Instagram web.
 func (m *IGApiManager) Toplive() (tr IGTopliveResp, err error) {
-	b, err := getHTTPResponse(urlToplive, m.dsUserId, m.sessionid, m.csrftoken)
+	b, err := m.getHTTPResponse(urlToplive, "GET")
 	if err != nil {
 		return
 	}

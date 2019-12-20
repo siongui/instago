@@ -1,15 +1,15 @@
 package instago
 
 import (
-	"os"
 	"testing"
 )
 
 func ExampleGetTimeline(t *testing.T) {
-	mgr := NewInstagramApiManager(
-		os.Getenv("IG_DS_USER_ID"),
-		os.Getenv("IG_SESSIONID"),
-		os.Getenv("IG_CSRFTOKEN"))
+	mgr, err := NewInstagramApiManager("auth.json")
+	if err != nil {
+		t.Error(err)
+		return
+	}
 	tl, err := mgr.GetTimeline()
 	if err != nil {
 		t.Error(err)
@@ -19,10 +19,11 @@ func ExampleGetTimeline(t *testing.T) {
 }
 
 func ExampleGetTimelineUntilPageN(t *testing.T) {
-	mgr := NewInstagramApiManager(
-		os.Getenv("IG_DS_USER_ID"),
-		os.Getenv("IG_SESSIONID"),
-		os.Getenv("IG_CSRFTOKEN"))
+	mgr, err := NewInstagramApiManager("auth.json")
+	if err != nil {
+		t.Error(err)
+		return
+	}
 	items, err := mgr.GetTimelineUntilPageN(5)
 	if err != nil {
 		t.Error(err)

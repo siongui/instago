@@ -23,7 +23,7 @@ type savedPostsResp struct {
 
 // GetSavedPosts returns your saved posts.
 func (m *IGApiManager) GetSavedPosts() (items []IGItem, err error) {
-	b, err := getHTTPResponse(urlSaved, m.dsUserId, m.sessionid, m.csrftoken)
+	b, err := m.getHTTPResponse(urlSaved, "GET")
 	if err != nil {
 		return
 	}
@@ -39,7 +39,7 @@ func (m *IGApiManager) GetSavedPosts() (items []IGItem, err error) {
 
 	for spp.MoreAvailable {
 		url := urlSaved + "?max_id=" + spp.NextMaxId
-		b, err = getHTTPResponse(url, m.dsUserId, m.sessionid, m.csrftoken)
+		b, err = m.getHTTPResponse(url, "GET")
 		if err != nil {
 			return
 		}

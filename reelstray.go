@@ -60,7 +60,7 @@ func (t *IGReelTray) GetItems() []IGItem {
 }
 
 func (m *IGApiManager) GetReelsTray() (r reelsTray, err error) {
-	b, err := getHTTPResponse(urlReelsTray, m.dsUserId, m.sessionid, m.csrftoken)
+	b, err := m.getHTTPResponse(urlReelsTray, "GET")
 	if err != nil {
 		return
 	}
