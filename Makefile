@@ -10,6 +10,9 @@ ALL_GO_SOURCES=$(shell /bin/sh -c "find *.go | grep -v _test.go")
 
 default: userstory
 
+apimgr: fmt
+	@go test -v apimgr.go apimgr_test.go
+
 userstory: fmt
 	@echo "\033[92mTest Getting user unexpired stories ...\033[0m"
 	@go test -v $(ALL_GO_SOURCES) userstory_test.go

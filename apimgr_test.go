@@ -1,17 +1,32 @@
 package instago
 
 import (
-	"os"
 	"testing"
 )
 
 func TestGetSelfId(t *testing.T) {
-	mgr := NewInstagramApiManager(
-		os.Getenv("IG_DS_USER_ID"),
-		os.Getenv("IG_SESSIONID"),
-		os.Getenv("IG_CSRFTOKEN"))
+	mgr, err := NewInstagramApiManager("auth.json")
 
-	if mgr.GetSelfId() != os.Getenv("IG_DS_USER_ID") {
-		t.Error(mgr.GetSelfId())
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	if mgr.GetSelfId() == "" {
+		t.Error("no ds_user_id")
+		return
+	}
+
+	if _, ok := mgr.cookies["sessionid"]; !ok {
+		t.Error("no sessionid")
+		return
+	}
+	if _, ok := mgr.cookies["csrftoken"]; !ok {
+		t.Error("no csrftoken")
+		return
+	}
+
+	for k, v := range mgr.cookies {
+		t.Log(k, v)
 	}
 }

@@ -3,10 +3,13 @@
 // following and followers.
 package instago
 
+import (
+	"encoding/json"
+	"io/ioutil"
+)
+
 type IGApiManager struct {
-	dsUserId  string
-	sessionid string
-	csrftoken string
+	cookies map[string]string
 }
 
 // After login to Instagram, you can get the cookies of *ds_user_id*,
@@ -14,14 +17,19 @@ type IGApiManager struct {
 // See https://stackoverflow.com/a/44773079
 // or
 // https://github.com/hoschiCZ/instastories-backup#obtain-cookies
-func NewInstagramApiManager(ds_user_id, sessionid, csrftoken string) *IGApiManager {
-	return &IGApiManager{
-		dsUserId:  ds_user_id,
-		sessionid: sessionid,
-		csrftoken: csrftoken,
+func NewInstagramApiManager(authFilePath string) (*IGApiManager, error) {
+	var m IGApiManager
+	b, err := ioutil.ReadFile(authFilePath)
+	if err != nil {
+		return &m, err
 	}
+
+	m.cookies = make(map[string]string)
+	err = json.Unmarshal(b, &m.cookies)
+	return &m, err
 }
 
 func (m *IGApiManager) GetSelfId() string {
-	return m.dsUserId
+	id, _ := m.cookies["ds_user_id"]
+	return id
 }
