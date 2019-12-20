@@ -31,8 +31,8 @@ saved:
 
 userstory:
 	@echo "\033[92mDownload user $(id) unexpired stories ...\033[0m"
-	@go fmt example/downloaduserstory.go
-	@go run example/downloaduserstory.go -id=$(id)
+	@go fmt example/userstory.go
+	@go run example/userstory.go -id=$(id)
 
 userstoryhighlight:
 	@echo "\033[92mDownload user $(id) story highlights ...\033[0m"
