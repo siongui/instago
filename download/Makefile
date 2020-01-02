@@ -21,6 +21,10 @@ timeline: fmt
 	@echo "\033[92mDownload timeline ...\033[0m"
 	@go run example/download.go -downloadtype=timeline
 
+allposts:
+	@echo "\033[92mDownload all user posts ...\033[0m"
+	@go run example/allposts.go
+
 allpostsnologin:
 	@echo "\033[92mDownload all user posts ...\033[0m"
 	@go run example/allpostsnologin.go
