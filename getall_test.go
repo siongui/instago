@@ -7,10 +7,11 @@ import (
 )
 
 func ExampleGetAllPostCode(t *testing.T) {
-	mgr := NewInstagramApiManager(
-		os.Getenv("IG_DS_USER_ID"),
-		os.Getenv("IG_SESSIONID"),
-		os.Getenv("IG_CSRFTOKEN"))
+	mgr, err := NewInstagramApiManager("auth.json")
+	if err != nil {
+		t.Error(err)
+		return
+	}
 
 	codes, err := mgr.GetAllPostCode(os.Getenv("IG_TEST_USERNAME"))
 	if err != nil {
@@ -23,10 +24,12 @@ func ExampleGetAllPostCode(t *testing.T) {
 }
 
 func ExampleGetAllStoryHighlights(t *testing.T) {
-	mgr := NewInstagramApiManager(
-		os.Getenv("IG_DS_USER_ID"),
-		os.Getenv("IG_SESSIONID"),
-		os.Getenv("IG_CSRFTOKEN"))
+	mgr, err := NewInstagramApiManager("auth.json")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
 	trays, err := mgr.GetAllStoryHighlights(os.Getenv("IG_TEST_ID"))
 	if err != nil {
 		t.Error(err)
