@@ -23,7 +23,7 @@ timeline: fmt
 
 allposts:
 	@echo "\033[92mDownload all user posts ...\033[0m"
-	@go run example/allposts.go
+	@go run example/allposts.go -id=$(id)
 
 allpostsnologin:
 	@echo "\033[92mDownload all user posts ...\033[0m"
@@ -40,8 +40,8 @@ userstory:
 
 userstoryhighlight:
 	@echo "\033[92mDownload user $(id) story highlights ...\033[0m"
-	@go fmt example/downloaduserstoryhighlight.go
-	@go run example/downloaduserstoryhighlight.go -id=$(id)
+	@go fmt example/userstoryhighlight.go
+	@go run example/userstoryhighlight.go -id=$(id)
 
 post_test: fmt
 	@echo "\033[92mDownload timeline ...\033[0m"
