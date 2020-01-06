@@ -29,6 +29,10 @@ allpostsnologin:
 	@echo "\033[92mDownload all user posts ...\033[0m"
 	@go run example/allpostsnologin.go
 
+post:
+	@echo "\033[92mDownload single post $(code) ...\033[0m"
+	@go run example/singlepost.go -code=$(code)
+
 saved:
 	@echo "\033[92mDownload all your saved posts ...\033[0m"
 	@go run example/download.go -downloadtype=saved
