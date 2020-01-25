@@ -14,7 +14,7 @@ func main() {
 		return
 	}
 
-	num := flag.String("num", "20", "number of saved posts to be downloaded")
+	num := flag.Int("num", 20, "number of saved posts to be downloaded")
 	flag.Parse()
 
 	fmt.Println("Download saved post:", *num)
