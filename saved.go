@@ -21,8 +21,8 @@ type savedPostsResp struct {
 	Status              string `json:"status"`
 }
 
-// GetSavedPosts returns your saved posts.
-func (m *IGApiManager) GetSavedPosts() (items []IGItem, err error) {
+// GetSavedPosts returns your saved posts. Pass -1 will get all saved posts.
+func (m *IGApiManager) GetSavedPosts(numOfItem int) (items []IGItem, err error) {
 	b, err := m.getHTTPResponse(urlSaved, "GET")
 	if err != nil {
 		return
@@ -38,6 +38,10 @@ func (m *IGApiManager) GetSavedPosts() (items []IGItem, err error) {
 	}
 
 	for spp.MoreAvailable {
+		if numOfItem > 0 && len(items) > numOfItem {
+			break
+		}
+
 		url := urlSaved + "?max_id=" + spp.NextMaxId
 		b, err = m.getHTTPResponse(url, "GET")
 		if err != nil {

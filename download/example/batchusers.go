@@ -13,7 +13,7 @@ func main() {
 		return
 	}
 
-	users:= []string{"instagram", "google"}
+	users := []string{"instagram", "google"}
 
 	for _, user := range users {
 		fmt.Println("Download all posts of", user)
