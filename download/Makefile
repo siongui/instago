@@ -43,7 +43,11 @@ allsaved:
 
 saved:
 	@echo "\033[92mDownload latest 20 of your saved posts ...\033[0m"
-	@go run example/saved.go -num=$(id)
+	#@go run example/saved.go -num=$(id)
+	while [ true ] ; do \
+		go run example/saved.go -num=$(id) ; \
+		sleep 30 ; \
+	done
 
 userstory:
 	@echo "\033[92mDownload user $(id) unexpired stories ...\033[0m"
