@@ -1,21 +1,24 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 
 	"github.com/siongui/instago/download"
 )
 
 func main() {
-	mgr, err := igdl.NewInstagramDownloadManager(
-		"IG_DS_USER_ID",
-		"IG_SESSIONID",
-		"IG_CSRFTOKEN")
+	mgr, err := igdl.NewInstagramDownloadManager("auth.json")
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	fmt.Println("Download all your saved posts")
-	mgr.DownloadSavedPosts()
+	num := flag.String("num", "20", "number of saved posts to be downloaded")
+	flag.Parse()
+
+	fmt.Println("Download saved post:", *num)
+	// The following method will download given number of saved posts.
+	// -1 will download all saved posts.
+	mgr.DownloadSavedPosts(*num)
 }

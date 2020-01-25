@@ -37,9 +37,13 @@ batchusers:
 	@echo "\033[92mDownload all posts of multiple users ...\033[0m"
 	@go run example/batchusers.go
 
-saved:
+allsaved:
 	@echo "\033[92mDownload all your saved posts ...\033[0m"
 	@go run example/download.go -downloadtype=saved
+
+saved:
+	@echo "\033[92mDownload latest 20 of your saved posts ...\033[0m"
+	@go run example/saved.go -num=$(id)
 
 userstory:
 	@echo "\033[92mDownload user $(id) unexpired stories ...\033[0m"
