@@ -19,6 +19,7 @@ func main() {
 
 	fmt.Println("Download saved post:", *num)
 	// The following method will download given number of saved posts.
-	// -1 will download all saved posts.
-	mgr.DownloadSavedPosts(*num)
+	// -1 will download all saved posts. second parameter true means also
+	// download unexpired stories of the post user
+	mgr.DownloadSavedPosts(*num, true)
 }

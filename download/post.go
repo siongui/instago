@@ -30,16 +30,17 @@ func DownloadPostNoLogin(code string) {
 	DownloadIGMedia(em)
 }
 
-func (m *IGDownloadManager) DownloadPost(code string) {
+func (m *IGDownloadManager) DownloadPost(code string) (isDownloaded bool) {
 	em, err := m.apimgr.GetPostInfo(code)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	DownloadIGMedia(em)
+	isDownloaded = DownloadIGMedia(em)
+	return
 }
 
-func DownloadIGMedia(em instago.IGMedia) {
+func DownloadIGMedia(em instago.IGMedia) (isDownloaded bool) {
 	urls := em.GetMediaUrls()
 
 	for index, url := range urls {
@@ -61,9 +62,12 @@ func DownloadIGMedia(em instago.IGMedia) {
 			err = Wget(url, filepath)
 			if err != nil {
 				fmt.Println(err)
+			} else {
+				isDownloaded = true
 			}
 		}
 	}
+	return
 }
 
 // Given username, download all posts of the user without login.

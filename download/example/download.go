@@ -29,7 +29,7 @@ func main() {
 		mgr.DownloadStoryHighlights()
 	case "saved":
 		fmt.Println("Download all saved posts")
-		mgr.DownloadSavedPosts(-1)
+		mgr.DownloadSavedPosts(-1, false)
 	default:
 		fmt.Println("You have to choose a download type")
 	}

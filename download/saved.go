@@ -4,8 +4,10 @@ import (
 	"log"
 )
 
-// DownloadSavedPost downloads all your saved posts.
-func (m *IGDownloadManager) DownloadSavedPosts(numOfItem int) {
+// DownloadSavedPost downloads your saved posts.
+// -1 means download all saved posts.
+// downloadStory flag will also download unexpired stories of the post user.
+func (m *IGDownloadManager) DownloadSavedPosts(numOfItem int, downloadStory bool) {
 	items, err := m.apimgr.GetSavedPosts(numOfItem)
 	if err != nil {
 		log.Println(err)
@@ -17,7 +19,15 @@ func (m *IGDownloadManager) DownloadSavedPosts(numOfItem int) {
 	// 2. not best quality of saved posts
 	//getTimelineItems(items)
 
+	username := make(map[string]bool)
 	for _, item := range items {
-		m.DownloadPost(item.Code)
+		isDownloaded := m.DownloadPost(item.Code)
+		if isDownloaded && downloadStory {
+			u := item.User.Username
+			if _, ok := username[u]; !ok {
+				m.DownloadUserStoryByName(u)
+				username[u] = true
+			}
+		}
 	}
 }

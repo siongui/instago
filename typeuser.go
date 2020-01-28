@@ -16,6 +16,7 @@ type IGUser struct {
 		IncomingRequest bool `json:"incoming_request"`
 		OutgoingRequest bool `json:"outgoing_request"`
 		IsBestie        bool `json:"is_bestie"`
+		IsRestricted    bool `json:"is_restricted"`
 	} `json:"friendship_status"`
 	HasAnonymousProfilePicture bool `json:"has_anonymous_profile_picture"`
 	IsUnpublished              bool `json:"is_unpublished"`

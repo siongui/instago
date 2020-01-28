@@ -46,6 +46,7 @@ saved:
 	#@go run example/saved.go -num=$(id)
 	while [ true ] ; do \
 		go run example/saved.go -num=$(id) ; \
+		echo "\033[92mSleep 30 seconds ...\033[0m" ; \
 		sleep 30 ; \
 	done
 
