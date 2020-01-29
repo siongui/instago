@@ -25,7 +25,8 @@ func (m *IGDownloadManager) DownloadSavedPosts(numOfItem int, downloadStory bool
 		if isDownloaded && downloadStory {
 			u := item.User.Username
 			if _, ok := username[u]; !ok {
-				m.DownloadUserStoryByName(u)
+				// Pk here is user id
+				m.DownloadUserStory(item.User.Pk)
 				username[u] = true
 			}
 		}
