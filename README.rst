@@ -30,26 +30,8 @@ Get Instagram_ media (photos and videos), stories, story highlights, postlives
 Obtain Cookies
 ++++++++++++++
 
-The following three values are must to access the Instagram API.
-
-- ``ds_user_id``
-- ``sessionid``
-- ``csrftoken``
-
-First login to Instagram_ from Chrome browser, and there are three ways to get
-the above information:
-
-1. Use `Chrome extension in this repo <crx-cookies>`_ to get the cookies.
-
-2. From `Chrome Developer Tools`_: See this `SO answer`_ or `Obtain cookies`_
-   section in `instastories-backup`_ repo.
-
-.. image:: https://i.stack.imgur.com/psJLZ.png
-   :align: center
-   :alt: ds_user_id sessionid csrftoken
-
-3. From Chrome extension: Use EditThisCookie_ or `cookie-txt-export`_ or other
-   cookie tools.
+Use `Chrome extension in this repo <crx-cookies>`_ to get the cookies. Save it
+as *auth.json*. We will use it later to access Instagram API.
 
 
 Terminology
@@ -95,7 +77,7 @@ NewInstagramApiManager_ first:
   	"github.com/siongui/instago"
   )
 
-  mgr := instago.NewInstagramApiManager("IG_DS_USER_ID", "IG_SESSIONID", "IG_CSRFTOKEN")
+  mgr := instago.NewInstagramApiManager("auth.json")
 
 Then you can use *mgr* to get metadata from Instagram API. For example, you can
 get all post codes of the user
