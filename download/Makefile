@@ -50,10 +50,13 @@ saved:
 		sleep 30 ; \
 	done
 
-userstory:
+userstory: fmt
 	@echo "\033[92mDownload user $(id) unexpired stories ...\033[0m"
-	@go fmt example/userstory.go
 	@go run example/userstory.go -id=$(id)
+
+userstorybatch: fmt
+	@echo "\033[92mDownload unexpired stories of multiple users ...\033[0m"
+	@go run example/userstorybatch.go
 
 userstoryhighlight:
 	@echo "\033[92mDownload user $(id) story highlights ...\033[0m"
