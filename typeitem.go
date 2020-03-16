@@ -74,6 +74,8 @@ type IGItem struct {
 	//"story_feed_media"
 	//"story_sound_on"
 
+	ReelMentions []ItemReelMention `json:"reel_mentions"`
+
 	CanReshare            bool `json:"can_reshare"`
 	SupportsReelReactions bool `json:"supports_reel_reactions"`
 }
@@ -94,6 +96,27 @@ type ItemImageVersion2 struct {
 		Height int64  `json:"height"`
 		Url    string `json:"url"`
 	} `json:"candidates"`
+}
+
+// users mentioned in items (stories, etc.)
+type ItemReelMention struct {
+	X float64 `json:"x"`
+	Y float64 `json:"y"`
+	Z float64 `json:"z"`
+
+	Width    float64 `json:"width"`
+	Height   float64 `json:"height"`
+	Rotation float64 `json:"rotation"`
+
+	IsPinned float64 `json:"is_pinned"`
+	IsHidden float64 `json:"is_hidden"`
+
+	DisplayType string `json:"display_type"`
+
+	IsSticker   float64 `json:"is_sticker"`
+	IsFbSticker float64 `json:"is_fb_sticker"`
+
+	User IGUser
 }
 
 // media type:
