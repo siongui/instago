@@ -64,8 +64,12 @@ userstoryhighlight:
 	@go run example/userstoryhighlight.go -id=$(id)
 
 post_test: fmt
-	@echo "\033[92mDownload timeline ...\033[0m"
+	@echo "\033[92mDownload post test ...\033[0m"
 	@go test -v $(ALL_GO_SOURCES) post_test.go
+
+story_test: fmt
+	@echo "\033[92mDownload user stories test ...\033[0m"
+	@go test -v $(ALL_GO_SOURCES) story_test.go
 
 files: fmt
 	@echo "\033[92mHandle downloaded files ...\033[0m"

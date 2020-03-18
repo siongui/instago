@@ -68,6 +68,7 @@ func (m *IGDownloadManager) DownloadUserStoryByName(username string) {
 func (m *IGDownloadManager) DownloadUserStory(userId int64) (err error) {
 	tray, err := m.apimgr.GetUserStory(strconv.FormatInt(userId, 10))
 	if err != nil {
+		fmt.Println(err)
 		return
 	}
 	for _, item := range tray.GetItems() {
@@ -116,4 +117,34 @@ func (m *IGDownloadManager) DownloadAllStory(trays []instago.IGReelTray) {
 	for i := 0; i < numOfStoryUser; i++ {
 		<-c
 	}
+}
+
+func (m *IGDownloadManager) getStoryItemLayer(item instago.IGItem, username string, layer int) {
+	getStoryItem(item, username)
+	for _, reelmention := range item.ReelMentions {
+		m.DownloadUserStoryByNameLayer(reelmention.User.Username, layer)
+	}
+}
+
+// DownloadUserStoryByNameLayer downloads unexpired stories (last 24 hours) of
+// the given user name, and also stories of reel mentions.
+func (m *IGDownloadManager) DownloadUserStoryByNameLayer(username string, layer int) {
+	if layer < 1 {
+		return
+	}
+	layer--
+
+	id, err := instago.GetUserId(username)
+	if err != nil {
+		panic(err)
+	}
+
+	tray, err := m.apimgr.GetUserStory(id)
+	if err != nil {
+		panic(err)
+	}
+	for _, item := range tray.GetItems() {
+		m.getStoryItemLayer(item, tray.GetUsername(), layer)
+	}
+	return
 }
