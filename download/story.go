@@ -148,3 +148,22 @@ func (m *IGDownloadManager) DownloadUserStoryByNameLayer(username string, layer 
 	}
 	return
 }
+
+// DownloadUserStoryLayer is the same as DownloadUserStoryByNameLayer, except
+// int64 id passed as argument.
+func (m *IGDownloadManager) DownloadUserStoryLayer(userId int64, layer int) {
+	if layer < 1 {
+		return
+	}
+	layer--
+
+	tray, err := m.apimgr.GetUserStory(strconv.FormatInt(userId, 10))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	for _, item := range tray.GetItems() {
+		m.getStoryItemLayer(item, tray.GetUsername(), layer)
+	}
+	return
+}
