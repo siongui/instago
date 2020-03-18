@@ -6,10 +6,11 @@ import (
 )
 
 func ExampleGetUserStory(t *testing.T) {
-	mgr := NewInstagramApiManager(
-		os.Getenv("IG_DS_USER_ID"),
-		os.Getenv("IG_SESSIONID"),
-		os.Getenv("IG_CSRFTOKEN"))
+	mgr, err := NewInstagramApiManager("auth.json")
+	if err != nil {
+		t.Error(err)
+		return
+	}
 	tray, err := mgr.GetUserStory(os.Getenv("IG_TEST_ID"))
 	if err != nil {
 		t.Error(err)
