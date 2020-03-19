@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -13,6 +14,17 @@ func isOlderThanOneDay(t time.Time) bool {
 }
 
 func processFile(todir, path string, info os.FileInfo) {
+	// move files with "-post-" in the filename
+	if strings.Contains(info.Name(), "-post-") {
+		newpath := filepath.Join(todir, info.Name())
+		fmt.Printf("move %q to %q\n", path, newpath)
+		err := os.Rename(path, newpath)
+		if err != nil {
+			panic(err)
+		}
+		return
+	}
+	// move files older than one day
 	if isOlderThanOneDay(info.ModTime()) {
 		newpath := filepath.Join(todir, info.Name())
 		fmt.Printf("move %q to %q\n", path, newpath)

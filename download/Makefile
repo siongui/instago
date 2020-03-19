@@ -46,8 +46,8 @@ saved:
 	#@go run example/saved.go -num=$(id)
 	while [ true ] ; do \
 		go run example/saved.go -num=$(id) ; \
-		echo "\033[92mSleep 30 seconds ...\033[0m" ; \
-		sleep 30 ; \
+		echo "\033[92mSleep 12 seconds ...\033[0m" ; \
+		sleep 12 ; \
 	done
 
 userstory: fmt
@@ -71,9 +71,13 @@ story_test: fmt
 	@echo "\033[92mDownload user stories test ...\033[0m"
 	@go test -v $(ALL_GO_SOURCES) story_test.go
 
-files: fmt
+example_files: fmt
 	@echo "\033[92mHandle downloaded files ...\033[0m"
 	@go run example/files.go -root=Instagram -todir=${HOME}/Downloads/
+
+example_zero: fmt
+	@echo "\033[92mFind files with 0 size ...\033[0m"
+	@go run example/zero.go -root=Instagram
 
 profile_pic_test: fmt
 	@echo "\033[92mDownload timeline ...\033[0m"
