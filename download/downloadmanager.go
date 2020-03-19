@@ -9,7 +9,8 @@ import (
 )
 
 type IGDownloadManager struct {
-	apimgr *instago.IGApiManager
+	apimgr      *instago.IGApiManager
+	collections []instago.Collection
 }
 
 // The arguments here is the same as the NewInstagramApiManager of instago.
@@ -27,5 +28,11 @@ func NewInstagramDownloadManager(authFilePath string) (*IGDownloadManager, error
 	}
 
 	m.apimgr, err = instago.NewInstagramApiManager(authFilePath)
+	if err != nil {
+		return &m, err
+	}
+
+	m.collections, err = m.apimgr.GetSavedCollectionList()
+
 	return &m, err
 }

@@ -71,6 +71,10 @@ story_test: fmt
 	@echo "\033[92mDownload user stories test ...\033[0m"
 	@go test -v $(ALL_GO_SOURCES) story_test.go
 
+test_saved:
+	@echo "\033[92mSaved posts test ...\033[0m"
+	@go test -v $(ALL_GO_SOURCES) saved_test.go
+
 example_files: fmt
 	@echo "\033[92mHandle downloaded files ...\033[0m"
 	@go run example/files.go -root=Instagram -todir=${HOME}/Downloads/

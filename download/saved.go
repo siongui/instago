@@ -2,6 +2,8 @@ package igdl
 
 import (
 	"log"
+
+	"github.com/siongui/instago"
 )
 
 // DownloadSavedPost downloads your saved posts.
@@ -31,4 +33,15 @@ func (m *IGDownloadManager) DownloadSavedPosts(numOfItem int, downloadStory bool
 			}
 		}
 	}
+}
+
+func (m *IGDownloadManager) IsInCollection(item instago.IGItem, name string) bool {
+	for _, id := range item.SavedCollectionIds {
+		for _, collection := range m.collections {
+			if collection.CollectionId == id && name == collection.CollectionName {
+				return true
+			}
+		}
+	}
+	return false
 }
