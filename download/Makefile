@@ -94,3 +94,14 @@ fmt:
 
 install:
 	go get -u github.com/siongui/instago/download
+
+### example Makefile for simonedegiacomi/gphotosuploader
+### Don't forget to prepare auth file of gphotosuploader
+#upload:
+#	while [ true ] ; do \
+#		cd auth; gphotosuploader --upload path/to/Instagram/ --maxConcurrent 4 ; \
+#		sleep 10 ; \
+#	done
+#
+#install_gphotosuploader:
+#	go get github.com/simonedegiacomi/gphotosuploader
