@@ -30,8 +30,11 @@ func DownloadPostLive(pl instago.IGPostLive, cpl chan int) {
 				fmt.Println(err)
 				return
 			}
-			if len(urls) != 2 {
-				fmt.Println("error: number of urls: ", len(urls))
+			// total 5 urls now.
+			// first 4 urls are video track. last url is audio track.
+			// second url seems to be best video quality track.
+			if len(urls) != 5 {
+				fmt.Println("error: number of urls != 5", len(urls))
 				return
 			}
 
@@ -42,7 +45,7 @@ func DownloadPostLive(pl instago.IGPostLive, cpl chan int) {
 			vpath := ""
 			apath := ""
 			for index, url := range urls {
-				if index == 0 {
+				if index == 1 {
 					filepath = getPostLiveFilePath(
 						username,
 						id,
@@ -50,7 +53,7 @@ func DownloadPostLive(pl instago.IGPostLive, cpl chan int) {
 						"video",
 						timestamp)
 					vpath = filepath
-				} else {
+				} else if index == (len(urls) - 1) {
 					filepath = getPostLiveFilePath(
 						username,
 						id,
@@ -58,6 +61,8 @@ func DownloadPostLive(pl instago.IGPostLive, cpl chan int) {
 						"audio",
 						timestamp)
 					apath = filepath
+				} else {
+					continue
 				}
 
 				CreateFilepathDirIfNotExist(filepath)
