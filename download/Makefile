@@ -83,6 +83,10 @@ example_zero: fmt
 	@echo "\033[92mFind files with 0 size ...\033[0m"
 	@go run example/zero.go -root=Instagram
 
+example_find_post:
+	@echo "\033[92mFind files with -post- in filename ...\033[0m"
+	@find Instagram -name "*-post-*"
+
 profile_pic_test: fmt
 	@echo "\033[92mDownload timeline ...\033[0m"
 	@go test -v $(ALL_GO_SOURCES) profilepic_test.go
