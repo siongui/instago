@@ -3,6 +3,7 @@ package instago
 import (
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 // Live videos that users share to their stories
@@ -62,6 +63,7 @@ func (b *IGBroadcast) GetBaseUrls() (urls []string, err error) {
 
 	matches := reBaseUrls.FindAllStringSubmatch(b.GetDashManifest(), -1)
 	for _, match := range matches {
+		match[1] = strings.Replace(match[1], "&amp;", "&", -1)
 		urls = append(urls, match[1])
 	}
 	return

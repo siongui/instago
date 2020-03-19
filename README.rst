@@ -130,6 +130,8 @@ Tricks
 
 - Saved endpoint: see `ping/instagram_private_api <https://github.com/ping/instagram_private_api>`_
 
+- postlive URL issue: Google search "Bad URL timestamp". See `Instagram reports "Bad URL timestamp" <https://www.reddit.com/r/ifttt/comments/e79x24/instagram_reports_bad_url_timestamp/>`_. replacing &amp; with & in the access link.
+
 
 Private API
 +++++++++++

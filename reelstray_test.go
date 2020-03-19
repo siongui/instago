@@ -15,5 +15,10 @@ func ExampleGetReelsTray(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	t.Log(rt)
+	//t.Log(rt)
+	for _, item := range rt.PostLive.PostLiveItems {
+		for _, bc := range item.Broadcasts {
+			t.Log(bc.DashManifest)
+		}
+	}
 }

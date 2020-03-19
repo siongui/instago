@@ -65,6 +65,7 @@ func (m *IGApiManager) GetReelsTray() (r reelsTray, err error) {
 		return
 	}
 
+	//println(string(b))
 	err = json.Unmarshal(b, &r)
 	return
 }
