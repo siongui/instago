@@ -76,6 +76,9 @@ type IGItem struct {
 
 	ReelMentions []ItemReelMention `json:"reel_mentions"`
 
+	// for saved items
+	SavedCollectionIds []string `json:"saved_collection_ids"`
+
 	CanReshare            bool `json:"can_reshare"`
 	SupportsReelReactions bool `json:"supports_reel_reactions"`
 }

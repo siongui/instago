@@ -128,6 +128,8 @@ Tricks
 - Do not remove query string in the URLs of photo/viedo/story/highlight. It may
   cause 403 Forbidden when downloading the URL. See `issue #2`_ for more info.
 
+- Saved endpoint: see `ping/instagram_private_api <https://github.com/ping/instagram_private_api>`_
+
 
 Private API
 +++++++++++
