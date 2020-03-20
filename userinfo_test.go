@@ -9,7 +9,8 @@ import (
 func ExampleGetUserInfoNoLogin() {
 	user, err := GetUserInfoNoLogin("instagram")
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		return
 	}
 
 	fmt.Println(user.Id)
@@ -75,7 +76,8 @@ func ExampleGetUserInfo(t *testing.T) {
 func ExampleGetSharedDataQueryHashNoLogin() {
 	sd, qh, err := GetSharedDataQueryHashNoLogin("instagram")
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		return
 	}
 
 	fmt.Println(sd.EntryData.ProfilePage[0].GraphQL.User.Id)

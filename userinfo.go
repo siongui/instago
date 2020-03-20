@@ -2,6 +2,7 @@ package instago
 
 import (
 	"encoding/json"
+	"errors"
 	"regexp"
 	"strings"
 )
@@ -90,6 +91,13 @@ func getJsonBytes(b []byte) []byte {
 	return []byte(strings.TrimSuffix(m1, `;</script>`))
 }
 
+func checkSharedData(sd SharedData) (err error) {
+	if len(sd.EntryData.ProfilePage) == 0 {
+		err = errors.New("Looks like decoded JSON data is not correct")
+	}
+	return
+}
+
 // Given the HTML source code of the user profile page without logged in, return
 // query_hash for Instagram GraphQL API.
 func GetQueryHashNoLogin(b []byte) (qh string, err error) {
@@ -125,6 +133,11 @@ func GetSharedDataQueryHashNoLogin(username string) (sd SharedData, qh string, e
 		return
 	}
 
+	err = checkSharedData(sd)
+	if err != nil {
+		return
+	}
+
 	qh, err = GetQueryHashNoLogin(b)
 	return
 }
@@ -149,6 +162,12 @@ func GetUserInfoNoLogin(username string) (ui UserInfo, err error) {
 	if err != nil {
 		return
 	}
+
+	err = checkSharedData(sd)
+	if err != nil {
+		return
+	}
+
 	ui = sd.EntryData.ProfilePage[0].GraphQL.User
 	return
 }
