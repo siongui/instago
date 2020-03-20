@@ -8,7 +8,7 @@ export PATH := $(GOROOT)/bin:$(GOPATH)/bin:$(PATH)
 
 ALL_GO_SOURCES=$(shell /bin/sh -c "find *.go | grep -v _test.go")
 
-default: postlive
+default: media
 
 apimgr: fmt
 	@go test -v apimgr.go apimgr_test.go
@@ -59,8 +59,12 @@ toplive: fmt
 	@go test -v $(ALL_GO_SOURCES) toplive_test.go
 
 post: fmt
-	@echo "\033[92mTest getting post information...\033[0m"
+	@echo "\033[92mTest getting post information (GraphQL)...\033[0m"
 	@go test -v $(ALL_GO_SOURCES) post_test.go
+
+media: fmt
+	@echo "\033[92mTest getting post information (API endpoint)...\033[0m"
+	@go test -v $(ALL_GO_SOURCES) media_test.go
 
 saved: fmt
 	@echo "\033[92mTest getting saved posts ...\033[0m"

@@ -66,7 +66,6 @@ type IGItem struct {
 
 	IsDashEligible int64 `json:"is_dash_eligible"`
 
-	//"reel_mentions"
 	//"story_locations"
 	//"story_events"
 	//"story_hashtags"
