@@ -7,7 +7,7 @@ export PATH := $(GOROOT)/bin:$(GOPATH)/bin:$(PATH)
 
 ALL_GO_SOURCES=$(shell /bin/sh -c "find *.go | grep -v _test.go")
 
-default: postlive_test
+default: story_test
 
 highlight: fmt
 	@echo "\033[92mDownload story highlights of all following users ...\033[0m"
@@ -53,6 +53,10 @@ saved:
 userstory: fmt
 	@echo "\033[92mDownload user $(id) unexpired stories ...\033[0m"
 	@go run example/userstory.go -id=$(id)
+
+userstory2layer: fmt
+	@echo "\033[92mDownload user $(id) unexpired stories and stories of reel mentions...\033[0m"
+	@go run example/userstory2layer.go -id=$(id)
 
 userstorybatch: fmt
 	@echo "\033[92mDownload unexpired stories of multiple users ...\033[0m"

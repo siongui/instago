@@ -45,10 +45,25 @@ func getStoryItem(item instago.IGItem, username string) {
 	}
 }
 
+func (m *IGDownloadManager) UsernameToId(username string) (id string, err error) {
+	// Try to get id without loggin
+	id, err = instago.GetUserId(username)
+	if err == nil {
+		return
+	}
+
+	// Try to get id with loggin
+	ui, err := m.apimgr.GetUserInfo(username)
+	if err == nil {
+		id = ui.Id
+	}
+	return
+}
+
 // DownloadUserStoryByName downloads unexpired stories (last 24 hours) of the
 // given user name.
 func (m *IGDownloadManager) DownloadUserStoryByName(username string) {
-	id, err := instago.GetUserId(username)
+	id, err := m.UsernameToId(username)
 	if err != nil {
 		panic(err)
 	}
@@ -134,7 +149,7 @@ func (m *IGDownloadManager) DownloadUserStoryByNameLayer(username string, layer 
 	}
 	layer--
 
-	id, err := instago.GetUserId(username)
+	id, err := m.UsernameToId(username)
 	if err != nil {
 		panic(err)
 	}
