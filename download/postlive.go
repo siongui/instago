@@ -20,71 +20,83 @@ func printPostLiveDownloadInfo(username, url, filepath string, timestamp int64) 
 	cc.Println(filepath)
 }
 
+func DownloadPostLiveItem(pli instago.IGPostLiveItem) {
+	for _, broadcast := range pli.GetBroadcasts() {
+		urls, err := broadcast.GetBaseUrls()
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		// total 5 or 2 urls.
+		// if 5, first 4 urls are video track. last url is audio track.
+		// second url seems to be best video quality track.
+		vidx := 0
+		if len(urls) == 2 {
+			fmt.Println("number of urls = 2")
+			vidx = 0
+		} else if len(urls) == 5 {
+			fmt.Println("number of urls = 5")
+			vidx = 1
+		} else {
+			fmt.Println("error: number of urls != 5", len(urls))
+			return
+		}
+
+		username := pli.GetUsername()
+		id := pli.GetUserId()
+		timestamp := broadcast.GetPublishedTime()
+		filepath := ""
+		vpath := ""
+		apath := ""
+		for index, url := range urls {
+			if index == vidx {
+				filepath = getPostLiveFilePath(
+					username,
+					id,
+					url,
+					"video",
+					timestamp)
+				vpath = filepath
+			} else if index == (len(urls) - 1) {
+				filepath = getPostLiveFilePath(
+					username,
+					id,
+					url,
+					"audio",
+					timestamp)
+				apath = filepath
+			} else {
+				continue
+			}
+
+			CreateFilepathDirIfNotExist(filepath)
+			// check if file exist
+			if _, err := os.Stat(filepath); os.IsNotExist(err) {
+				// file not exists
+				printPostLiveDownloadInfo(username, url, filepath, timestamp)
+				err = Wget(url, filepath)
+				if err != nil {
+					fmt.Println(err)
+					return
+				}
+			}
+		}
+
+		mpath := getPostLiveMergedFilePath(vpath, apath)
+		// check if file exist
+		if _, err := os.Stat(mpath); os.IsNotExist(err) {
+			// file not exists
+			mergePostliveVideoAndAudio(vpath, apath)
+		}
+	}
+}
+
 func DownloadPostLive(pl instago.IGPostLive, cpl chan int) {
 	defer func() { cpl <- 1 }()
 
 	for _, item := range pl.PostLiveItems {
-		for _, broadcast := range item.GetBroadcasts() {
-			urls, err := broadcast.GetBaseUrls()
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
-			// total 5 urls now.
-			// first 4 urls are video track. last url is audio track.
-			// second url seems to be best video quality track.
-			if len(urls) != 5 {
-				fmt.Println("error: number of urls != 5", len(urls))
-				return
-			}
-
-			username := item.GetUsername()
-			id := item.GetUserId()
-			timestamp := broadcast.GetPublishedTime()
-			filepath := ""
-			vpath := ""
-			apath := ""
-			for index, url := range urls {
-				if index == 1 {
-					filepath = getPostLiveFilePath(
-						username,
-						id,
-						url,
-						"video",
-						timestamp)
-					vpath = filepath
-				} else if index == (len(urls) - 1) {
-					filepath = getPostLiveFilePath(
-						username,
-						id,
-						url,
-						"audio",
-						timestamp)
-					apath = filepath
-				} else {
-					continue
-				}
-
-				CreateFilepathDirIfNotExist(filepath)
-				// check if file exist
-				if _, err := os.Stat(filepath); os.IsNotExist(err) {
-					// file not exists
-					printPostLiveDownloadInfo(username, url, filepath, timestamp)
-					err = Wget(url, filepath)
-					if err != nil {
-						fmt.Println(err)
-						return
-					}
-				}
-			}
-
-			mpath := getPostLiveMergedFilePath(vpath, apath)
-			// check if file exist
-			if _, err := os.Stat(mpath); os.IsNotExist(err) {
-				// file not exists
-				mergePostliveVideoAndAudio(vpath, apath)
-			}
-		}
+		DownloadPostLiveItem(item)
 	}
 }
 
