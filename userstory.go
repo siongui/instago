@@ -1,6 +1,6 @@
 package instago
 
-// Get all unexpired stories of a specific user
+// Get all unexpired stories of a specific user, without postlive
 
 import (
 	"encoding/json"
