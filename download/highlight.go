@@ -4,13 +4,11 @@ import (
 	"fmt"
 	"strconv"
 	"time"
-
-	"github.com/siongui/instago"
 )
 
 // Given username, download story highlights of the user.
 func (m *IGDownloadManager) DownloadUserStoryHighlightsByName(username string) {
-	id, err := instago.GetUserId(username)
+	id, err := m.UsernameToId(username)
 	if err != nil {
 		panic(err)
 	}
