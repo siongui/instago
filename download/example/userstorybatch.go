@@ -17,6 +17,10 @@ func main() {
 
 	for _, username := range usernames {
 		fmt.Println("Download unexpired stories of", username)
-		mgr.DownloadUserStoryByName(username)
+		err = mgr.DownloadUserStoryPostliveByName(username)
+		if err != nil {
+			fmt.Println(username)
+			panic(err)
+		}
 	}
 }

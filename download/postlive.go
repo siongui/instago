@@ -39,7 +39,7 @@ func DownloadPostLiveItem(pli instago.IGPostLiveItem) {
 			fmt.Println("number of urls = 5")
 			vidx = 1
 		} else {
-			fmt.Println("error: number of urls != 5", len(urls))
+			fmt.Println("error: number of urls != (5 or 2)", len(urls))
 			return
 		}
 

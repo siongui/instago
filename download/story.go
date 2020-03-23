@@ -109,6 +109,29 @@ func (m *IGDownloadManager) DownloadUserStoryPostlive(userId int64) (err error) 
 	return
 }
 
+// DownloadUserStoryPostLiveByName is the same as DownloadUserStoryPostlive,
+// except username is given as argument.
+func (m *IGDownloadManager) DownloadUserStoryPostliveByName(username string) (err error) {
+	id, err := m.UsernameToId(username)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	ut, err := m.apimgr.GetUserReelMedia(id)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	for _, item := range ut.Reel.GetItems() {
+		getStoryItem(item, ut.Reel.GetUsername())
+	}
+	DownloadPostLiveItem(ut.PostLiveItem)
+
+	return
+}
+
 // DownloadUnreadStory downloads all available stories in IGReelTray.
 func DownloadUnreadStory(trays []instago.IGReelTray) {
 	for _, tray := range trays {

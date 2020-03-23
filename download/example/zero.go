@@ -10,6 +10,7 @@ import (
 func processFile(path string, info os.FileInfo) {
 	if info.Size() == 0 {
 		fmt.Println(path, "=0")
+		//os.Remove(path)
 	}
 }
 
