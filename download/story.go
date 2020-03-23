@@ -1,6 +1,7 @@
 package igdl
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"strconv"
@@ -8,9 +9,10 @@ import (
 	"github.com/siongui/instago"
 )
 
-func getStoryItem(item instago.IGItem, username string) {
+func getStoryItem(item instago.IGItem, username string) (err error) {
 	if !(item.MediaType == 1 || item.MediaType == 2) {
-		fmt.Println("In getStoryItem: not single photo or video!")
+		err = errors.New("In getStoryItem: not single photo or video!")
+		fmt.Println(err)
 		return
 	}
 
@@ -20,7 +22,8 @@ func getStoryItem(item instago.IGItem, username string) {
 		return
 	}
 	if len(urls) != 1 {
-		fmt.Println("In getStoryItem: number of download url != 1")
+		err = errors.New("In getStoryItem: number of download url != 1")
+		fmt.Println(err)
 		return
 	}
 	url := urls[0]
@@ -37,12 +40,14 @@ func getStoryItem(item instago.IGItem, username string) {
 	if _, err := os.Stat(filepath); os.IsNotExist(err) {
 		// file not exists
 		printDownloadInfo(item, username, url, filepath)
+		err = nil
 		err = Wget(url, filepath)
 		if err != nil {
 			fmt.Println(err)
-			return
+			return err
 		}
 	}
+	return
 }
 
 func (m *IGDownloadManager) UsernameToId(username string) (id string, err error) {
