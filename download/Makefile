@@ -95,6 +95,10 @@ example_find_post:
 	@echo "\033[92mFind files with -post- in filename ...\033[0m"
 	@find Instagram -name "*-post-*"
 
+example_1dayrm: fmt
+	@echo "\033[92mRemove files older than one day ...\033[0m"
+	@go run example/1dayrm.go -root=Instagram
+
 profile_pic_test: fmt
 	@echo "\033[92mDownload timeline ...\033[0m"
 	@go test -v $(ALL_GO_SOURCES) profilepic_test.go
