@@ -60,36 +60,35 @@ func (m *IGDownloadManager) UsernameToId(username string) (id string, err error)
 	return
 }
 
-// DownloadUserStoryByName downloads unexpired stories (last 24 hours) of the
-// given user name.
-func (m *IGDownloadManager) DownloadUserStoryByName(username string) {
-	id, err := m.UsernameToId(username)
-	if err != nil {
-		panic(err)
-	}
-
+func (m *IGDownloadManager) downloadUserStory(id string) (err error) {
 	tray, err := m.apimgr.GetUserStory(id)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		return
 	}
+
 	for _, item := range tray.GetItems() {
 		getStoryItem(item, tray.GetUsername())
 	}
 	return
 }
 
-// DownloadUserStory downloads unexpired stories (last 24 hours) of the given
-// user id.
-func (m *IGDownloadManager) DownloadUserStory(userId int64) (err error) {
-	tray, err := m.apimgr.GetUserStory(strconv.FormatInt(userId, 10))
+// DownloadUserStoryByName downloads unexpired stories (last 24 hours) of the
+// given user name.
+func (m *IGDownloadManager) DownloadUserStoryByName(username string) (err error) {
+	id, err := m.UsernameToId(username)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	for _, item := range tray.GetItems() {
-		getStoryItem(item, tray.GetUsername())
-	}
-	return
+
+	return m.downloadUserStory(id)
+}
+
+// DownloadUserStory downloads unexpired stories (last 24 hours) of the given
+// user id.
+func (m *IGDownloadManager) DownloadUserStory(userId int64) (err error) {
+	return m.downloadUserStory(strconv.FormatInt(userId, 10))
 }
 
 // DownloadUserStoryPostLive downloads unexpired stories (last 24 hours) and

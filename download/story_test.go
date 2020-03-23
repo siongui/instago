@@ -5,6 +5,15 @@ import (
 	"testing"
 )
 
+func ExampleDownloadUserStoryByName(t *testing.T) {
+	mgr, err := NewInstagramDownloadManager("auth.json")
+	if err != nil {
+		panic(err)
+	}
+
+	mgr.DownloadUserStoryByName("instagram")
+}
+
 func ExampleDownloadUserStoryByNameLayer(t *testing.T) {
 	mgr, err := NewInstagramDownloadManager("auth.json")
 	if err != nil {
