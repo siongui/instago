@@ -5,7 +5,17 @@ import (
 	"testing"
 )
 
-func TestIsInCollection(t *testing.T) {
+func ExampleDownloadSavedPosts(t *testing.T) {
+	mgr, err := NewInstagramDownloadManager("auth.json")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	mgr.DownloadSavedPosts(12, true)
+}
+
+func ExampleIsInCollection(t *testing.T) {
 	mgr, err := NewInstagramDownloadManager("auth.json")
 	if err != nil {
 		fmt.Println(err)

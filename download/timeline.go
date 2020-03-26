@@ -21,6 +21,7 @@ func printDownloadInfo(item instago.IGItem, username string, url, filepath strin
 	cc.Println(filepath)
 }
 
+// getTimelineItems is obsoleted. Use getPostItem instead.
 func getTimelineItems(items []instago.IGItem) {
 	for _, item := range items {
 		if !item.IsRegularMedia() {
@@ -70,7 +71,7 @@ func (m *IGDownloadManager) DownloadTimeline(n int) {
 				if !item.IsRegularMedia() {
 					continue
 				}
-				m.DownloadPost(item.Code)
+				m.getPostItem(item)
 			}
 		}
 

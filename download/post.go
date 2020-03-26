@@ -40,6 +40,7 @@ func (m *IGDownloadManager) DownloadPost(code string) (isDownloaded bool) {
 	return
 }
 
+// TODO: try to merge getPostItem and DownloadIGMedia
 func DownloadIGMedia(em instago.IGMedia) (isDownloaded bool) {
 	urls := em.GetMediaUrls()
 

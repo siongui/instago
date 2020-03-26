@@ -40,7 +40,6 @@ func getStoryItem(item instago.IGItem, username string) (err error) {
 	if _, err := os.Stat(filepath); os.IsNotExist(err) {
 		// file not exists
 		printDownloadInfo(item, username, url, filepath)
-		err = nil
 		err = Wget(url, filepath)
 		if err != nil {
 			fmt.Println(err)

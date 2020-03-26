@@ -7,7 +7,7 @@ export PATH := $(GOROOT)/bin:$(GOPATH)/bin:$(PATH)
 
 ALL_GO_SOURCES=$(shell /bin/sh -c "find *.go | grep -v _test.go")
 
-default: story_test
+default: timeline_test
 
 highlight: fmt
 	@echo "\033[92mDownload story highlights of all following users ...\033[0m"
@@ -75,13 +75,19 @@ story_test: fmt
 	@echo "\033[92mDownload user stories test ...\033[0m"
 	@go test -v $(ALL_GO_SOURCES) story_test.go
 
+timeline_test: fmt
+	@echo "\033[92mDownload timeline test ...\033[0m"
+	# -count=1 disable test cache
+	@go test -v -count=1 $(ALL_GO_SOURCES) timeline_test.go
+
 postlive_test: fmt
 	@echo "\033[92mDownload postlives test ...\033[0m"
 	@go test -v $(ALL_GO_SOURCES) postlive_test.go
 
 test_saved:
 	@echo "\033[92mSaved posts test ...\033[0m"
-	@go test -v $(ALL_GO_SOURCES) saved_test.go
+	# -count=1 disable test cache
+	@go test -v -count=1 $(ALL_GO_SOURCES) saved_test.go
 
 example_files: fmt
 	@echo "\033[92mHandle downloaded files ...\033[0m"
