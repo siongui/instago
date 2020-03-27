@@ -61,11 +61,10 @@ func (m *IGDownloadManager) getPostItem(item instago.IGItem) (isDownloaded bool,
 			if err != nil {
 				log.Println(err)
 				return false, err
-			} else {
-				log.Print("username: ", item.GetUsername(), " , url: ", item.GetPostUrl(), " files already exist!")
 			}
 		}
 	}
+	log.Print("username: ", item.GetUsername(), " , url: ", item.GetPostUrl(), " files already exist!")
 	return
 }
 

@@ -42,13 +42,8 @@ allsaved:
 	@go run example/download.go -downloadtype=saved
 
 saved:
-	@echo "\033[92mDownload latest 20 of your saved posts ...\033[0m"
-	#@go run example/saved.go -num=$(id)
-	while [ true ] ; do \
-		go run example/saved.go -num=$(id) ; \
-		echo "\033[92mSleep 12 seconds ...\033[0m" ; \
-		sleep 12 ; \
-	done
+	@echo "\033[92mDownload latest 12 your saved posts ...\033[0m"
+	@go run example/saved.go -num=12
 
 userstory: fmt
 	@echo "\033[92mDownload user $(id) unexpired stories ...\033[0m"
