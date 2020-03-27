@@ -1,5 +1,37 @@
 package instago
 
+import (
+	"errors"
+	"fmt"
+)
+
+func PrintPostItem(pi PostItem) (err error) {
+	fmt.Println("username:", pi.GetUsername())
+	fmt.Println("id:", pi.GetUserId())
+	fmt.Println("url:", pi.GetPostUrl())
+	fmt.Println("code:", pi.GetPostCode())
+	fmt.Println("timestamp:", pi.GetTimestamp())
+	fmt.Println("media urls:")
+	urls, err := pi.GetMediaUrls()
+	if err != nil {
+		return
+	}
+	for _, url := range urls {
+		fmt.Println("url:", url)
+	}
+	return
+}
+
+// Common methods of IG posts for IGMedia and IGItem
+type PostItem interface {
+	GetUsername() string
+	GetUserId() string
+	GetPostUrl() string
+	GetPostCode() string
+	GetTimestamp() int64
+	GetMediaUrls() ([]string, error)
+}
+
 // Main data structure returned by https://www.instagram.com/p/{{CODE}}/?__a=1
 type IGMedia struct {
 	Typename   string `json:"__typename"`
@@ -152,7 +184,7 @@ func (em *IGMedia) GetTimestamp() int64 {
 }
 
 // Get URLs of media (photos/videos) in the post
-func (em *IGMedia) GetMediaUrls() (urls []string) {
+func (em *IGMedia) GetMediaUrls() (urls []string, err error) {
 	switch em.Typename {
 	case "GraphImage":
 		urls = append(urls, em.getImageUrl())
@@ -160,10 +192,15 @@ func (em *IGMedia) GetMediaUrls() (urls []string) {
 		urls = append(urls, em.getVideoUrl())
 	case "GraphSidecar":
 		for _, edge := range em.EdgeSidecarToChildren.Edges {
-			urls = append(urls, edge.Node.GetMediaUrls()...)
+			nodeUrls, err := edge.Node.GetMediaUrls()
+			if err != nil {
+				return urls, err
+			}
+			urls = append(urls, nodeUrls...)
 		}
 	default:
-		panic(em.Typename)
+		err = errors.New("Not Regular Media Type: " + em.Typename)
+		return
 	}
 
 	/*

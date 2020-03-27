@@ -12,16 +12,56 @@ func ExampleGetPostInfo(t *testing.T) {
 		return
 	}
 
-	em, err := mgr.GetPostInfo(os.Getenv("IG_TEST_CODE"))
+	// photos and videos in a post
+	em, err := mgr.GetPostInfo("B-KwveQgsdr")
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	t.Log(em.GetPostUrl())
-	t.Log(em.GetUsername())
-	t.Log(em.GetTimestamp())
-	for _, url := range em.GetMediaUrls() {
-		t.Log(url)
+
+	err = PrintPostItem(&em)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	// IGTV video
+	em, err = mgr.GetPostInfo("B-NK7ZYgntC")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	err = PrintPostItem(&em)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	// single video
+	em, err = mgr.GetPostInfo("B-H13uwgNRK")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	err = PrintPostItem(&em)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	// single photo
+	em, err = mgr.GetPostInfo("B94Z25jgy9w")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	err = PrintPostItem(&em)
+	if err != nil {
+		t.Error(err)
+		return
 	}
 }
 
@@ -31,10 +71,9 @@ func ExampleGetPostInfoNoLogin(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	t.Log(em.GetPostUrl())
-	t.Log(em.GetUsername())
-	t.Log(em.GetTimestamp())
-	for _, url := range em.GetMediaUrls() {
-		t.Log(url)
+	err = PrintPostItem(&em)
+	if err != nil {
+		t.Error(err)
+		return
 	}
 }

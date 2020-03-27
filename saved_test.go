@@ -13,14 +13,18 @@ func ExampleGetSavedPosts(t *testing.T) {
 		return
 	}
 
-	items, err := mgr.GetSavedPosts(20)
+	items, err := mgr.GetSavedPosts(12)
 	if err != nil {
 		t.Error(err)
 		return
 	}
 
 	for _, item := range items {
-		fmt.Println(item.GetPostUrl())
+		err = PrintPostItem(&item)
+		if err != nil {
+			t.Error(err)
+			return
+		}
 		fmt.Println(item.SavedCollectionIds)
 	}
 }
