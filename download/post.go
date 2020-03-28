@@ -36,7 +36,7 @@ func (m *IGDownloadManager) DownloadPost(code string) (isDownloaded bool) {
 		log.Println(err)
 		return
 	}
-	isDownloaded = DownloadIGMedia(em)
+	isDownloaded, _ = DownloadIGMedia(em)
 	return
 }
 
