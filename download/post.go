@@ -41,8 +41,12 @@ func (m *IGDownloadManager) DownloadPost(code string) (isDownloaded bool) {
 }
 
 // TODO: try to merge getPostItem and DownloadIGMedia
-func DownloadIGMedia(em instago.IGMedia) (isDownloaded bool) {
-	urls := em.GetMediaUrls()
+func DownloadIGMedia(em instago.IGMedia) (isDownloaded bool, err error) {
+	urls, err := em.GetMediaUrls()
+	if err != nil {
+		log.Println(err)
+		return
+	}
 
 	for index, url := range urls {
 		filepath := getPostFilePath(
