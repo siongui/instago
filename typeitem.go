@@ -205,3 +205,8 @@ func (i *IGItem) GetMediaUrls() (urls []string, err error) {
 	*/
 	return
 }
+
+// Return self type name
+func (i *IGItem) GetSelfType() string {
+	return "IGItem"
+}

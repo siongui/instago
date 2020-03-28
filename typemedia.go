@@ -6,12 +6,12 @@ import (
 )
 
 func PrintPostItem(pi PostItem) (err error) {
+	fmt.Println("self type:", pi.GetSelfType())
 	fmt.Println("username:", pi.GetUsername())
 	fmt.Println("id:", pi.GetUserId())
 	fmt.Println("url:", pi.GetPostUrl())
 	fmt.Println("code:", pi.GetPostCode())
 	fmt.Println("timestamp:", pi.GetTimestamp())
-	fmt.Println("media urls:")
 	urls, err := pi.GetMediaUrls()
 	if err != nil {
 		return
@@ -24,6 +24,7 @@ func PrintPostItem(pi PostItem) (err error) {
 
 // Common methods of IG posts for IGMedia and IGItem
 type PostItem interface {
+	GetSelfType() string
 	GetUsername() string
 	GetUserId() string
 	GetPostUrl() string
@@ -217,6 +218,12 @@ func (em *IGMedia) GetPostUrl() string {
 	return "https://www.instagram.com/p/" + em.Shortcode + "/"
 }
 
+// Return code of post
 func (em *IGMedia) GetPostCode() string {
 	return em.Shortcode
+}
+
+// Return self type name
+func (em *IGMedia) GetSelfType() string {
+	return "IGMedia"
 }
