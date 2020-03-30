@@ -2,18 +2,19 @@ package igdl
 
 import (
 	"fmt"
-	"github.com/siongui/instago"
 	"log"
 	"os"
+
+	"github.com/siongui/instago"
 )
 
-func printPostDownloadInfo(em instago.IGMedia, url, filepath string) {
+func printPostDownloadInfo(pi instago.PostItem, url, filepath string) {
 	fmt.Print("username: ")
-	cc.Println(em.GetUsername())
+	cc.Println(pi.GetUsername())
 	fmt.Print("time: ")
-	cc.Println(em.GetTimestamp())
+	cc.Println(pi.GetTimestamp())
 	fmt.Print("post url: ")
-	cc.Println(em.GetPostUrl())
+	cc.Println(pi.GetPostUrl())
 
 	fmt.Print("Download ")
 	rc.Print(url)
@@ -21,23 +22,24 @@ func printPostDownloadInfo(em instago.IGMedia, url, filepath string) {
 	cc.Println(filepath)
 }
 
-func DownloadPostNoLogin(code string) {
+func DownloadPostNoLogin(code string) (isDownloaded bool, err error) {
 	em, err := instago.GetPostInfoNoLogin(code)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	DownloadIGMedia(em)
+
+	return DownloadIGMedia(em)
 }
 
-func (m *IGDownloadManager) DownloadPost(code string) (isDownloaded bool) {
+func (m *IGDownloadManager) DownloadPost(code string) (isDownloaded bool, err error) {
 	em, err := m.apimgr.GetPostInfo(code)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	isDownloaded, _ = DownloadIGMedia(em)
-	return
+
+	return DownloadIGMedia(em)
 }
 
 // TODO: try to merge getPostItem and DownloadIGMedia
@@ -63,7 +65,7 @@ func DownloadIGMedia(em instago.IGMedia) (isDownloaded bool, err error) {
 		// check if file exist
 		if _, err := os.Stat(filepath); os.IsNotExist(err) {
 			// file not exists
-			printPostDownloadInfo(em, url, filepath)
+			printPostDownloadInfo(&em, url, filepath)
 			err = Wget(url, filepath)
 			if err != nil {
 				fmt.Println(err)
