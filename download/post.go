@@ -12,7 +12,7 @@ func printPostDownloadInfo(pi instago.PostItem, url, filepath string) {
 	fmt.Print("username: ")
 	cc.Println(pi.GetUsername())
 	fmt.Print("time: ")
-	cc.Println(pi.GetTimestamp())
+	cc.Println(formatTimestamp(pi.GetTimestamp()))
 	fmt.Print("post url: ")
 	cc.Println(pi.GetPostUrl())
 
@@ -29,7 +29,7 @@ func DownloadPostNoLogin(code string) (isDownloaded bool, err error) {
 		return
 	}
 
-	return DownloadIGMedia(em)
+	return DownloadPostItem(&em)
 }
 
 func (m *IGDownloadManager) DownloadPost(code string) (isDownloaded bool, err error) {
@@ -39,12 +39,17 @@ func (m *IGDownloadManager) DownloadPost(code string) (isDownloaded bool, err er
 		return
 	}
 
-	return DownloadIGMedia(em)
+	return DownloadPostItem(&em)
 }
 
-// TODO: try to merge getPostItem and DownloadIGMedia
-func DownloadIGMedia(em instago.IGMedia) (isDownloaded bool, err error) {
-	urls, err := em.GetMediaUrls()
+// TODO: try to merge getPostItem and DownloadPostItem
+//
+// DownloadPostItem downloads photos/videos in the post.
+// IGItem (items in timeline or saved posts) or IGMedia (read from
+// https://www.instagram.com/p/{{CODE}}/?__a=1) can be argument in
+// DownloadPostItem method.
+func DownloadPostItem(pi instago.PostItem) (isDownloaded bool, err error) {
+	urls, err := pi.GetMediaUrls()
 	if err != nil {
 		log.Println(err)
 		return
@@ -52,11 +57,11 @@ func DownloadIGMedia(em instago.IGMedia) (isDownloaded bool, err error) {
 
 	for index, url := range urls {
 		filepath := getPostFilePath(
-			em.GetUsername(),
-			em.GetUserId(),
-			em.GetPostCode(),
+			pi.GetUsername(),
+			pi.GetUserId(),
+			pi.GetPostCode(),
 			url,
-			em.GetTimestamp())
+			pi.GetTimestamp())
 		if index > 0 {
 			filepath = appendIndexToFilename(filepath, index)
 		}
@@ -65,10 +70,10 @@ func DownloadIGMedia(em instago.IGMedia) (isDownloaded bool, err error) {
 		// check if file exist
 		if _, err := os.Stat(filepath); os.IsNotExist(err) {
 			// file not exists
-			printPostDownloadInfo(&em, url, filepath)
+			printPostDownloadInfo(pi, url, filepath)
 			err = Wget(url, filepath)
 			if err != nil {
-				fmt.Println(err)
+				log.Println(err)
 			} else {
 				isDownloaded = true
 			}

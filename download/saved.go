@@ -8,7 +8,7 @@ import (
 )
 
 // getPostItem downloads media (photo/video) item in the post.
-// TODO: try to merge getPostItem and DownloadIGMedia
+// TODO: try to merge getPostItem and DownloadPostItem
 func (m *IGDownloadManager) getPostItem(item instago.IGItem) (isDownloaded bool, err error) {
 	// FIXME: item.IsRegularMedia() will return false if getting posts of
 	// non-following users
