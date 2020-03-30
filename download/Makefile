@@ -49,6 +49,10 @@ userstory: fmt
 	@echo "\033[92mDownload user $(id) unexpired stories ...\033[0m"
 	@go run example/userstory.go -id=$(id)
 
+userstorypostlive: fmt
+	@echo "\033[92mDownload user $(id) unexpired stories and postlives ...\033[0m"
+	@go run example/userstorypostlive.go -id=$(id)
+
 userstory2layer: fmt
 	@echo "\033[92mDownload user $(id) unexpired stories and stories of reel mentions...\033[0m"
 	@go run example/userstory2layer.go -id=$(id)
