@@ -46,8 +46,7 @@ func (m *IGDownloadManager) DownloadPost(code string) (isDownloaded bool, err er
 //
 // DownloadPostItem downloads photos/videos in the post.
 // IGItem (items in timeline or saved posts) or IGMedia (read from
-// https://www.instagram.com/p/{{CODE}}/?__a=1) can be argument in
-// DownloadPostItem method.
+// https://www.instagram.com/p/{{CODE}}/?__a=1) can be argument in this method.
 func DownloadPostItem(pi instago.PostItem) (isDownloaded bool, err error) {
 	urls, err := pi.GetMediaUrls()
 	if err != nil {

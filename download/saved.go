@@ -1,6 +1,7 @@
 package igdl
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -44,7 +45,7 @@ func (m *IGDownloadManager) getPostItem(item instago.IGItem) (isDownloaded bool,
 				// never run here. Old way of implementation
 				// only for reference. Old way is not good
 				// because not best quality of posts
-				printDownloadInfo(item, item.GetUsername(), url, filepath)
+				printPostDownloadInfo(&item, url, filepath)
 				err = Wget(url, filepath)
 				if err != nil {
 					log.Println(err)
@@ -55,15 +56,18 @@ func (m *IGDownloadManager) getPostItem(item instago.IGItem) (isDownloaded bool,
 				// always run here.
 				return m.DownloadPost(item.GetPostCode())
 			}
-		} else {
-			if err != nil {
-				log.Println(err)
-				return false, err
-			}
 		}
 	}
-	log.Print("username: ", item.GetUsername(), " , url: ", item.GetPostUrl(), " files already exist!")
 	return
+}
+
+func printSavedInfo(index int, pi instago.PostItem) {
+	cc.Print(index)
+	fmt.Print(": username: ")
+	rc.Print(pi.GetUsername())
+	fmt.Print(" , post url: ")
+	cc.Print(pi.GetPostUrl())
+	fmt.Println(" Download ignore(files already exist)")
 }
 
 // DownloadSavedPost downloads your saved posts.
@@ -82,8 +86,9 @@ func (m *IGDownloadManager) DownloadSavedPosts(numOfItem int, downloadStory bool
 	//getTimelineItems(items)
 
 	username := make(map[string]bool)
-	for _, item := range items {
+	for idx, item := range items {
 		// FIXME: check err
+		printSavedInfo(idx, &item)
 		isDownloaded, _ := m.getPostItem(item)
 		if isDownloaded && downloadStory {
 			u := item.GetUsername()
