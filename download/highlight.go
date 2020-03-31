@@ -24,7 +24,6 @@ func (m *IGDownloadManager) DownloadUserStoryHighlights(userid string) {
 	}
 	for _, tray := range trays {
 		for _, item := range tray.GetItems() {
-			item.User.Username = tray.User.Username
 			getStoryItem(item, tray.GetUsername())
 		}
 	}
