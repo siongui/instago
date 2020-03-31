@@ -10,6 +10,7 @@ import (
 
 func printDownloadInfo(pi instago.PostItem, url, filepath string) {
 	fmt.Print("username: ")
+	// FIXME: username of story item is missing
 	cc.Println(pi.GetUsername())
 	fmt.Print("time: ")
 	cc.Println(formatTimestamp(pi.GetTimestamp()))

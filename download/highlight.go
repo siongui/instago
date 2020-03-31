@@ -13,15 +13,7 @@ func (m *IGDownloadManager) DownloadUserStoryHighlightsByName(username string) {
 		panic(err)
 	}
 
-	trays, err := m.apimgr.GetAllStoryHighlights(id)
-	if err != nil {
-		panic(err)
-	}
-	for _, tray := range trays {
-		for _, item := range tray.GetItems() {
-			getStoryItem(item, tray.GetUsername())
-		}
-	}
+	m.DownloadUserStoryHighlights(id)
 }
 
 // Download story highlights of a single user.
@@ -32,6 +24,7 @@ func (m *IGDownloadManager) DownloadUserStoryHighlights(userid string) {
 	}
 	for _, tray := range trays {
 		for _, item := range tray.GetItems() {
+			item.User.Username = tray.User.Username
 			getStoryItem(item, tray.GetUsername())
 		}
 	}
