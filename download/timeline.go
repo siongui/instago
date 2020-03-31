@@ -2,23 +2,8 @@ package igdl
 
 import (
 	"fmt"
-	"github.com/siongui/instago"
 	"time"
 )
-
-func printDownloadInfo(item instago.IGItem, username string, url, filepath string) {
-	fmt.Print("username: ")
-	cc.Println(username)
-	fmt.Print("time: ")
-	cc.Println(formatTimestamp(item.GetTimestamp()))
-	fmt.Print("post url: ")
-	cc.Println(item.GetPostUrl())
-
-	fmt.Print("Download ")
-	rc.Print(url)
-	fmt.Print(" to ")
-	cc.Println(filepath)
-}
 
 // download timeline until page n
 func (m *IGDownloadManager) DownloadTimeline(n int) {

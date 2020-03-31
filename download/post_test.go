@@ -12,7 +12,8 @@ func ExampleDownloadPost(t *testing.T) {
 		return
 	}
 
-	mgr.DownloadPost(os.Getenv("IG_TEST_CODE"))
+	//mgr.DownloadPost(os.Getenv("IG_TEST_CODE"))
+	mgr.DownloadPost("B-NK7ZYgntC")
 }
 
 func ExampleDownloadPostNoLogin(t *testing.T) {

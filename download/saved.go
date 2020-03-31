@@ -45,7 +45,7 @@ func (m *IGDownloadManager) getPostItem(item instago.IGItem) (isDownloaded bool,
 				// never run here. Old way of implementation
 				// only for reference. Old way is not good
 				// because not best quality of posts
-				printPostDownloadInfo(&item, url, filepath)
+				printDownloadInfo(&item, url, filepath)
 				err = Wget(url, filepath)
 				if err != nil {
 					log.Println(err)

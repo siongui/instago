@@ -8,7 +8,7 @@ import (
 	"github.com/siongui/instago"
 )
 
-func printPostDownloadInfo(pi instago.PostItem, url, filepath string) {
+func printDownloadInfo(pi instago.PostItem, url, filepath string) {
 	fmt.Print("username: ")
 	cc.Println(pi.GetUsername())
 	fmt.Print("time: ")
@@ -69,7 +69,7 @@ func DownloadPostItem(pi instago.PostItem) (isDownloaded bool, err error) {
 		// check if file exist
 		if _, err := os.Stat(filepath); os.IsNotExist(err) {
 			// file not exists
-			printPostDownloadInfo(pi, url, filepath)
+			printDownloadInfo(pi, url, filepath)
 			err = Wget(url, filepath)
 			if err != nil {
 				log.Println(err)
