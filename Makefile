@@ -8,7 +8,7 @@ export PATH := $(GOROOT)/bin:$(GOPATH)/bin:$(PATH)
 
 ALL_GO_SOURCES=$(shell /bin/sh -c "find *.go | grep -v _test.go")
 
-default: userreelmedia
+default: timeline
 
 apimgr: fmt
 	@go test -v apimgr.go apimgr_test.go

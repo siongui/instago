@@ -44,6 +44,25 @@ type IGItem struct {
 		FacebookPlacesId int64   `json:"facebook_places_id"`
 	} `json:"location"`
 
+	// timeline only (You're All Caught Up)
+	EndOfFeedDemarcator struct {
+		Id       int64  `json:"id"`
+		Title    string `json:"title"`
+		SubTitle string `json"subtitle"`
+	} `json:"end_of_feed_demarcator"`
+
+	// timeline only (ads in timeline)
+	Injected struct {
+		Label   string `json:"label"`
+		AdTitle string `json:"ad_title"`
+	} `json:"injected"`
+
+	// timeline only (suggested_user, "type": 2)
+	Type             int64            `json:"type"`
+	Suggestions      []ItemSuggestion `json:"suggestions"`
+	RankingAlgorithm string           `json:"ranking_algorithm"`
+	// end of timeline only (suggested_user, "type": 2)
+
 	ImageVersions2  ItemImageVersion2 `json:"image_versions2"`
 	OriginalWidth   int64             `json:"original_width"`
 	OriginalHeight  int64             `json:"original_height"`
@@ -121,14 +140,39 @@ type ItemReelMention struct {
 	User IGUser
 }
 
+// suggested_user in items of timeline
+type ItemSuggestion struct {
+	//Cannot use IGUser because
+	//json: cannot unmarshal string into Go struct field IGUser.items.suggestions.user.pk of type int64
+	//User          IGUser `json:"user"`
+	User struct {
+		Pk       string `json:"pk"`
+		Username string `json:"username"`
+		FullName string `json:"full_name"`
+	} `json:"user"`
+
+	Algorithm     string `json:"algorithm"`
+	SocialContext string `json:"social_context"`
+}
+
 // media type:
 //   0: ???
 //   1: single photo
 //   2: single video
 //   8: multiple photos/videos
 func (i *IGItem) IsRegularMedia() bool {
-	// remove ads
-	if i.User.FriendshipStatus.Following == false {
+	// You're All Caught Up
+	if i.EndOfFeedDemarcator.Title != "" {
+		return false
+	}
+
+	// injected ads
+	if i.Injected.Label != "" {
+		return false
+	}
+
+	// suggested_user
+	if i.Type == 2 {
 		return false
 	}
 

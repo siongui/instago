@@ -23,6 +23,7 @@ func (m *IGApiManager) GetTimeline() (tl IGTimeline, err error) {
 		return
 	}
 
+	//println(string(b))
 	err = json.Unmarshal(b, &tl)
 	return
 }
