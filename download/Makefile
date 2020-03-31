@@ -88,10 +88,6 @@ test_saved:
 	# -count=1 disable test cache
 	@go test -v -count=1 $(ALL_GO_SOURCES) saved_test.go
 
-example_files: fmt
-	@echo "\033[92mHandle downloaded files ...\033[0m"
-	@go run example/files.go -root=Instagram -todir=${HOME}/Downloads/
-
 example_zero: fmt
 	@echo "\033[92mFind files with 0 size ...\033[0m"
 	@go run example/zero.go -root=Instagram
@@ -102,7 +98,7 @@ example_find_post:
 
 example_1dayrm: fmt
 	@echo "\033[92mRemove files older than one day ...\033[0m"
-	@go run example/1dayrm.go -root=Instagram
+	@go run example/1dayrm.go -root=Instagram -todir=${HOME}/Downloads/
 
 profile_pic_test: fmt
 	@echo "\033[92mDownload timeline ...\033[0m"
