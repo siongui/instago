@@ -15,11 +15,11 @@ func (m *IGDownloadManager) DownloadTimeline(n int) {
 			fmt.Println(err)
 		} else {
 			for idx, item := range items {
-				printSavedInfo(idx, &item)
 				if !item.IsRegularMedia() {
-					fmt.Println("seems to be ads. download ignored")
+					fmt.Println(idx, ": ", item)
 					continue
 				}
+				printSavedInfo(idx, &item)
 				m.getPostItem(item)
 			}
 		}

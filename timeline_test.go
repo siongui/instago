@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestGetTimeline(t *testing.T) {
+func ExampleGetTimeline(t *testing.T) {
 	mgr, err := NewInstagramApiManager("auth.json")
 	if err != nil {
 		t.Error(err)

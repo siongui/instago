@@ -66,8 +66,8 @@ func printSavedInfo(index int, pi instago.PostItem) {
 	fmt.Print(": username: ")
 	rc.Print(pi.GetUsername())
 	fmt.Print(" , post url: ")
-	cc.Print(pi.GetPostUrl())
-	fmt.Println(" Download ignore(files already exist)")
+	cc.Println(pi.GetPostUrl())
+	//fmt.Println(" Download ignore(files already exist)")
 }
 
 // DownloadSavedPost downloads your saved posts.
