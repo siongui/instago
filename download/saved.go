@@ -80,11 +80,6 @@ func (m *IGDownloadManager) DownloadSavedPosts(numOfItem int, downloadStory bool
 		return
 	}
 
-	// Using getTimelineItems is not good because
-	// 1. Cannot download saved posts of non-following users
-	// 2. not best quality of saved posts
-	//getTimelineItems(items)
-
 	username := make(map[string]bool)
 	for idx, item := range items {
 		// FIXME: check err

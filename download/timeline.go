@@ -3,7 +3,6 @@ package igdl
 import (
 	"fmt"
 	"github.com/siongui/instago"
-	"os"
 	"time"
 )
 
@@ -19,43 +18,6 @@ func printDownloadInfo(item instago.IGItem, username string, url, filepath strin
 	rc.Print(url)
 	fmt.Print(" to ")
 	cc.Println(filepath)
-}
-
-// getTimelineItems is obsoleted. Use getPostItem instead.
-func getTimelineItems(items []instago.IGItem) {
-	for _, item := range items {
-		if !item.IsRegularMedia() {
-			continue
-		}
-
-		urls, err := item.GetMediaUrls()
-		if err != nil {
-			fmt.Println(err)
-			continue
-		}
-		for index, url := range urls {
-			filepath := getPostFilePath(
-				item.GetUsername(),
-				item.GetUserId(),
-				item.GetPostCode(),
-				url,
-				item.GetTimestamp())
-			if index > 0 {
-				filepath = appendIndexToFilename(filepath, index)
-			}
-
-			CreateFilepathDirIfNotExist(filepath)
-			// check if file exist
-			if _, err := os.Stat(filepath); os.IsNotExist(err) {
-				// file not exists
-				printDownloadInfo(item, item.GetUsername(), url, filepath)
-				err = Wget(url, filepath)
-				if err != nil {
-					fmt.Println(err)
-				}
-			}
-		}
-	}
 }
 
 // download timeline until page n
