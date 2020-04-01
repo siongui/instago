@@ -15,11 +15,10 @@ func (m *IGDownloadManager) DownloadTimeline(n int) {
 			fmt.Println(err)
 		} else {
 			for idx, item := range items {
+				printTimelineItemInfo(idx, item)
 				if !item.IsRegularMedia() {
-					fmt.Println(idx, ": ", item)
 					continue
 				}
-				printItemInfo(idx, &item)
 				m.getPostItem(item)
 			}
 		}
