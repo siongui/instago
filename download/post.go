@@ -1,27 +1,11 @@
 package igdl
 
 import (
-	"fmt"
 	"log"
 	"os"
 
 	"github.com/siongui/instago"
 )
-
-func printDownloadInfo(pi instago.PostItem, url, filepath string) {
-	fmt.Print("username: ")
-	// FIXME: username of story item is missing
-	cc.Println(pi.GetUsername())
-	fmt.Print("time: ")
-	cc.Println(formatTimestamp(pi.GetTimestamp()))
-	fmt.Print("post url: ")
-	cc.Println(pi.GetPostUrl())
-
-	fmt.Print("Download ")
-	rc.Print(url)
-	fmt.Print(" to ")
-	cc.Println(filepath)
-}
 
 func DownloadPostNoLogin(code string) (isDownloaded bool, err error) {
 	em, err := instago.GetPostInfoNoLogin(code)

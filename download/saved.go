@@ -1,7 +1,6 @@
 package igdl
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -11,14 +10,7 @@ import (
 // getPostItem downloads media (photo/video) item in the post.
 // TODO: try to merge getPostItem and DownloadPostItem
 func (m *IGDownloadManager) getPostItem(item instago.IGItem) (isDownloaded bool, err error) {
-	// FIXME: item.IsRegularMedia() will return false if getting posts of
-	// non-following users
-	/*
-		if !item.IsRegularMedia() {
-			log.Println("seems like ads. download ignored.")
-			return
-		}
-	*/
+	// FIXME: Use item.IsRegularMedia() to check validity of item?
 
 	urls, err := item.GetMediaUrls()
 	if err != nil {
@@ -61,15 +53,6 @@ func (m *IGDownloadManager) getPostItem(item instago.IGItem) (isDownloaded bool,
 	return
 }
 
-func printSavedInfo(index int, pi instago.PostItem) {
-	cc.Print(index)
-	fmt.Print(": username: ")
-	rc.Print(pi.GetUsername())
-	fmt.Print(" , post url: ")
-	cc.Println(pi.GetPostUrl())
-	//fmt.Println(" Download ignore(files already exist)")
-}
-
 // DownloadSavedPost downloads your saved posts.
 // -1 means download all saved posts.
 // downloadStory flag will also download unexpired stories of the post user.
@@ -83,7 +66,7 @@ func (m *IGDownloadManager) DownloadSavedPosts(numOfItem int, downloadStory bool
 	username := make(map[string]bool)
 	for idx, item := range items {
 		// FIXME: check err
-		printSavedInfo(idx, &item)
+		printItemInfo(idx, &item)
 		isDownloaded, _ := m.getPostItem(item)
 		if isDownloaded && downloadStory {
 			u := item.GetUsername()

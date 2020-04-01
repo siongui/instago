@@ -19,7 +19,7 @@ func (m *IGDownloadManager) DownloadTimeline(n int) {
 					fmt.Println(idx, ": ", item)
 					continue
 				}
-				printSavedInfo(idx, &item)
+				printItemInfo(idx, &item)
 				m.getPostItem(item)
 			}
 		}
