@@ -47,6 +47,37 @@ func getStoryFilePath(username, id, code, url string, timestamp int64) string {
 	return path.Join(userStoriesDir, buildFilename(url, username, id, "-story-", code+"-", timestamp))
 }
 
+// same as getStoryFilePath, except adding usernames in reel_mentions
+func getStoryFilePath2(username, id, code, url string, timestamp int64, rms []instago.ItemReelMention) string {
+	userDir := path.Join(outputDir, username)
+	userStoriesDir := path.Join(userDir, "stories")
+
+	filename := buildFilename(url, username, id, "-story-", code+"-", timestamp)
+	prefix := username + "-" + id
+
+	usednames := make(map[string]bool)
+	usednames[username] = true
+	for _, rm := range rms {
+		newprefix := prefix + "-" + rm.GetUsername()
+		newfilename := strings.Replace(filename, prefix, newprefix, 1)
+
+		if len(newfilename) > 256 {
+			continue
+		}
+
+		if _, ok := usednames[rm.GetUsername()]; ok {
+			continue
+		} else {
+			usednames[rm.GetUsername()] = true
+		}
+
+		prefix = newprefix
+		filename = newfilename
+	}
+
+	return path.Join(userStoriesDir, filename)
+}
+
 func getPostLiveFilePath(username, id, url, typ string, timestamp int64) string {
 	userDir := path.Join(outputDir, username)
 	userPostLiveDir := path.Join(userDir, "postlives")
