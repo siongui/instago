@@ -28,5 +28,8 @@ func ExampleGetUserStory(t *testing.T) {
 		for _, url := range urls {
 			t.Log(url)
 		}
+		for _, rm := range item.ReelMentions {
+			t.Log(rm.GetUsername(), rm.GetUserId())
+		}
 	}
 }

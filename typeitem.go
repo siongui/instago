@@ -140,6 +140,14 @@ type ItemReelMention struct {
 	User IGUser
 }
 
+func (i ItemReelMention) GetUsername() string {
+	return i.User.Username
+}
+
+func (i ItemReelMention) GetUserId() string {
+	return strconv.FormatInt(i.User.Pk, 10)
+}
+
 // suggested_user in items of timeline
 type ItemSuggestion struct {
 	//Cannot use IGUser because
