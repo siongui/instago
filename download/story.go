@@ -31,12 +31,13 @@ func getStoryItem(item instago.IGItem, username string) (err error) {
 	// fix missing username issue while print download info
 	item.User.Username = username
 
-	filepath := getStoryFilePath(
+	filepath := getStoryFilePath2(
 		username,
 		item.GetUserId(),
 		item.GetPostCode(),
 		url,
-		item.GetTimestamp())
+		item.GetTimestamp(),
+		item.ReelMentions)
 
 	CreateFilepathDirIfNotExist(filepath)
 	// check if file exist
