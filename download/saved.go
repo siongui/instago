@@ -72,7 +72,7 @@ func (m *IGDownloadManager) DownloadSavedPosts(numOfItem int, downloadStory bool
 			u := item.GetUsername()
 			if _, ok := username[u]; !ok {
 				// Pk here is user id
-				m.DownloadUserStoryPostlive(item.User.Pk)
+				go m.DownloadUserStoryPostlive(item.User.Pk)
 				username[u] = true
 			}
 		}
