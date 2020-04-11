@@ -104,6 +104,10 @@ example_1dayrm: fmt
 	@echo "\033[92mRemove files older than one day ...\033[0m"
 	@go run example/1dayrm.go -root=Instagram -todir=${HOME}/Downloads/
 
+example_rmemptydir: fmt
+	@echo "\033[92mRemove empty dir ...\033[0m"
+	@go run example/rmemptydir.go -root=Instagram
+
 profile_pic_test: fmt
 	@echo "\033[92mDownload timeline ...\033[0m"
 	@go test -v $(ALL_GO_SOURCES) profilepic_test.go
