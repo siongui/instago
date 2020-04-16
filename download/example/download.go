@@ -15,7 +15,12 @@ func main() {
 	}
 
 	typ := flag.String("downloadtype", "timeline", "Download 1) timeline 2) story 3) highlight 4) saved posts")
+	outputdir := flag.String("outputdir", "Instagram", "dir to save post and story")
+	datadir := flag.String("datadir", "Data", "dir to save data")
 	flag.Parse()
+
+	igdl.SetOutputDir(*outputdir)
+	igdl.SetDataDir(*datadir)
 
 	switch *typ {
 	case "timeline":
