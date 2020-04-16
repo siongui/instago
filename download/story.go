@@ -28,6 +28,8 @@ func getStoryItem(item instago.IGItem, username string) (err error) {
 	}
 	url := urls[0]
 
+	saveIdUsername(item.GetUserId(), username)
+
 	// fix missing username issue while print download info
 	item.User.Username = username
 
