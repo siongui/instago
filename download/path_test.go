@@ -110,3 +110,11 @@ func TestGetUserProfilPicFilePath(t *testing.T) {
 		return
 	}
 }
+
+func TestGetIdUsernamePath(t *testing.T) {
+	path := getIdUsernamePath("25025320", "instagram")
+	if path != "Data/ID-USERNAME/25025320-instagram" {
+		t.Error(path)
+		return
+	}
+}

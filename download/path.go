@@ -10,9 +10,14 @@ import (
 )
 
 var outputDir = "Instagram"
+var dataDir = "Data"
 
 func SetOutputDir(s string) {
 	outputDir = s
+}
+
+func SetDataDir(s string) {
+	dataDir = s
 }
 
 func formatTimestamp(timestamp int64) string {
@@ -115,4 +120,9 @@ func getUserProfilPicFilePath(username, id, url string, timestamp int64) string 
 	userDir := path.Join(outputDir, username)
 	filename := username + "-" + id + "-profile_pic-" + strconv.FormatInt(timestamp, 10) + ext
 	return path.Join(userDir, filename)
+}
+
+func getIdUsernamePath(id, username string) string {
+	filename := id + "-" + username
+	return path.Join(dataDir, "ID-USERNAME", filename)
 }
