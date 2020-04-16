@@ -3,6 +3,7 @@ package igdl
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 )
 
 func saveIdUsername(id, username string) (err error) {
