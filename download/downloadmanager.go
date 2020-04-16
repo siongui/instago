@@ -28,11 +28,10 @@ func NewInstagramDownloadManager(authFilePath string) (*IGDownloadManager, error
 	}
 
 	m.apimgr, err = instago.NewInstagramApiManager(authFilePath)
-	if err != nil {
-		return &m, err
-	}
-
-	m.collections, err = m.apimgr.GetSavedCollectionList()
-
 	return &m, err
+}
+
+func (m *IGDownloadManager) LoadCollectionList() (err error) {
+	m.collections, err = m.apimgr.GetSavedCollectionList()
+	return
 }
