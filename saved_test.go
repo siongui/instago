@@ -26,6 +26,7 @@ func ExampleGetSavedPosts(t *testing.T) {
 			return
 		}
 		fmt.Println(item.SavedCollectionIds)
+		fmt.Println(item.Usertags)
 	}
 }
 

@@ -94,8 +94,16 @@ type IGItem struct {
 
 	ReelMentions []ItemReelMention `json:"reel_mentions"`
 
-	// for saved items
+	// for items of saved posts
 	SavedCollectionIds []string `json:"saved_collection_ids"`
+	Usertags           struct {
+		In []struct {
+			User     IGUser `json:"user"`
+			Position []float64
+			//start_time_in_video_in_sec
+			//duration_in_video_in_sec
+		} `json:"in"`
+	} `json:"usertags"`
 
 	CanReshare            bool `json:"can_reshare"`
 	SupportsReelReactions bool `json:"supports_reel_reactions"`
