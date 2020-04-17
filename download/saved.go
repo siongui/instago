@@ -93,3 +93,12 @@ func (m *IGDownloadManager) IsInCollection(item instago.IGItem, name string) boo
 	}
 	return false
 }
+
+func (m *IGDownloadManager) CollectionId2Name(id string) string {
+	for _, collection := range m.collections {
+		if collection.CollectionId == id {
+			return collection.CollectionName
+		}
+	}
+	return ""
+}
