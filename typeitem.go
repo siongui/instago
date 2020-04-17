@@ -19,19 +19,21 @@ type IGItem struct {
 	ClientCacheKey  string `json:"client_cache_key"`
 	FilterType      int64  `json:"filter_type"`
 
-	// timeline only
+	// timeline and saved posts
 	CarouselMedia []struct {
-		Id               string             `json:"id"`
-		MediaType        int64              `json:"media_type"`
-		ImageVersions2   ItemImageVersion2  `json:"image_versions2"`
-		OriginalWidth    int64              `json:"original_width"`
-		OriginalHeight   int64              `json:"original_height"`
-		VideoVersions    []ItemVideoVersion `json:"video_versions"`
-		Pk               int64              `json:"pk"`
-		CarouselParentId string             `json:"carousel_parent_id"`
+		Id                    string             `json:"id"`
+		MediaType             int64              `json:"media_type"`
+		ImageVersions2        ItemImageVersion2  `json:"image_versions2"`
+		OriginalWidth         int64              `json:"original_width"`
+		OriginalHeight        int64              `json:"original_height"`
+		VideoVersions         []ItemVideoVersion `json:"video_versions"`
+		Pk                    int64              `json:"pk"`
+		CarouselParentId      string             `json:"carousel_parent_id"`
+		CanSeeInsightsAsBrand bool               `json:"can_see_insights_as_brand"`
+		Usertags              ItemUsertags       `json:"usertags"`
 	} `json:"carousel_media"`
 
-	// timeline only
+	// timeline only?
 	Location struct {
 		Pk               int64   `json:"pk"`
 		Name             string  `json:"name"`
@@ -95,15 +97,8 @@ type IGItem struct {
 	ReelMentions []ItemReelMention `json:"reel_mentions"`
 
 	// for items of saved posts
-	SavedCollectionIds []string `json:"saved_collection_ids"`
-	Usertags           struct {
-		In []struct {
-			User     IGUser `json:"user"`
-			Position []float64
-			//start_time_in_video_in_sec
-			//duration_in_video_in_sec
-		} `json:"in"`
-	} `json:"usertags"`
+	SavedCollectionIds []string     `json:"saved_collection_ids"`
+	Usertags           ItemUsertags `json:"usertags"`
 
 	CanReshare            bool `json:"can_reshare"`
 	SupportsReelReactions bool `json:"supports_reel_reactions"`
@@ -154,6 +149,16 @@ func (i ItemReelMention) GetUsername() string {
 
 func (i ItemReelMention) GetUserId() string {
 	return strconv.FormatInt(i.User.Pk, 10)
+}
+
+// user tags in items
+type ItemUsertags struct {
+	In []struct {
+		User     IGUser `json:"user"`
+		Position []float64
+		//start_time_in_video_in_sec
+		//duration_in_video_in_sec
+	} `json:"in"`
 }
 
 // suggested_user in items of timeline
