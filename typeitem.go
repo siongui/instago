@@ -161,6 +161,13 @@ type ItemUsertags struct {
 	} `json:"in"`
 }
 
+func (i ItemUsertags) GetTaggedUsernames() (usernames []string) {
+	for _, in := range i.In {
+		usernames = append(usernames, in.User.Username)
+	}
+	return
+}
+
 // suggested_user in items of timeline
 type ItemSuggestion struct {
 	//Cannot use IGUser because

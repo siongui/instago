@@ -5,6 +5,14 @@ import (
 	"fmt"
 )
 
+func PrintTaggedUsers(tu TaggedUsers) {
+	fmt.Println("tagged users:", tu.GetTaggedUsernames())
+}
+
+type TaggedUsers interface {
+	GetTaggedUsernames() []string
+}
+
 func PrintPostItem(pi PostItem) (err error) {
 	fmt.Println("self type:", pi.GetSelfType())
 	fmt.Println("username:", pi.GetUsername())
@@ -66,21 +74,7 @@ type IGMedia struct {
 	ShouldLogClientEvent bool   `json:"should_log_client_event"`
 	TrackingToken        string `json:"tracking_token"`
 
-	EdgeMediaToTaggedUser struct {
-		Edges []struct {
-			Node struct {
-				User struct {
-					FullName      string `json:"full_name"`
-					Id            string `json:"id"`
-					IsVerified    bool   `json:"is_verified"`
-					ProfilePicUrl string `json:"profile_pic_url"`
-					Username      string `json:"username"`
-				} `json:"user"`
-				X float64 `json:"x"`
-				Y float64 `json:"y"`
-			} `json:"node"`
-		} `json:"edges"`
-	} `json:"edge_media_to_tagged_user"`
+	EdgeMediaToTaggedUser MediaUsertags `json:"edge_media_to_tagged_user"`
 
 	EdgeMediaToCaption struct {
 		Edges []struct {
@@ -230,4 +224,28 @@ func (em *IGMedia) GetPostCode() string {
 // Return self type name
 func (em *IGMedia) GetSelfType() string {
 	return "IGMedia"
+}
+
+// tagged users in post
+type MediaUsertags struct {
+	Edges []struct {
+		Node struct {
+			User struct {
+				FullName      string `json:"full_name"`
+				Id            string `json:"id"`
+				IsVerified    bool   `json:"is_verified"`
+				ProfilePicUrl string `json:"profile_pic_url"`
+				Username      string `json:"username"`
+			} `json:"user"`
+			X float64 `json:"x"`
+			Y float64 `json:"y"`
+		} `json:"node"`
+	} `json:"edges"`
+}
+
+func (m MediaUsertags) GetTaggedUsernames() (usernames []string) {
+	for _, edge := range m.Edges {
+		usernames = append(usernames, edge.Node.User.Username)
+	}
+	return
 }

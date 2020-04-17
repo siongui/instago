@@ -26,9 +26,9 @@ func ExampleGetSavedPosts(t *testing.T) {
 			return
 		}
 		fmt.Println(item.SavedCollectionIds)
-		fmt.Println(item.Usertags)
+		PrintTaggedUsers(item.Usertags)
 		for _, cm := range item.CarouselMedia {
-			fmt.Println(cm.Usertags)
+			PrintTaggedUsers(cm.Usertags)
 		}
 	}
 }

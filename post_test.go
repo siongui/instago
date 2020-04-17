@@ -24,6 +24,10 @@ func ExampleGetPostInfo(t *testing.T) {
 		t.Error(err)
 		return
 	}
+	PrintTaggedUsers(em.EdgeMediaToTaggedUser)
+	for _, child := range em.EdgeSidecarToChildren.Edges {
+		PrintTaggedUsers(child.Node.EdgeMediaToTaggedUser)
+	}
 
 	// IGTV video
 	em, err = mgr.GetPostInfo("B-NK7ZYgntC")
