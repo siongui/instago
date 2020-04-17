@@ -52,33 +52,43 @@ func getStoryFilePath(username, id, code, url string, timestamp int64) string {
 	return path.Join(userStoriesDir, buildFilename(url, username, id, "-story-", code+"-", timestamp))
 }
 
-// same as getStoryFilePath, except adding usernames in reel_mentions
-func getStoryFilePath2(username, id, code, url string, timestamp int64, rms []instago.ItemReelMention) string {
-	userDir := path.Join(outputDir, username)
-	userStoriesDir := path.Join(userDir, "stories")
-
-	filename := buildFilename(url, username, id, "-story-", code+"-", timestamp)
+func appendUsernameToFilename(username, id, filename string, appendUsernames []string) string {
 	prefix := username + "-" + id
 
 	usednames := make(map[string]bool)
 	usednames[username] = true
-	for _, rm := range rms {
-		newprefix := prefix + "-" + rm.GetUsername()
+	for _, n := range appendUsernames {
+		newprefix := prefix + "-" + n
 		newfilename := strings.Replace(filename, prefix, newprefix, 1)
 
 		if len(newfilename) > 256 {
 			continue
 		}
 
-		if _, ok := usednames[rm.GetUsername()]; ok {
+		if _, ok := usednames[n]; ok {
 			continue
 		} else {
-			usednames[rm.GetUsername()] = true
+			usednames[n] = true
 		}
 
 		prefix = newprefix
 		filename = newfilename
 	}
+
+	return filename
+}
+
+// same as getStoryFilePath, except adding usernames in reel_mentions
+func getStoryFilePath2(username, id, code, url string, timestamp int64, rms []instago.ItemReelMention) string {
+	userDir := path.Join(outputDir, username)
+	userStoriesDir := path.Join(userDir, "stories")
+
+	filename := buildFilename(url, username, id, "-story-", code+"-", timestamp)
+	appendUsernames := []string{}
+	for _, rm := range rms {
+		appendUsernames = append(appendUsernames, rm.GetUsername())
+	}
+	filename = appendUsernameToFilename(username, id, filename, appendUsernames)
 
 	return path.Join(userStoriesDir, filename)
 }
