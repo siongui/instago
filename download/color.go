@@ -22,7 +22,7 @@ func printTimelineItemInfo(index int, item instago.IGItem) {
 	if item.Injected.Label != "" {
 		cc.Print(index)
 		fmt.Print(": injected ad: ")
-		printItemInfo(index, &item)
+		PrintItemInfo(index, &item)
 		return
 	}
 
@@ -42,10 +42,10 @@ func printTimelineItemInfo(index int, item instago.IGItem) {
 	}
 
 	// item from following users
-	printItemInfo(index, &item)
+	PrintItemInfo(index, &item)
 }
 
-func printItemInfo(index int, pi instago.PostItem) {
+func PrintItemInfo(index int, pi instago.PostItem) {
 	cc.Print(index)
 	fmt.Print(": username: ")
 	rc.Print(pi.GetUsername())

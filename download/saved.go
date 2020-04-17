@@ -7,9 +7,9 @@ import (
 	"github.com/siongui/instago"
 )
 
-// getPostItem downloads media (photo/video) item in the post.
-// TODO: try to merge getPostItem and DownloadPostItem
-func (m *IGDownloadManager) getPostItem(item instago.IGItem) (isDownloaded bool, err error) {
+// GetPostItem downloads media (photo/video) item in the post.
+// TODO: try to merge GetPostItem and DownloadPostItem
+func (m *IGDownloadManager) GetPostItem(item instago.IGItem) (isDownloaded bool, err error) {
 	// FIXME: Use item.IsRegularMedia() to check validity of item?
 
 	urls, err := item.GetMediaUrls()
@@ -66,8 +66,8 @@ func (m *IGDownloadManager) DownloadSavedPosts(numOfItem int, downloadStory bool
 	username := make(map[string]bool)
 	for idx, item := range items {
 		// FIXME: check err
-		printItemInfo(idx, &item)
-		isDownloaded, _ := m.getPostItem(item)
+		PrintItemInfo(idx, &item)
+		isDownloaded, _ := m.GetPostItem(item)
 		if isDownloaded && downloadStory {
 			u := item.GetUsername()
 			if _, ok := username[u]; !ok {
@@ -77,6 +77,10 @@ func (m *IGDownloadManager) DownloadSavedPosts(numOfItem int, downloadStory bool
 			}
 		}
 	}
+}
+
+func (m *IGDownloadManager) GetSavedPosts(numOfItem int) (items []instago.IGItem, err error) {
+	return m.apimgr.GetSavedPosts(numOfItem)
 }
 
 func (m *IGDownloadManager) IsInCollection(item instago.IGItem, name string) bool {

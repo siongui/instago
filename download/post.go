@@ -27,7 +27,7 @@ func (m *IGDownloadManager) DownloadPost(code string) (isDownloaded bool, err er
 	return DownloadPostItem(&em)
 }
 
-// TODO: try to merge getPostItem and DownloadPostItem
+// TODO: try to merge GetPostItem and DownloadPostItem
 //
 // DownloadPostItem downloads photos/videos in the post.
 // IGItem (items in timeline or saved posts) or IGMedia (read from
