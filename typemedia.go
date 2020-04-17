@@ -70,7 +70,11 @@ type IGMedia struct {
 		Edges []struct {
 			Node struct {
 				User struct {
-					Username string `json:"username"`
+					FullName      string `json:"full_name"`
+					Id            string `json:"id"`
+					IsVerified    bool   `json:"is_verified"`
+					ProfilePicUrl string `json:"profile_pic_url"`
+					Username      string `json:"username"`
 				} `json:"user"`
 				X float64 `json:"x"`
 				Y float64 `json:"y"`
