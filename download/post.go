@@ -14,7 +14,7 @@ func DownloadPostNoLogin(code string) (isDownloaded bool, err error) {
 		return
 	}
 
-	return DownloadPostItem(&em)
+	return DownloadIGMedia(em)
 }
 
 func (m *IGDownloadManager) DownloadPost(code string) (isDownloaded bool, err error) {
@@ -24,28 +24,34 @@ func (m *IGDownloadManager) DownloadPost(code string) (isDownloaded bool, err er
 		return
 	}
 
-	return DownloadPostItem(&em)
+	return DownloadIGMedia(em)
 }
 
-// TODO: try to merge GetPostItem and DownloadPostItem
-//
-// DownloadPostItem downloads photos/videos in the post.
+// DownloadIGMedia downloads photos/videos in the post.
 // IGItem (items in timeline or saved posts) or IGMedia (read from
 // https://www.instagram.com/p/{{CODE}}/?__a=1) can be argument in this method.
-func DownloadPostItem(pi instago.PostItem) (isDownloaded bool, err error) {
-	urls, err := pi.GetMediaUrls()
+func DownloadIGMedia(em instago.IGMedia) (isDownloaded bool, err error) {
+	urls, err := em.GetMediaUrls()
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
 	for index, url := range urls {
-		filepath := getPostFilePath(
-			pi.GetUsername(),
-			pi.GetUserId(),
-			pi.GetPostCode(),
+		taggedusers := []string{}
+		if len(urls) == 1 {
+			taggedusers = em.EdgeMediaToTaggedUser.GetTaggedUsernames()
+		} else {
+			taggedusers = em.EdgeSidecarToChildren.Edges[index].Node.EdgeMediaToTaggedUser.GetTaggedUsernames()
+		}
+
+		filepath := getPostFilePath2(
+			em.GetUsername(),
+			em.GetUserId(),
+			em.GetPostCode(),
 			url,
-			pi.GetTimestamp())
+			em.GetTimestamp(),
+			taggedusers)
 		if index > 0 {
 			filepath = appendIndexToFilename(filepath, index)
 		}
@@ -54,7 +60,7 @@ func DownloadPostItem(pi instago.PostItem) (isDownloaded bool, err error) {
 		// check if file exist
 		if _, err := os.Stat(filepath); os.IsNotExist(err) {
 			// file not exists
-			printDownloadInfo(pi, url, filepath)
+			printDownloadInfo(&em, url, filepath)
 			err = Wget(url, filepath)
 			if err != nil {
 				log.Println(err)

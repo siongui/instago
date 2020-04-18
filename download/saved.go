@@ -8,7 +8,6 @@ import (
 )
 
 // GetPostItem downloads media (photo/video) item in the post.
-// TODO: try to merge GetPostItem and DownloadPostItem
 func (m *IGDownloadManager) GetPostItem(item instago.IGItem) (isDownloaded bool, err error) {
 	// FIXME: Use item.IsRegularMedia() to check validity of item?
 
@@ -19,12 +18,20 @@ func (m *IGDownloadManager) GetPostItem(item instago.IGItem) (isDownloaded bool,
 	}
 
 	for index, url := range urls {
-		filepath := getPostFilePath(
+		taggedusers := []string{}
+		if len(urls) == 1 {
+			taggedusers = item.Usertags.GetTaggedUsernames()
+		} else {
+			taggedusers = item.CarouselMedia[index].Usertags.GetTaggedUsernames()
+		}
+
+		filepath := getPostFilePath2(
 			item.GetUsername(),
 			item.GetUserId(),
 			item.GetPostCode(),
 			url,
-			item.GetTimestamp())
+			item.GetTimestamp(),
+			taggedusers)
 		if index > 0 {
 			filepath = appendIndexToFilename(filepath, index)
 		}
