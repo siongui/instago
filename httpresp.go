@@ -9,8 +9,9 @@ import (
 	"strconv"
 )
 
-var userAgent = "Instagram 10.26.0 (iPhone8,1; iOS 10_2; en_US; en-US; " +
-	"scale=2.00; gamut=normal; 750x1334) AppleWebKit/420+"
+// Google Search: useragent ios instagram 134.00
+// https://developers.whatismybrowser.com/useragents/parse/31984417-instagram-ios-iphone-11-pro-max-webkit
+var userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Instagram 134.0.0.25.116 (iPhone12,5; iOS 13_3_1; en_US; en-US; scale=3.00; 1242x2688; 204771128)"
 
 // SetUserAgent let you set User-Agent header in HTTP requests.
 func SetUserAgent(s string) {
