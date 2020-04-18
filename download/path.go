@@ -40,6 +40,16 @@ func buildFilename(url, username, id, middle, last string, timestamp int64) stri
 		ext)
 }
 
+func getPostFilePath2(username, id, code, url string, timestamp int64, taggedusers []string) string {
+	userDir := path.Join(outputDir, username)
+	userPostsDir := path.Join(userDir, "posts")
+
+	filename := buildFilename(url, username, id, "-post-", code+"-", timestamp)
+	filename = appendUsernameToFilename(username, id, filename, taggedusers)
+
+	return path.Join(userPostsDir, filename)
+}
+
 func getPostFilePath(username, id, code, url string, timestamp int64) string {
 	userDir := path.Join(outputDir, username)
 	userPostsDir := path.Join(userDir, "posts")
