@@ -14,26 +14,26 @@ const urlFollowing = `https://i.instagram.com/api/v1/friendships/{{USERID}}/foll
 type rawFollow struct {
 	//sections
 	//global_blacklist_sample
-	Users     []IGUser `json:"users"`
-	BigList   bool     `json:"big_list"`    // if false, no next_max_id in response
-	NextMaxId int64    `json:"next_max_id"` // used for pagination if list is too big
-	PageSize  int64    `json:"page_size"`
-	Status    string   `json:"status"`
+	Users     []IGFollowUser `json:"users"`
+	BigList   bool           `json:"big_list"`    // if false, no next_max_id in response
+	NextMaxId int64          `json:"next_max_id"` // used for pagination if list is too big
+	PageSize  int64          `json:"page_size"`
+	Status    string         `json:"status"`
 }
 
 // GetFollowers returns all followers of the given user id.
-func (m *IGApiManager) GetFollowers(id string) (users []IGUser, err error) {
+func (m *IGApiManager) GetFollowers(id string) (users []IGFollowUser, err error) {
 	url := strings.Replace(urlFollowers, "{{USERID}}", id, 1)
 	return m.getFollow(url)
 }
 
 // GetFollowing returns all following users of the given user id.
-func (m *IGApiManager) GetFollowing(id string) (users []IGUser, err error) {
+func (m *IGApiManager) GetFollowing(id string) (users []IGFollowUser, err error) {
 	url := strings.Replace(urlFollowing, "{{USERID}}", id, 1)
 	return m.getFollow(url)
 }
 
-func (m *IGApiManager) getFollow(url string) (users []IGUser, err error) {
+func (m *IGApiManager) getFollow(url string) (users []IGFollowUser, err error) {
 	rf, err := m.getFollowResponse(url)
 	if err != nil {
 		return

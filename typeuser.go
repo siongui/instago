@@ -1,5 +1,17 @@
 package instago
 
+type IGFollowUser struct {
+	Pk                         int64  `json:"pk"`
+	Username                   string `json:"username"`
+	FullName                   string `json:"full_name"`
+	IsPrivate                  bool   `json:"is_private"`
+	ProfilePicUrl              string `json:"profile_pic_url"`
+	ProfilePicId               string `json:"profile_pic_id"`
+	IsVerified                 bool   `json:"is_verified"`
+	HasAnonymousProfilePicture bool   `json:"has_anonymous_profile_picture"`
+	LatestReelMedia            int64  `json:"latest_reel_media"`
+}
+
 type IGUser struct {
 	Pk               int64  `json:"pk"`
 	Username         string `json:"username"`
