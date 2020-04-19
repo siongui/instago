@@ -49,6 +49,12 @@ func (m *IGApiManager) GetTimelineUntilPageN(pageN int) (items []IGItem, err err
 		if err != nil {
 			return items, err
 		}
+
+		// for development purpose
+		if saveRawJsonByte {
+			SaveRawJsonByte("timeline-", b)
+		}
+
 		pageCount++
 		err = json.Unmarshal(b, &tl)
 		if err != nil {
