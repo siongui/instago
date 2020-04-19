@@ -59,7 +59,11 @@ func (m *IGApiManager) getFollowResponse(url string) (rf rawFollow, err error) {
 		return
 	}
 
-	//println(string(b))
+	// for development purpose
+	if saveRawJsonByte {
+		SaveRawJsonByte("follow-", b)
+	}
+
 	err = json.Unmarshal(b, &rf)
 	return
 }

@@ -65,7 +65,11 @@ func (m *IGApiManager) GetReelsTray() (r reelsTray, err error) {
 		return
 	}
 
-	//println(string(b))
+	// for development purpose
+	if saveRawJsonByte {
+		SaveRawJsonByte("reels_tray-", b)
+	}
+
 	err = json.Unmarshal(b, &r)
 	return
 }

@@ -24,6 +24,11 @@ func (m *IGApiManager) GetHighlightsReelsMedia(id string) (tray IGStoryHighlight
 		return
 	}
 
+	// for development purpose
+	if saveRawJsonByte {
+		SaveRawJsonByte("reels_media-", b)
+	}
+
 	// The name of json field is the id of the highlight tray, which is only
 	// known in run-time, not compile-time. So we need to replace the id of
 	// the highlight tray with *reels_media*, which can be decoded by Go

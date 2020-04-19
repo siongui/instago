@@ -47,6 +47,11 @@ func (m *IGApiManager) GetSavedPosts(numOfItem int) (items []IGItem, err error) 
 		return
 	}
 
+	// for development purpose
+	if saveRawJsonByte {
+		SaveRawJsonByte("saved-", b)
+	}
+
 	spp := savedPostsResp{}
 	err = json.Unmarshal(b, &spp)
 	if err != nil {
@@ -90,6 +95,11 @@ func (m *IGApiManager) GetSavedCollection(id string) (items []IGItem, err error)
 		return
 	}
 
+	// for development purpose
+	if saveRawJsonByte {
+		SaveRawJsonByte(id+"-collection-", b)
+	}
+
 	spp := savedPostsResp{}
 	err = json.Unmarshal(b, &spp)
 	if err != nil {
@@ -107,6 +117,11 @@ func (m *IGApiManager) GetSavedCollectionList() (c []Collection, err error) {
 	b, err := m.getHTTPResponse(urlSavedCollectionList, "GET")
 	if err != nil {
 		return
+	}
+
+	// for development purpose
+	if saveRawJsonByte {
+		SaveRawJsonByte("collections-list-", b)
 	}
 
 	cl := collectionsList{}

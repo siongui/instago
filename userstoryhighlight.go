@@ -66,6 +66,11 @@ func (m *IGApiManager) GetUserStoryHighlights(id string) (trays []IGStoryHighlig
 		return
 	}
 
+	// for development purpose
+	if saveRawJsonByte {
+		SaveRawJsonByte(id+"-highlights_tray-", b)
+	}
+
 	t := rawHighlightsTray{}
 	err = json.Unmarshal(b, &t)
 	if err != nil {

@@ -29,6 +29,11 @@ func (m *IGApiManager) GetPostInfo(code string) (em IGMedia, err error) {
 		return
 	}
 
+	// for development purpose
+	if saveRawJsonByte {
+		SaveRawJsonByte("post-"+code+"-with-login-", b)
+	}
+
 	pi := postInfo{}
 	err = json.Unmarshal(b, &pi)
 	if err != nil {
@@ -44,6 +49,11 @@ func GetPostInfoNoLogin(code string) (em IGMedia, err error) {
 	b, err := getHTTPResponseNoLogin(url)
 	if err != nil {
 		return
+	}
+
+	// for development purpose
+	if saveRawJsonByte {
+		SaveRawJsonByte("post-"+code+"-no-login-", b)
 	}
 
 	pi := postInfo{}

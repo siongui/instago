@@ -23,6 +23,11 @@ func (m *IGApiManager) GetUserReelMedia(userid string) (ut userTray, err error) 
 		return
 	}
 
+	// for development purpose
+	if saveRawJsonByte {
+		SaveRawJsonByte(userid+"-story-", b)
+	}
+
 	err = json.Unmarshal(b, &ut)
 	return
 }

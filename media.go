@@ -26,7 +26,11 @@ func (m *IGApiManager) GetMediaInfo(id string) (item IGItem, err error) {
 		return
 	}
 
-	//println(string(b))
+	// for development purpose
+	if saveRawJsonByte {
+		SaveRawJsonByte("media-"+id+"-info-", b)
+	}
+
 	mpp := mediaPostResp{}
 	err = json.Unmarshal(b, &mpp)
 	if err != nil {

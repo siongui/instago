@@ -23,7 +23,11 @@ func (m *IGApiManager) GetTimeline() (tl IGTimeline, err error) {
 		return
 	}
 
-	//println(string(b))
+	// for development purpose
+	if saveRawJsonByte {
+		SaveRawJsonByte("timeline-", b)
+	}
+
 	err = json.Unmarshal(b, &tl)
 	return
 }
