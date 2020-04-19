@@ -47,3 +47,16 @@ func (m *IGDownloadManager) SaveSelfFollowing(filepath string) (err error) {
 
 	return ioutil.WriteFile(filepath, b, 0644)
 }
+
+// Load []instago.IGFollowUser from JSON file, which is created by
+// SaveSelfFollowers or SaveSelfFollowing methods.
+func LoadFollowUsers(filepath string) (users []instago.IGFollowUser, err error) {
+	b, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	err = json.Unmarshal(b, &users)
+	return
+}

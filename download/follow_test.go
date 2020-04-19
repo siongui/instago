@@ -23,3 +23,15 @@ func ExampleSaveSelfFollowing(t *testing.T) {
 
 	mgr.SaveSelfFollowing(mgr.GetSelfId() + "-following.json")
 }
+
+func ExampleLoadFollowUsers(t *testing.T) {
+	users, err := LoadFollowUsers("following-or-followers.json")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	for _, user := range users {
+		t.Log(user)
+	}
+}
