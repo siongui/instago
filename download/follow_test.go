@@ -11,7 +11,7 @@ func ExampleSaveSelfFollowers(t *testing.T) {
 		return
 	}
 
-	mgr.SaveSelfFollowers("myfollowers.json")
+	mgr.SaveSelfFollowers(mgr.GetSelfId() + "-followers.json")
 }
 
 func ExampleSaveSelfFollowing(t *testing.T) {
@@ -21,5 +21,5 @@ func ExampleSaveSelfFollowing(t *testing.T) {
 		return
 	}
 
-	mgr.SaveSelfFollowing("myfollowing.json")
+	mgr.SaveSelfFollowing(mgr.GetSelfId() + "-following.json")
 }

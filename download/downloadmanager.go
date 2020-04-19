@@ -31,6 +31,10 @@ func NewInstagramDownloadManager(authFilePath string) (*IGDownloadManager, error
 	return &m, err
 }
 
+func (m *IGDownloadManager) GetSelfId() string {
+	return m.apimgr.GetSelfId()
+}
+
 func (m *IGDownloadManager) LoadCollectionList() (err error) {
 	m.collections, err = m.apimgr.GetSavedCollectionList()
 	return
