@@ -7,7 +7,7 @@ export PATH := $(GOROOT)/bin:$(GOPATH)/bin:$(PATH)
 
 ALL_GO_SOURCES=$(shell /bin/sh -c "find *.go | grep -v _test.go")
 
-default: test_highlight
+default: test_follow
 
 highlight: fmt
 	@echo "\033[92mDownload story highlights of all following users ...\033[0m"
@@ -87,10 +87,15 @@ test_highlight: fmt
 	@echo "\033[92mDownload user highlight test ...\033[0m"
 	@go test -v $(ALL_GO_SOURCES) highlight_test.go
 
-test_saved:
+test_saved: fmt
 	@echo "\033[92mSaved posts test ...\033[0m"
 	# -count=1 disable test cache
 	@go test -v -count=1 $(ALL_GO_SOURCES) saved_test.go
+
+test_follow: fmt
+	@echo "\033[92mTest follow methods ...\033[0m"
+	# -count=1 disable test cache
+	@go test -v -count=1 $(ALL_GO_SOURCES) follow_test.go
 
 example_zero: fmt
 	@echo "\033[92mFind files with 0 size ...\033[0m"
