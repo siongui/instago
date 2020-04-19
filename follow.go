@@ -4,6 +4,7 @@ package instago
 
 import (
 	"encoding/json"
+	"strconv"
 	"strings"
 )
 
@@ -11,11 +12,13 @@ const urlFollowers = `https://i.instagram.com/api/v1/friendships/{{USERID}}/foll
 const urlFollowing = `https://i.instagram.com/api/v1/friendships/{{USERID}}/following/`
 
 type rawFollow struct {
+	//sections
+	//global_blacklist_sample
 	Users     []IGUser `json:"users"`
-	BigList   bool     `json:"big_list"` // if false, no next_max_id in response
+	BigList   bool     `json:"big_list"`    // if false, no next_max_id in response
+	NextMaxId int64    `json:"next_max_id"` // used for pagination if list is too big
 	PageSize  int64    `json:"page_size"`
 	Status    string   `json:"status"`
-	NextMaxId string   `json:"next_max_id"` // used for pagination if list is too big
 }
 
 // GetFollowers returns all followers of the given user id.
@@ -38,8 +41,8 @@ func (m *IGApiManager) getFollow(url string) (users []IGUser, err error) {
 	users = append(users, rf.Users...)
 
 	// If the list is too big and next_max_id is not ""
-	for rf.NextMaxId != "" {
-		urln := url + "?max_id=" + rf.NextMaxId
+	for rf.NextMaxId != 0 {
+		urln := url + "?max_id=" + strconv.FormatInt(rf.NextMaxId, 10)
 		rfn, err := m.getFollowResponse(urln)
 		if err != nil {
 			return users, err
@@ -56,6 +59,7 @@ func (m *IGApiManager) getFollowResponse(url string) (rf rawFollow, err error) {
 		return
 	}
 
+	//println(string(b))
 	err = json.Unmarshal(b, &rf)
 	return
 }

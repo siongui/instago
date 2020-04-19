@@ -6,10 +6,12 @@ import (
 )
 
 func ExampleGetFollowing(t *testing.T) {
-	mgr := NewInstagramApiManager(
-		os.Getenv("IG_DS_USER_ID"),
-		os.Getenv("IG_SESSIONID"),
-		os.Getenv("IG_CSRFTOKEN"))
+	mgr, err := NewInstagramApiManager("auth.json")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
 	users, err := mgr.GetFollowing(os.Getenv("IG_TEST_ID"))
 	if err != nil {
 		t.Error(err)
@@ -20,10 +22,12 @@ func ExampleGetFollowing(t *testing.T) {
 }
 
 func ExampleGetFollowers(t *testing.T) {
-	mgr := NewInstagramApiManager(
-		os.Getenv("IG_DS_USER_ID"),
-		os.Getenv("IG_SESSIONID"),
-		os.Getenv("IG_CSRFTOKEN"))
+	mgr, err := NewInstagramApiManager("auth.json")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
 	users, err := mgr.GetFollowers(os.Getenv("IG_TEST_ID"))
 	if err != nil {
 		t.Error(err)
