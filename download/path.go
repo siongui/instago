@@ -146,3 +146,13 @@ func getIdUsernamePath(id, username string) string {
 	filename := id + "-" + username
 	return path.Join(dataDir, "ID-USERNAME", filename)
 }
+
+func getFollowingPath(id string) string {
+	filename := id + "-following-" + time.Now().Format(time.RFC3339) + ".json"
+	return path.Join(dataDir, "Follow", filename)
+}
+
+func getFollowersPath(id string) string {
+	filename := id + "-followers-" + time.Now().Format(time.RFC3339) + ".json"
+	return path.Join(dataDir, "Follow", filename)
+}

@@ -60,3 +60,22 @@ func LoadFollowUsers(filepath string) (users []instago.IGFollowUser, err error) 
 	err = json.Unmarshal(b, &users)
 	return
 }
+
+// Run SaveSelfFollowers and SaveSelfFollowing in oneshot
+func (m *IGDownloadManager) SaveSelfFollow() (err error) {
+	p := getFollowersPath(m.GetSelfId())
+	CreateFilepathDirIfNotExist(p)
+	err = m.SaveSelfFollowers(p)
+	if err != nil {
+		return
+	}
+	log.Println(p, "saved!")
+
+	p = getFollowingPath(m.GetSelfId())
+	CreateFilepathDirIfNotExist(p)
+	err = m.SaveSelfFollowing(p)
+	if err == nil {
+		log.Println(p, "saved!")
+	}
+	return
+}

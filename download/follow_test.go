@@ -35,3 +35,13 @@ func ExampleLoadFollowUsers(t *testing.T) {
 		t.Log(user)
 	}
 }
+
+func ExampleSaveSelfFollow(t *testing.T) {
+	mgr, err := NewInstagramDownloadManager("auth.json")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	mgr.SaveSelfFollow()
+}
