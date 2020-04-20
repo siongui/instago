@@ -7,7 +7,7 @@ export PATH := $(GOROOT)/bin:$(GOPATH)/bin:$(PATH)
 
 ALL_GO_SOURCES=$(shell /bin/sh -c "find *.go | grep -v _test.go")
 
-default: test_follow
+default: test_diffuser
 
 highlight: fmt
 	@echo "\033[92mDownload story highlights of all following users ...\033[0m"
@@ -96,6 +96,10 @@ test_follow: fmt
 	@echo "\033[92mTest follow methods ...\033[0m"
 	# -count=1 disable test cache
 	@go test -v -count=1 $(ALL_GO_SOURCES) follow_test.go
+
+test_diffuser: fmt
+	@echo "\033[92mTest users difference ...\033[0m"
+	@go test -v -count=1 $(ALL_GO_SOURCES) diffuser_test.go
 
 example_zero: fmt
 	@echo "\033[92mFind files with 0 size ...\033[0m"
