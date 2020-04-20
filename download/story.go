@@ -28,7 +28,9 @@ func getStoryItem(item instago.IGItem, username string) (err error) {
 	}
 	url := urls[0]
 
-	saveIdUsername(item.GetUserId(), username)
+	if saveData {
+		saveIdUsername(item.GetUserId(), username)
+	}
 
 	// fix missing username issue while print download info
 	item.User.Username = username
@@ -51,21 +53,6 @@ func getStoryItem(item instago.IGItem, username string) (err error) {
 			fmt.Println(err)
 			return err
 		}
-	}
-	return
-}
-
-func (m *IGDownloadManager) UsernameToId(username string) (id string, err error) {
-	// Try to get id without loggin
-	id, err = instago.GetUserId(username)
-	if err == nil {
-		return
-	}
-
-	// Try to get id with loggin
-	ui, err := m.apimgr.GetUserInfo(username)
-	if err == nil {
-		id = ui.Id
 	}
 	return
 }

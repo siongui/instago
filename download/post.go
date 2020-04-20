@@ -31,6 +31,10 @@ func (m *IGDownloadManager) DownloadPost(code string) (isDownloaded bool, err er
 // IGItem (items in timeline or saved posts) or IGMedia (read from
 // https://www.instagram.com/p/{{CODE}}/?__a=1) can be argument in this method.
 func DownloadIGMedia(em instago.IGMedia) (isDownloaded bool, err error) {
+	if saveData {
+		saveIdUsername(em.GetUserId(), em.GetUsername())
+	}
+
 	urls, err := em.GetMediaUrls()
 	if err != nil {
 		log.Println(err)
