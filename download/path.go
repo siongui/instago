@@ -2,6 +2,7 @@ package igdl
 
 import (
 	"path"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -157,4 +158,39 @@ func getFollowingPath(id string) string {
 func getFollowersPath(id string) string {
 	filename := id + "-followers-" + time.Now().Format(time.RFC3339) + ".json"
 	return path.Join(dataDir, "Follow", filename)
+}
+
+func GetRFC3339String(s string) string {
+	// Google search: regex rfc3339 golang
+	pattern := regexp.MustCompile(`([0-9]+)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])[Tt]([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?(([Zz])|([\+|\-]([01][0-9]|2[0-3]):[0-5][0-9]))`)
+	return string(pattern.Find([]byte(s)))
+}
+
+func ExtractPostCodeFromFilename(filename string) (code string) {
+	// remove ext
+	f1 := strings.TrimSuffix(filename, path.Ext(filename))
+
+	rfc3339s := GetRFC3339String(f1)
+	pieces := strings.Split(f1, "-"+rfc3339s+"-")
+	if len(pieces) != 2 {
+		return
+	}
+
+	f2 := pieces[1]
+	pieces = strings.Split(f2, "-")
+	if len(pieces) < 2 {
+		return
+	}
+
+	utime := pieces[len(pieces)-1]
+	if len(utime) < 3 && len(pieces) > 2 {
+		utime = pieces[len(pieces)-2]
+	}
+
+	pieces = strings.Split(f2, "-"+utime)
+	if len(pieces) < 1 {
+		return
+	}
+
+	return pieces[0]
 }

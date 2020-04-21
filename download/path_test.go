@@ -170,3 +170,35 @@ func TestGetIdUsernamePath(t *testing.T) {
 		return
 	}
 }
+
+func TestGetRFC3339String(t *testing.T) {
+	s := "testuser-1234567-post-2018-06-10T09:41:35+08:00--j03-x3BXga-1528594895.jpg"
+	sp := GetRFC3339String(s)
+	if sp != "2018-06-10T09:41:35+08:00" {
+		t.Error(sp)
+		return
+	}
+}
+
+func TestExtractPostCodeFromFilename(t *testing.T) {
+	s := "testuser-1234567-post-2018-06-10T09:41:35+08:00--j03-x3BXga-1528594895.jpg"
+	code := ExtractPostCodeFromFilename(s)
+	if code != "-j03-x3BXga" {
+		t.Error(code)
+		return
+	}
+
+	s2 := "instagram-25025320-story-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4"
+	code = ExtractPostCodeFromFilename(s2)
+	if code != "Bh7kySfDYq8" {
+		t.Error(code)
+		return
+	}
+
+	s3 := "instagram-25025320-story-2018-03-03T13:57:41+08:00-Bh7kySfDYq--1520056661-2.mp4"
+	code = ExtractPostCodeFromFilename(s3)
+	if code != "Bh7kySfDYq-" {
+		t.Error(code)
+		return
+	}
+}
