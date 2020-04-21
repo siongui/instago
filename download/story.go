@@ -3,6 +3,7 @@ package igdl
 import (
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 
@@ -52,6 +53,10 @@ func getStoryItem(item instago.IGItem, username string) (err error) {
 		if err != nil {
 			fmt.Println(err)
 			return err
+		}
+	} else {
+		if err != nil {
+			log.Println(err)
 		}
 	}
 	return

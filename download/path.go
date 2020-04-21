@@ -71,7 +71,9 @@ func appendUsernameToFilename(username, id, filename string, appendUsernames []s
 		newprefix := prefix + "-" + n
 		newfilename := strings.Replace(filename, prefix, newprefix, 1)
 
-		if len(newfilename) > 256 {
+		// cannot use 256 here. will get filename too long error.
+		// use 240
+		if len(newfilename) > 240 {
 			continue
 		}
 

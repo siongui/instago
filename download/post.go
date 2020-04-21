@@ -71,6 +71,10 @@ func DownloadIGMedia(em instago.IGMedia) (isDownloaded bool, err error) {
 			} else {
 				isDownloaded = true
 			}
+		} else {
+			if err != nil {
+				log.Println(err)
+			}
 		}
 	}
 	return
