@@ -171,6 +171,14 @@ func TestGetIdUsernamePath(t *testing.T) {
 	}
 }
 
+func TestGetReelMentionsPath(t *testing.T) {
+	path := getReelMentionsPath("25025320", "instagram")
+	if path != "Data/Reel-Mentions/25025320-instagram" {
+		t.Error(path)
+		return
+	}
+}
+
 func TestGetRFC3339String(t *testing.T) {
 	s := "testuser-1234567-post-2018-06-10T09:41:35+08:00--j03-x3BXga-1528594895.jpg"
 	sp := GetRFC3339String(s)

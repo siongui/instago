@@ -31,6 +31,7 @@ func getStoryItem(item instago.IGItem, username string) (err error) {
 
 	if saveData {
 		saveIdUsername(item.GetUserId(), username)
+		saveReelMentions(item.ReelMentions)
 	}
 
 	// fix missing username issue while print download info

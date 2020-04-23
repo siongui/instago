@@ -150,6 +150,11 @@ func getIdUsernamePath(id, username string) string {
 	return path.Join(dataDir, "ID-USERNAME", filename)
 }
 
+func getReelMentionsPath(id, username string) string {
+	filename := id + "-" + username
+	return path.Join(dataDir, "Reel-Mentions", filename)
+}
+
 func getFollowingPath(id string) string {
 	filename := id + "-following-" + time.Now().Format(time.RFC3339) + ".json"
 	return path.Join(dataDir, "Follow", filename)

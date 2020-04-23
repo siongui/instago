@@ -36,15 +36,32 @@ func (m *IGDownloadManager) UsernameToId(username string) (id string, err error)
 	return
 }
 
-func saveIdUsername(id, username string) (err error) {
-	p := getIdUsernamePath(id, username)
+func saveEmpty(p string) (err error) {
 	CreateFilepathDirIfNotExist(p)
 	// check if file exist
 	if _, err := os.Stat(p); os.IsNotExist(err) {
 		// file not exists
-		err = ioutil.WriteFile(p, []byte(""), 0644)
+		return ioutil.WriteFile(p, []byte(""), 0644)
+	}
+	return
+}
+
+func saveIdUsername(id, username string) (err error) {
+	p := getIdUsernamePath(id, username)
+	err = saveEmpty(p)
+	if err == nil {
+		fmt.Println("ID-USERNAME: ", id, username, "saved")
+	}
+	return
+}
+
+func saveReelMentions(rms []instago.ItemReelMention) (err error) {
+	for _, rm := range rms {
+		saveIdUsername(rm.GetUserId(), rm.GetUsername())
+		p := getReelMentionsPath(rm.GetUserId(), rm.GetUsername())
+		err = saveEmpty(p)
 		if err == nil {
-			fmt.Println(id, username, "saved")
+			fmt.Println("Reel-Mentions: ", rm.GetUserId(), rm.GetUsername(), "saved")
 		}
 	}
 	return
