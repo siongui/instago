@@ -41,18 +41,17 @@ func saveEmpty(p string) (err error) {
 	// check if file exist
 	if _, err := os.Stat(p); os.IsNotExist(err) {
 		// file not exists
-		return ioutil.WriteFile(p, []byte(""), 0644)
+		err = ioutil.WriteFile(p, []byte(""), 0644)
+		if err == nil {
+			fmt.Println(p, "saved")
+		}
 	}
 	return
 }
 
 func saveIdUsername(id, username string) (err error) {
 	p := getIdUsernamePath(id, username)
-	err = saveEmpty(p)
-	if err == nil {
-		fmt.Println("ID-USERNAME: ", id, username, "saved")
-	}
-	return
+	return saveEmpty(p)
 }
 
 func saveReelMentions(rms []instago.ItemReelMention) (err error) {
@@ -60,9 +59,7 @@ func saveReelMentions(rms []instago.ItemReelMention) (err error) {
 		saveIdUsername(rm.GetUserId(), rm.GetUsername())
 		p := getReelMentionsPath(rm.GetUserId(), rm.GetUsername())
 		err = saveEmpty(p)
-		if err == nil {
-			fmt.Println("Reel-Mentions: ", rm.GetUserId(), rm.GetUsername(), "saved")
-		}
 	}
+	// DISCUSS: err returned here seems useless
 	return
 }
