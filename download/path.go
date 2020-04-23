@@ -194,3 +194,13 @@ func ExtractPostCodeFromFilename(filename string) (code string) {
 
 	return pieces[0]
 }
+
+func ExtractUsernameIdFromFilename(filename string) (username, id string) {
+	pieces := strings.Split(filename, "-")
+	if len(pieces) < 2 {
+		return
+	}
+	username = pieces[0]
+	id = pieces[1]
+	return
+}
