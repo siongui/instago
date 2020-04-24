@@ -41,7 +41,7 @@ func buildFilename(url, username, id, middle, last string, timestamp int64) stri
 		ext)
 }
 
-func getPostFilePath2(username, id, code, url string, timestamp int64, taggedusers []string) string {
+func getPostFilePath2(username, id, code, url string, timestamp int64, taggedusers [][2]string) string {
 	userDir := path.Join(outputDir, username)
 	userPostsDir := path.Join(userDir, "posts")
 
@@ -63,13 +63,14 @@ func getStoryFilePath(username, id, code, url string, timestamp int64) string {
 	return path.Join(userStoriesDir, buildFilename(url, username, id, "-story-", code+"-", timestamp))
 }
 
-func appendUsernameToFilename(username, id, filename string, appendUsernames []string) string {
+func appendUsernameToFilename(username, id, filename string, appendIdUsernames [][2]string) string {
 	prefix := username + "-" + id
 
 	usednames := make(map[string]bool)
 	usednames[username] = true
-	for _, n := range appendUsernames {
-		newprefix := prefix + "-" + n
+	for _, n := range appendIdUsernames {
+		taggedname := n[1]
+		newprefix := prefix + "-" + taggedname
 		newfilename := strings.Replace(filename, prefix, newprefix, 1)
 
 		// cannot use 256 here. will get filename too long error.
@@ -78,10 +79,10 @@ func appendUsernameToFilename(username, id, filename string, appendUsernames []s
 			continue
 		}
 
-		if _, ok := usednames[n]; ok {
+		if _, ok := usednames[taggedname]; ok {
 			continue
 		} else {
-			usednames[n] = true
+			usednames[taggedname] = true
 		}
 
 		prefix = newprefix
@@ -97,11 +98,12 @@ func getStoryFilePath2(username, id, code, url string, timestamp int64, rms []in
 	userStoriesDir := path.Join(userDir, "stories")
 
 	filename := buildFilename(url, username, id, "-story-", code+"-", timestamp)
-	appendUsernames := []string{}
+	appendIdUsernames := [][2]string{}
 	for _, rm := range rms {
-		appendUsernames = append(appendUsernames, rm.GetUsername())
+		pair := [2]string{rm.GetUserId(), rm.GetUsername()}
+		appendIdUsernames = append(appendIdUsernames, pair)
 	}
-	filename = appendUsernameToFilename(username, id, filename, appendUsernames)
+	filename = appendUsernameToFilename(username, id, filename, appendIdUsernames)
 
 	return path.Join(userStoriesDir, filename)
 }

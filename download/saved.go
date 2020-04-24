@@ -18,11 +18,11 @@ func (m *IGDownloadManager) GetPostItem(item instago.IGItem) (isDownloaded bool,
 	}
 
 	for index, url := range urls {
-		taggedusers := []string{}
+		taggedusers := [][2]string{}
 		if len(urls) == 1 {
-			taggedusers = item.Usertags.GetTaggedUsernames()
+			taggedusers = item.Usertags.GetIdUsernamePairs()
 		} else {
-			taggedusers = item.CarouselMedia[index].Usertags.GetTaggedUsernames()
+			taggedusers = item.CarouselMedia[index].Usertags.GetIdUsernamePairs()
 		}
 
 		filepath := getPostFilePath2(

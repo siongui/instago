@@ -42,11 +42,11 @@ func DownloadIGMedia(em instago.IGMedia) (isDownloaded bool, err error) {
 	}
 
 	for index, url := range urls {
-		taggedusers := []string{}
+		taggedusers := [][2]string{}
 		if len(urls) == 1 {
-			taggedusers = em.EdgeMediaToTaggedUser.GetTaggedUsernames()
+			taggedusers = em.EdgeMediaToTaggedUser.GetIdUsernamePairs()
 		} else {
-			taggedusers = em.EdgeSidecarToChildren.Edges[index].Node.EdgeMediaToTaggedUser.GetTaggedUsernames()
+			taggedusers = em.EdgeSidecarToChildren.Edges[index].Node.EdgeMediaToTaggedUser.GetIdUsernamePairs()
 		}
 
 		filepath := getPostFilePath2(
