@@ -7,10 +7,14 @@ import (
 
 func PrintTaggedUsers(tu TaggedUsers) {
 	fmt.Println("tagged users:", tu.GetTaggedUsernames())
+	for _, pair := range tu.GetIdUsernamePairs() {
+		fmt.Println("id:", pair[0], ", username:", pair[1])
+	}
 }
 
 type TaggedUsers interface {
 	GetTaggedUsernames() []string
+	GetIdUsernamePairs() [][2]string
 }
 
 func PrintPostItem(pi PostItem) (err error) {

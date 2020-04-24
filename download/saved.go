@@ -55,6 +55,10 @@ func (m *IGDownloadManager) GetPostItem(item instago.IGItem) (isDownloaded bool,
 				// always run here.
 				return m.DownloadPost(item.GetPostCode())
 			}
+		} else {
+			if err != nil {
+				log.Println(err)
+			}
 		}
 	}
 	return

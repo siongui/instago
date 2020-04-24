@@ -168,6 +168,14 @@ func (i ItemUsertags) GetTaggedUsernames() (usernames []string) {
 	return
 }
 
+func (i ItemUsertags) GetIdUsernamePairs() (pairs [][2]string) {
+	for _, in := range i.In {
+		pair := [2]string{strconv.FormatInt(in.User.Pk, 10), in.User.Username}
+		pairs = append(pairs, pair)
+	}
+	return
+}
+
 // suggested_user in items of timeline
 type ItemSuggestion struct {
 	//Cannot use IGUser because
