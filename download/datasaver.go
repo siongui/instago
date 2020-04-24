@@ -63,3 +63,10 @@ func saveReelMentions(rms []instago.ItemReelMention) (err error) {
 	// DISCUSS: err returned here seems useless
 	return
 }
+
+func saveTaggedUsers(taggedusers [][2]string) (err error) {
+	for _, user := range taggedusers {
+		err = saveIdUsername(user[0], user[1])
+	}
+	return
+}

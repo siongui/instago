@@ -9,6 +9,10 @@ import (
 
 // GetPostItem downloads media (photo/video) item in the post.
 func (m *IGDownloadManager) GetPostItem(item instago.IGItem) (isDownloaded bool, err error) {
+	if saveData {
+		saveIdUsername(item.GetUserId(), item.GetUsername())
+	}
+
 	// FIXME: Use item.IsRegularMedia() to check validity of item?
 
 	urls, err := item.GetMediaUrls()
@@ -23,6 +27,10 @@ func (m *IGDownloadManager) GetPostItem(item instago.IGItem) (isDownloaded bool,
 			taggedusers = item.Usertags.GetIdUsernamePairs()
 		} else {
 			taggedusers = item.CarouselMedia[index].Usertags.GetIdUsernamePairs()
+		}
+
+		if saveData {
+			saveTaggedUsers(taggedusers)
 		}
 
 		filepath := getPostFilePath2(

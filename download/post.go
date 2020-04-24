@@ -49,6 +49,10 @@ func DownloadIGMedia(em instago.IGMedia) (isDownloaded bool, err error) {
 			taggedusers = em.EdgeSidecarToChildren.Edges[index].Node.EdgeMediaToTaggedUser.GetIdUsernamePairs()
 		}
 
+		if saveData {
+			saveTaggedUsers(taggedusers)
+		}
+
 		filepath := getPostFilePath2(
 			em.GetUsername(),
 			em.GetUserId(),
