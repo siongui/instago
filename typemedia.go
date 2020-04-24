@@ -249,3 +249,11 @@ func (m MediaUsertags) GetTaggedUsernames() (usernames []string) {
 	}
 	return
 }
+
+func (m MediaUsertags) GetIdUsernamePairs() (pairs [][2]string) {
+	for _, edge := range m.Edges {
+		pair := [2]string{edge.Node.User.Id, edge.Node.User.Username}
+		pairs = append(pairs, pair)
+	}
+	return
+}
