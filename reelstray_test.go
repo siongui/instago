@@ -21,4 +21,5 @@ func ExampleGetReelsTray(t *testing.T) {
 			t.Log(bc.DashManifest)
 		}
 	}
+	t.Log(rt.Broadcasts)
 }

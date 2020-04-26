@@ -17,9 +17,10 @@ const urlReelsTray = `https://i.instagram.com/api/v1/feed/reels_tray/`
 
 // Used to decode JSON returned by Instagram reels tray feed API.
 type reelsTray struct {
-	Trays             []IGReelTray `json:"tray"`
-	PostLive          IGPostLive   `json:"post_live"`
-	StoryRankingToken string       `json:"story_ranking_token"`
+	Trays             []IGReelTray  `json:"tray"`
+	Broadcasts        []IGBroadcast `json:"broadcasts"`
+	PostLive          IGPostLive    `json:"post_live"`
+	StoryRankingToken string        `json:"story_ranking_token"`
 
 	// "broadcasts"
 
