@@ -7,7 +7,7 @@ export PATH := $(GOROOT)/bin:$(GOPATH)/bin:$(PATH)
 
 ALL_GO_SOURCES=$(shell /bin/sh -c "find *.go | grep -v _test.go")
 
-default: test_checkzero
+default: test_screenshot
 
 highlight: fmt
 	@echo "\033[92mDownload story highlights of all following users ...\033[0m"
@@ -104,6 +104,10 @@ test_diffuser: fmt
 test_checkzero: fmt
 	@echo "\033[92mTest check zero files and re-download ...\033[0m"
 	@go test -v $(ALL_GO_SOURCES) checkzero_test.go
+
+test_screenshot: fmt
+	@echo "\033[92mTest screenshot feature ...\033[0m"
+	@go test -v $(ALL_GO_SOURCES) screenshot_test.go
 
 example_zero: fmt
 	@echo "\033[92mFind files with 0 size ...\033[0m"
