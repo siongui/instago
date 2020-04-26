@@ -33,10 +33,10 @@ func DownloadPostLiveItem(pli instago.IGPostLiveItem) {
 		// second url seems to be best video quality track.
 		vidx := 0
 		if len(urls) == 2 {
-			fmt.Println("number of urls = 2")
+			//fmt.Println("number of urls = 2")
 			vidx = 0
 		} else if len(urls) == 5 {
-			fmt.Println("number of urls = 5")
+			//fmt.Println("number of urls = 5")
 			vidx = 1
 		} else {
 			fmt.Println("error: number of urls != (5 or 2)", len(urls))
@@ -92,18 +92,22 @@ func DownloadPostLiveItem(pli instago.IGPostLiveItem) {
 	}
 }
 
-func DownloadPostLive(pl instago.IGPostLive, cpl chan int) {
-	defer func() { cpl <- 1 }()
-
+func DownloadPostLive(pl instago.IGPostLive, isDownloading map[string]bool) {
 	for _, item := range pl.PostLiveItems {
-		go PrintPostLiveItem(item)
+		if _, ok := isDownloading[item.Pk]; ok {
+			fmt.Println(item.Pk, " is downloading. ignored.")
+			continue
+		}
+		isDownloading[item.Pk] = true
+		PrintPostLiveItem(item)
 		DownloadPostLiveItem(item)
+		delete(isDownloading, item.Pk)
 	}
 }
 
 func (m *IGDownloadManager) DownloadStoryAndPostLive() {
 	// channel for waiting DownloadPostLive completed
-	cpl := make(chan int)
+	isDownloading := make(map[string]bool)
 
 	sleepInterval := 30 // seconds
 	count := 0
@@ -114,7 +118,7 @@ func (m *IGDownloadManager) DownloadStoryAndPostLive() {
 			continue
 		}
 
-		go DownloadPostLive(rt.PostLive, cpl)
+		go DownloadPostLive(rt.PostLive, isDownloading)
 		go PrintLiveBroadcasts(rt.Broadcasts)
 		if count == 0 {
 			m.DownloadAllStory(rt.Trays)
@@ -131,8 +135,5 @@ func (m *IGDownloadManager) DownloadStoryAndPostLive() {
 		cc.Print(sleepInterval)
 		fmt.Println(" second")
 		time.Sleep(time.Duration(sleepInterval) * time.Second)
-
-		// wait DownloadPostLive completed
-		<-cpl
 	}
 }
