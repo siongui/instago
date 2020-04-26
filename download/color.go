@@ -66,3 +66,25 @@ func printDownloadInfo(pi instago.PostItem, url, filepath string) {
 	fmt.Print(" to ")
 	cc.Println(filepath)
 }
+
+func PrintLiveBroadcasts(bcs []instago.IGBroadcast) {
+	for _, bc := range bcs {
+		fmt.Print("Live: ")
+		cc.Print(bc.BroadcastOwner.Username)
+		for _, cobcter := range bc.Cobroadcasters {
+			fmt.Print(" + ")
+			cc.Print(cobcter.Username)
+		}
+		fmt.Print(" , id: ")
+		cc.Print(bc.Id)
+		fmt.Println(" , viewer_count: ", bc.ViewerCount)
+	}
+}
+
+func PrintPostLiveItem(pli instago.IGPostLiveItem) {
+	fmt.Print("Postlive Item, Pk: ")
+	cc.Print(pli.Pk)
+	fmt.Print(" , user: ")
+	cc.Print(pli.User.Username)
+	fmt.Println(" , ranked_position: ", pli.RankedPosition)
+}

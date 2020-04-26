@@ -96,6 +96,7 @@ func DownloadPostLive(pl instago.IGPostLive, cpl chan int) {
 	defer func() { cpl <- 1 }()
 
 	for _, item := range pl.PostLiveItems {
+		go PrintPostLiveItem(item)
 		DownloadPostLiveItem(item)
 	}
 }
@@ -114,6 +115,7 @@ func (m *IGDownloadManager) DownloadStoryAndPostLive() {
 		}
 
 		go DownloadPostLive(rt.PostLive, cpl)
+		go PrintLiveBroadcasts(rt.Broadcasts)
 		if count == 0 {
 			m.DownloadAllStory(rt.Trays)
 			cc.Println("Download all stories finished")
