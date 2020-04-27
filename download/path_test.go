@@ -179,6 +179,14 @@ func TestGetReelMentionsPath(t *testing.T) {
 	}
 }
 
+func TestGetScreenshotPath(t *testing.T) {
+	path := GetScreenshotPath("25025320", "instagram")
+	if path != "Instagram/Auto-Screenshot/instagram-25025320.png" {
+		t.Error(path)
+		return
+	}
+}
+
 func TestGetRFC3339String(t *testing.T) {
 	s := "testuser-1234567-post-2018-06-10T09:41:35+08:00--j03-x3BXga-1528594895.jpg"
 	sp := GetRFC3339String(s)

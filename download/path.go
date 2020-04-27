@@ -157,6 +157,11 @@ func GetReelMentionsPath(id, username string) string {
 	return path.Join(dataDir, "Reel-Mentions", filename)
 }
 
+func GetScreenshotPath(id, username string) string {
+	filename := username + "-" + id + ".png"
+	return path.Join(outputDir, "Auto-Screenshot", filename)
+}
+
 func getFollowingPath(id string) string {
 	filename := id + "-following-" + time.Now().Format(time.RFC3339) + ".json"
 	return path.Join(dataDir, "Follow", filename)
