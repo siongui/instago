@@ -164,7 +164,7 @@ func TestGetUserProfilPicFilePath(t *testing.T) {
 }
 
 func TestGetIdUsernamePath(t *testing.T) {
-	path := getIdUsernamePath("25025320", "instagram")
+	path := GetIdUsernamePath("25025320", "instagram")
 	if path != "Data/ID-USERNAME/25025320-instagram" {
 		t.Error(path)
 		return
@@ -172,7 +172,7 @@ func TestGetIdUsernamePath(t *testing.T) {
 }
 
 func TestGetReelMentionsPath(t *testing.T) {
-	path := getReelMentionsPath("25025320", "instagram")
+	path := GetReelMentionsPath("25025320", "instagram")
 	if path != "Data/Reel-Mentions/25025320-instagram" {
 		t.Error(path)
 		return

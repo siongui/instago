@@ -50,14 +50,14 @@ func saveEmpty(p string) (err error) {
 }
 
 func saveIdUsername(id, username string) (err error) {
-	p := getIdUsernamePath(id, username)
+	p := GetIdUsernamePath(id, username)
 	return saveEmpty(p)
 }
 
 func saveReelMentions(rms []instago.ItemReelMention) (err error) {
 	for _, rm := range rms {
 		saveIdUsername(rm.GetUserId(), rm.GetUsername())
-		p := getReelMentionsPath(rm.GetUserId(), rm.GetUsername())
+		p := GetReelMentionsPath(rm.GetUserId(), rm.GetUsername())
 		err = saveEmpty(p)
 	}
 	// DISCUSS: err returned here seems useless
