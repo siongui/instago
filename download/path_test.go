@@ -181,7 +181,7 @@ func TestGetReelMentionsPath(t *testing.T) {
 
 func TestGetScreenshotPath(t *testing.T) {
 	path := GetScreenshotPath("25025320", "instagram")
-	if path != "Instagram/Auto-Screenshot/instagram-25025320.png" {
+	if path != "Instagram/Auto-Screenshot/instagram-25025320-screenshot.png" {
 		t.Error(path)
 		return
 	}

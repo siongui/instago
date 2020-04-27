@@ -158,7 +158,7 @@ func GetReelMentionsPath(id, username string) string {
 }
 
 func GetScreenshotPath(id, username string) string {
-	filename := username + "-" + id + ".png"
+	filename := username + "-" + id + "-screenshot.png"
 	return path.Join(outputDir, "Auto-Screenshot", filename)
 }
 
