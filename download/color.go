@@ -78,6 +78,9 @@ func PrintLiveBroadcasts(bcs []instago.IGBroadcast) {
 		fmt.Print(" , id: ")
 		cc.Print(bc.Id)
 		fmt.Println(" , viewer_count: ", bc.ViewerCount)
+		fmt.Println("dash_playback_url: ", bc.DashPlaybackUrl)
+		fmt.Println("dash_live_predictive_playback_url: ", bc.DashLivePredictivePlaybackUrl)
+		fmt.Println("cover_frame_url", bc.CoverFrameUrl)
 	}
 }
 
