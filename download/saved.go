@@ -98,6 +98,37 @@ func (m *IGDownloadManager) DownloadSavedPosts(numOfItem int, downloadStory bool
 	}
 }
 
+// DO NOT USE. Test now.
+func (m *IGDownloadManager) DownloadSavedPosts2(numOfItem int, downloadStory bool, c chan instago.IGItem) (err error) {
+	items, err := m.apimgr.GetSavedPosts(numOfItem)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	username := make(map[string]bool)
+	for idx, item := range items {
+		// FIXME: check err
+		PrintItemInfo(idx, &item)
+		isDownloaded, _ := m.GetPostItem(item)
+		if isDownloaded && downloadStory {
+			u := item.GetUsername()
+			if _, ok := username[u]; !ok {
+				// Pk here is user id
+				go m.DownloadUserStoryPostlive(item.User.Pk)
+				username[u] = true
+			}
+		}
+
+		// if item in collection, send to chan
+		if len(item.SavedCollectionIds) > 0 {
+			c <- item
+		}
+	}
+
+	return
+}
+
 func (m *IGDownloadManager) GetSavedPosts(numOfItem int) (items []instago.IGItem, err error) {
 	return m.apimgr.GetSavedPosts(numOfItem)
 }
