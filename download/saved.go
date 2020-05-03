@@ -148,7 +148,7 @@ func (m *IGDownloadManager) DownloadDependOnCollectionName(name2layer, nameAllpo
 			if name == name2layer {
 				if _, isDone := map2layer[iddone]; !isDone {
 					log.Println(item.GetUsername(), "download 2layer", iddone)
-					go m.DownloadUserStoryLayer(item.User.Pk, 1)
+					go m.DownloadUserStoryLayer(item.User.Pk, 2)
 					map2layer[iddone] = true
 				}
 			}
