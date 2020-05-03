@@ -98,8 +98,8 @@ func (m *IGDownloadManager) DownloadSavedPosts(numOfItem int, downloadStory bool
 	}
 }
 
-// DO NOT USE. Test now.
-func (m *IGDownloadManager) DownloadSavedPosts2(numOfItem int, downloadStory bool, c chan instago.IGItem) (err error) {
+// DO NOT USE. Test now. Used with DownloadDependOnCollectionName
+func (m *IGDownloadManager) DownloadSavedPostsAndSendItemInCollectionToChannel(numOfItem int, downloadStory bool, c chan instago.IGItem) (err error) {
 	items, err := m.apimgr.GetSavedPosts(numOfItem)
 	if err != nil {
 		log.Println(err)
@@ -120,13 +120,56 @@ func (m *IGDownloadManager) DownloadSavedPosts2(numOfItem int, downloadStory boo
 			}
 		}
 
-		// if item in collection, send to chan
+		// if item in collection, send to channel
 		if len(item.SavedCollectionIds) > 0 {
 			c <- item
 		}
 	}
 
 	return
+}
+
+// DO NOT USE. Test now. Used with DownloadSavedPostsAndSendItemInCollectionToChannel
+func (m *IGDownloadManager) DownloadDependOnCollectionName(name2layer, nameAllpost, nameHighlight string, c chan instago.IGItem) {
+	map2layer := make(map[string]bool)
+	mapAllpost := make(map[string]bool)
+	mapHighlight := make(map[string]bool)
+	for {
+		item := <-c
+		//log.Println(item.GetUsername())
+		for _, cid := range item.SavedCollectionIds {
+
+			name := m.CollectionId2Name(cid)
+			//log.Println(name)
+
+			iddone := cid + "-" + item.GetUsername() + "-" + item.GetUserId() + "-" + item.GetPostCode()
+			//log.Println(iddone)
+
+			if name == name2layer {
+				if _, isDone := map2layer[iddone]; !isDone {
+					log.Println(item.GetUsername(), "download 2layer", iddone)
+					go m.DownloadUserStoryLayer(item.User.Pk, 2)
+					map2layer[iddone] = true
+				}
+			}
+
+			if name == nameAllpost {
+				if _, isDone := mapAllpost[iddone]; !isDone {
+					log.Println(item.GetUsername(), "download all post (no login)", iddone)
+					go DownloadAllPostsNoLogin(item.GetUsername())
+					mapAllpost[iddone] = true
+				}
+			}
+
+			if name == nameHighlight {
+				if _, isDone := mapHighlight[iddone]; !isDone {
+					log.Println(item.GetUsername(), "download highlight", iddone)
+					go m.DownloadUserStoryHighlights(item.GetUserId())
+					mapHighlight[iddone] = true
+				}
+			}
+		}
+	}
 }
 
 func (m *IGDownloadManager) GetSavedPosts(numOfItem int) (items []instago.IGItem, err error) {
