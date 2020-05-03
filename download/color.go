@@ -91,3 +91,11 @@ func PrintPostLiveItem(pli instago.IGPostLiveItem) {
 	cc.Print(pli.User.Username)
 	fmt.Println(" , ranked_position: ", pli.RankedPosition)
 }
+
+func PrintDownloadStoryReelMentionInfo(rm instago.ItemReelMention) {
+	fmt.Print("Download story of reel mention of ")
+	cc.Print(rm.GetUsername())
+	fmt.Print(" , id: ")
+	cc.Print(rm.GetUserId())
+	fmt.Println(" , display type: ", rm.DisplayType)
+}

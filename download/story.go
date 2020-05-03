@@ -179,6 +179,7 @@ func (m *IGDownloadManager) DownloadAllStory(trays []instago.IGReelTray) {
 func (m *IGDownloadManager) getStoryItemLayer(item instago.IGItem, username string, layer int) {
 	getStoryItem(item, username)
 	for _, reelmention := range item.ReelMentions {
+		PrintDownloadStoryReelMentionInfo(reelmention)
 		m.DownloadUserStoryLayer(reelmention.User.Pk, layer)
 	}
 }
