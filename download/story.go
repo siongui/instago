@@ -176,7 +176,7 @@ func (m *IGDownloadManager) DownloadAllStory(trays []instago.IGReelTray) {
 	}
 }
 
-func (m *IGDownloadManager) getStoryItemLayer(item instago.IGItem, username string, layer int, isdone map[string]bool) {
+func (m *IGDownloadManager) getStoryItemLayer(item instago.IGItem, username string, layer int, isdone map[string]string) {
 	getStoryItem(item, username)
 	for _, reelmention := range item.ReelMentions {
 		// Pk is user id
@@ -185,14 +185,14 @@ func (m *IGDownloadManager) getStoryItemLayer(item instago.IGItem, username stri
 	}
 }
 
-func (m *IGDownloadManager) downloadUserStoryLayer(id string, layer int, isdone map[string]bool) (err error) {
+func (m *IGDownloadManager) downloadUserStoryLayer(id string, layer int, isdone map[string]string) (err error) {
 	if layer < 1 {
 		return
 	}
 	layer--
 
-	if _, ok := isdone[id]; ok {
-		log.Println(id, "already fetched")
+	if username, ok := isdone[id]; ok {
+		log.Println(username, id, "already fetched")
 		return
 	} else {
 		log.Println("fetching story of", id)
@@ -202,8 +202,8 @@ func (m *IGDownloadManager) downloadUserStoryLayer(id string, layer int, isdone 
 	if err != nil {
 		return
 	}
-	isdone[id] = true
-	log.Println("fetch story of", id, "success")
+	isdone[id] = tray.GetUsername()
+	log.Println("fetch story of", tray.GetUsername(), id, "success")
 
 	for _, item := range tray.GetItems() {
 		m.getStoryItemLayer(item, tray.GetUsername(), layer, isdone)
@@ -219,13 +219,13 @@ func (m *IGDownloadManager) DownloadUserStoryByNameLayer(username string, layer 
 		return
 	}
 
-	isdone := make(map[string]bool)
+	isdone := make(map[string]string)
 	return m.downloadUserStoryLayer(id, layer, isdone)
 }
 
 // DownloadUserStoryLayer is the same as DownloadUserStoryByNameLayer, except
 // int64 id passed as argument.
 func (m *IGDownloadManager) DownloadUserStoryLayer(userId int64, layer int) (err error) {
-	isdone := make(map[string]bool)
+	isdone := make(map[string]string)
 	return m.downloadUserStoryLayer(strconv.FormatInt(userId, 10), layer, isdone)
 }
