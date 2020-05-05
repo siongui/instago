@@ -7,7 +7,7 @@ export PATH := $(GOROOT)/bin:$(GOPATH)/bin:$(PATH)
 
 ALL_GO_SOURCES=$(shell /bin/sh -c "find *.go | grep -v _test.go")
 
-default: test_screenshot
+default: story_test
 
 highlight: fmt
 	@echo "\033[92mDownload story highlights of all following users ...\033[0m"

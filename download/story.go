@@ -176,52 +176,56 @@ func (m *IGDownloadManager) DownloadAllStory(trays []instago.IGReelTray) {
 	}
 }
 
-func (m *IGDownloadManager) getStoryItemLayer(item instago.IGItem, username string, layer int) {
-	PrintDownloadStoryLayerInfo(item, username)
+func (m *IGDownloadManager) getStoryItemLayer(item instago.IGItem, username string, layer int, isdone map[string]bool) {
 	getStoryItem(item, username)
 	for _, reelmention := range item.ReelMentions {
-		m.DownloadUserStoryLayer(reelmention.User.Pk, layer)
+		// Pk is user id
+		id := strconv.FormatInt(reelmention.User.Pk, 10)
+		m.downloadUserStoryLayer(id, layer, isdone)
 	}
 }
 
-// DownloadUserStoryByNameLayer downloads unexpired stories (last 24 hours) of
-// the given user name, and also stories of reel mentions.
-func (m *IGDownloadManager) DownloadUserStoryByNameLayer(username string, layer int) {
+func (m *IGDownloadManager) downloadUserStoryLayer(id string, layer int, isdone map[string]bool) (err error) {
 	if layer < 1 {
 		return
 	}
 	layer--
 
-	id, err := m.UsernameToId(username)
-	if err != nil {
-		panic(err)
+	if _, ok := isdone[id]; ok {
+		log.Println(id, "already fetched")
+		return
+	} else {
+		log.Println("fetching story of", id)
 	}
 
 	tray, err := m.apimgr.GetUserStory(id)
 	if err != nil {
-		panic(err)
+		return
 	}
+	isdone[id] = true
+	log.Println("fetch story of", id, "success")
+
 	for _, item := range tray.GetItems() {
-		m.getStoryItemLayer(item, tray.GetUsername(), layer)
+		m.getStoryItemLayer(item, tray.GetUsername(), layer, isdone)
 	}
 	return
 }
 
+// DownloadUserStoryByNameLayer downloads unexpired stories (last 24 hours) of
+// the given user name, and also stories of reel mentions.
+func (m *IGDownloadManager) DownloadUserStoryByNameLayer(username string, layer int) (err error) {
+	id, err := m.UsernameToId(username)
+	if err != nil {
+		return
+	}
+
+	isdone := make(map[string]bool)
+	return m.downloadUserStoryLayer(id, layer, isdone)
+}
+
 // DownloadUserStoryLayer is the same as DownloadUserStoryByNameLayer, except
 // int64 id passed as argument.
-func (m *IGDownloadManager) DownloadUserStoryLayer(userId int64, layer int) {
-	if layer < 1 {
-		return
-	}
-	layer--
-
-	tray, err := m.apimgr.GetUserStory(strconv.FormatInt(userId, 10))
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	for _, item := range tray.GetItems() {
-		m.getStoryItemLayer(item, tray.GetUsername(), layer)
-	}
-	return
+func (m *IGDownloadManager) DownloadUserStoryLayer(userId int64, layer int) (err error) {
+	isdone := make(map[string]bool)
+	return m.downloadUserStoryLayer(strconv.FormatInt(userId, 10), layer, isdone)
 }
