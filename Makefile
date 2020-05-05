@@ -8,7 +8,7 @@ export PATH := $(GOROOT)/bin:$(GOPATH)/bin:$(PATH)
 
 ALL_GO_SOURCES=$(shell /bin/sh -c "find *.go | grep -v _test.go")
 
-default: timeline
+default: userinfo2
 
 apimgr: fmt
 	@go test -v apimgr.go apimgr_test.go
@@ -29,6 +29,10 @@ userinfo: fmt
 	@#echo "\033[92mTest user info from .../username/?__a=1 ...\033[0m"
 	@echo "\033[92mTest user info from html embedded json ...\033[0m"
 	@go test -v $(ALL_GO_SOURCES) userinfo_test.go
+
+userinfo2: fmt
+	@echo "\033[92mTest user info from private api ...\033[0m"
+	@go test -v $(ALL_GO_SOURCES) userinfo2_test.go
 
 getall: fmt
 	@echo "\033[92mTest user info *get all* features ...\033[0m"
