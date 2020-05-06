@@ -129,6 +129,42 @@ func (m *IGDownloadManager) DownloadSavedPostsAndSendItemInCollectionToChannel(n
 	return
 }
 
+// DO NOT USE. Test now. Used with DownloadDependOnCollectionName
+func (m *IGDownloadManager) DownloadSavedCollectionPostsAndSendItemInCollectionToChannel(collectionName string, downloadStory bool, c chan instago.IGItem) (err error) {
+	cid := m.CollectionName2Id(collectionName)
+	if cid == "" {
+		log.Println("fail to get collection id of ", collectionName)
+	}
+
+	items, err := m.apimgr.GetSavedCollection(cid)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	username := make(map[string]bool)
+	for idx, item := range items {
+		// FIXME: check err
+		PrintItemInfo(idx, &item)
+		isDownloaded, _ := m.GetPostItem(item)
+		if isDownloaded && downloadStory {
+			u := item.GetUsername()
+			if _, ok := username[u]; !ok {
+				// Pk here is user id
+				go m.DownloadUserStoryPostlive(item.User.Pk)
+				username[u] = true
+			}
+		}
+
+		// if item in collection, send to channel
+		if len(item.SavedCollectionIds) > 0 {
+			c <- item
+		}
+	}
+
+	return
+}
+
 // DO NOT USE. Test now. Used with DownloadSavedPostsAndSendItemInCollectionToChannel
 func (m *IGDownloadManager) DownloadDependOnCollectionName(name2layer, nameAllpost, nameHighlight string, c chan instago.IGItem) {
 	map2layer := make(map[string]bool)
