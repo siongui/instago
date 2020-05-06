@@ -162,6 +162,8 @@ func (m *IGDownloadManager) DownloadAllStory(trays []instago.IGReelTray) {
 	}
 
 	// wait all goroutines to finish
+	// FIXME: do not wait all goroutines to finish? sometimes downloading
+	//        postlive takes too long time
 	for i := 0; i < numOfStoryUser; i++ {
 		<-c
 	}
