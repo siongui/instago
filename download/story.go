@@ -94,10 +94,8 @@ func (m *IGDownloadManager) DownloadUserStory(userId int64) (err error) {
 	return m.downloadUserStory(strconv.FormatInt(userId, 10))
 }
 
-// DownloadUserStoryPostLive downloads unexpired stories (last 24 hours) and
-// postlive of the given user id.
-func (m *IGDownloadManager) DownloadUserStoryPostlive(userId int64) (err error) {
-	ut, err := m.apimgr.GetUserReelMedia(strconv.FormatInt(userId, 10))
+func (m *IGDownloadManager) downloadUserStoryPostlive(id string) (err error) {
+	ut, err := m.apimgr.GetUserReelMedia(id)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -106,9 +104,13 @@ func (m *IGDownloadManager) DownloadUserStoryPostlive(userId int64) (err error) 
 	for _, item := range ut.Reel.GetItems() {
 		getStoryItem(item, ut.Reel.GetUsername())
 	}
-	DownloadPostLiveItem(ut.PostLiveItem)
+	return DownloadPostLiveItem(ut.PostLiveItem)
+}
 
-	return
+// DownloadUserStoryPostLive downloads unexpired stories (last 24 hours) and
+// postlive of the given user id.
+func (m *IGDownloadManager) DownloadUserStoryPostlive(userId int64) (err error) {
+	return m.downloadUserStoryPostlive(strconv.FormatInt(userId, 10))
 }
 
 // DownloadUserStoryPostLiveByName is the same as DownloadUserStoryPostlive,
@@ -120,18 +122,7 @@ func (m *IGDownloadManager) DownloadUserStoryPostliveByName(username string) (er
 		return
 	}
 
-	ut, err := m.apimgr.GetUserReelMedia(id)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	for _, item := range ut.Reel.GetItems() {
-		getStoryItem(item, ut.Reel.GetUsername())
-	}
-	DownloadPostLiveItem(ut.PostLiveItem)
-
-	return
+	return m.downloadUserStoryPostlive(id)
 }
 
 // DownloadUnreadStory downloads all available stories in IGReelTray.
@@ -147,7 +138,7 @@ func DownloadUnreadStory(trays []instago.IGReelTray) {
 func (m *IGDownloadManager) fetchUserStory(userId int64, username string, c chan int) {
 	defer func() { c <- 1 }()
 
-	err := m.DownloadUserStory(userId)
+	err := m.DownloadUserStoryPostlive(userId)
 	if err != nil {
 		fmt.Println("In fetchUserStorie: fail to fetch " + username)
 		fmt.Println(err)

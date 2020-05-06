@@ -1,6 +1,7 @@
 package igdl
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"time"
@@ -20,12 +21,12 @@ func printPostLiveDownloadInfo(username, url, filepath string, timestamp int64) 
 	cc.Println(filepath)
 }
 
-func DownloadPostLiveItem(pli instago.IGPostLiveItem) {
+func DownloadPostLiveItem(pli instago.IGPostLiveItem) (err error) {
 	for _, broadcast := range pli.GetBroadcasts() {
 		urls, err := broadcast.GetBaseUrls()
 		if err != nil {
 			fmt.Println(err)
-			return
+			return err
 		}
 
 		// total 5 or 2 urls.
@@ -40,7 +41,7 @@ func DownloadPostLiveItem(pli instago.IGPostLiveItem) {
 			vidx = 1
 		} else {
 			fmt.Println("error: number of urls != (5 or 2)", len(urls))
-			return
+			return errors.New("error: number of urls != (5 or 2)")
 		}
 
 		username := pli.GetUsername()
@@ -78,7 +79,7 @@ func DownloadPostLiveItem(pli instago.IGPostLiveItem) {
 				err = Wget(url, filepath)
 				if err != nil {
 					fmt.Println(err)
-					return
+					return err
 				}
 			}
 		}
@@ -90,6 +91,7 @@ func DownloadPostLiveItem(pli instago.IGPostLiveItem) {
 			mergePostliveVideoAndAudio(vpath, apath)
 		}
 	}
+	return
 }
 
 func DownloadPostLive(pl instago.IGPostLive, isDownloading map[string]bool) {
