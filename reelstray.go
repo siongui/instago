@@ -16,7 +16,7 @@ import (
 const urlReelsTray = `https://i.instagram.com/api/v1/feed/reels_tray/`
 
 // Used to decode JSON returned by Instagram reels tray feed API.
-type reelsTray struct {
+type IGReelsTray struct {
 	Trays             []IGReelTray  `json:"tray"`
 	Broadcasts        []IGBroadcast `json:"broadcasts"`
 	PostLive          IGPostLive    `json:"post_live"`
@@ -60,7 +60,7 @@ func (t *IGReelTray) GetItems() []IGItem {
 	return t.Items
 }
 
-func (m *IGApiManager) GetReelsTray() (r reelsTray, err error) {
+func (m *IGApiManager) GetReelsTray() (r IGReelsTray, err error) {
 	b, err := m.getHTTPResponse(urlReelsTray, "GET")
 	if err != nil {
 		return
