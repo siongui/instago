@@ -39,3 +39,7 @@ func (m *IGDownloadManager) LoadCollectionList() (err error) {
 	m.collections, err = m.apimgr.GetSavedCollectionList()
 	return
 }
+
+func (m *IGDownloadManager) GetReelsTray() (instago.IGReelsTray, error) {
+	return m.apimgr.GetReelsTray()
+}
