@@ -195,3 +195,12 @@ func (m *IGDownloadManager) CollectionId2Name(id string) string {
 	}
 	return ""
 }
+
+func (m *IGDownloadManager) CollectionName2Id(name string) string {
+	for _, collection := range m.collections {
+		if collection.CollectionName == name {
+			return collection.CollectionId
+		}
+	}
+	return ""
+}

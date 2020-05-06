@@ -64,3 +64,18 @@ func ExampleCollectionId2Name(t *testing.T) {
 		}
 	}
 }
+
+func ExampleCollectionName2Id(t *testing.T) {
+	mgr, err := NewInstagramDownloadManager("auth.json")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	mgr.LoadCollectionList()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	t.Log(mgr.CollectionName2Id("MyCollectionName"))
+}
