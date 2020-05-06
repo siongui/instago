@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"time"
 
 	"github.com/siongui/instago"
 )
@@ -132,10 +131,6 @@ func (m *IGDownloadManager) DownloadStoryAndPostLive() {
 		count++
 		count %= 5
 
-		rc.Print(time.Now().Format(time.RFC3339))
-		fmt.Print(": sleep ")
-		cc.Print(sleepInterval)
-		fmt.Println(" second")
-		time.Sleep(time.Duration(sleepInterval) * time.Second)
+		SleepAndPrint(sleepInterval)
 	}
 }

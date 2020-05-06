@@ -2,6 +2,7 @@ package igdl
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/fatih/color"
 	"github.com/siongui/instago"
@@ -9,6 +10,30 @@ import (
 
 var cc = color.New(color.FgCyan)
 var rc = color.New(color.FgRed)
+
+func CyanPrint(a ...interface{}) {
+	cc.Print(a...)
+}
+
+func RedPrint(a ...interface{}) {
+	rc.Print(a...)
+}
+
+func CyanPrintln(a ...interface{}) {
+	cc.Println(a...)
+}
+
+func RedPrintln(a ...interface{}) {
+	rc.Println(a...)
+}
+
+func SleepAndPrint(interval int) {
+	rc.Print(time.Now().Format(time.RFC3339))
+	fmt.Print(": sleep ")
+	cc.Print(interval)
+	fmt.Println(" second")
+	time.Sleep(time.Duration(interval) * time.Second)
+}
 
 func printTimelineItemInfo(index int, item instago.IGItem) {
 	// You're All Caught Up
