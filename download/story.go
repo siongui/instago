@@ -214,3 +214,111 @@ func (m *IGDownloadManager) DownloadUserStoryLayer(userId int64, layer int) (err
 	//return m.downloadUserStoryLayer(strconv.FormatInt(userId, 10), layer, isdone)
 	return m.downloadUserStoryPostliveLayer(strconv.FormatInt(userId, 10), layer, isdone)
 }
+
+func isTrayInQueue(queue []instago.IGReelTray, tray instago.IGReelTray) bool {
+	for _, t := range queue {
+		if t.Id == tray.Id {
+			return true
+		}
+	}
+	return false
+}
+
+func (m *IGDownloadManager) DownloadZeroItemUsers(c chan instago.IGReelTray, interval int, verbose bool) {
+	queue := []instago.IGReelTray{}
+	for {
+		select {
+		case tray := <-c:
+			// append to queue if not exist
+			id := tray.Id
+			username := tray.GetUsername()
+			if verbose {
+				UsernameIdColorPrint(username, id)
+				fmt.Println("legnth of channel:", len(c))
+			}
+			if isTrayInQueue(queue, tray) {
+				if verbose {
+					UsernameIdColorPrint(username, id)
+					fmt.Println("exist. ignore.")
+				}
+			} else {
+				queue = append(queue, tray)
+				if verbose {
+					UsernameIdColorPrint(username, id)
+					fmt.Println("appended")
+				}
+			}
+		default:
+			if len(queue) > 0 {
+				tray := queue[0]
+				queue = queue[1:]
+
+				id := tray.Id
+				username := tray.GetUsername()
+				if verbose {
+					UsernameIdColorPrint(username, id)
+					fmt.Println(" downloading...")
+				}
+
+				// FIXME: big postlive will take too long time
+				err := m.DownloadUserStoryPostlive(id)
+				if err == nil {
+					if verbose {
+						UsernameIdColorPrint(username, id)
+						fmt.Println(" Download Success.")
+					}
+				} else {
+					UsernameIdColorPrint(username, id)
+					fmt.Println(err)
+					queue = append(queue, tray)
+				}
+			}
+			if verbose {
+				fmt.Println("current queue length: ", len(queue))
+			}
+			PrintMsgSleep(interval, "DownloadZeroItemUsers: ")
+		}
+	}
+}
+
+// Use (25, 2, false) as arguments is good. will not cause http 429
+func (m *IGDownloadManager) DownloadStoryAndPostLiveForever(interval1, interval2 int, verbose bool) {
+	// channel for waiting DownloadPostLive completed
+	isDownloading := make(map[string]bool)
+
+	// usually there are at most 150 trays in reels_tray.
+	// double the buffer to 300. 160 or 200 may be ok as well.
+	c := make(chan instago.IGReelTray, 300)
+
+	go m.DownloadZeroItemUsers(c, interval2, verbose)
+	for {
+		rt, err := m.GetReelsTray()
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+
+		// TODO: use channel for postlive?
+		go DownloadPostLive(rt.PostLive, isDownloading)
+		go PrintLiveBroadcasts(rt.Broadcasts)
+
+		for index, tray := range rt.Trays {
+			username := tray.GetUsername()
+			id := tray.Id
+			items := tray.GetItems()
+			if len(items) == 0 {
+				if verbose {
+					UsernameIdColorPrint(username, id)
+					fmt.Println("#", index, " send to channel")
+				}
+				c <- tray
+			} else {
+				for _, item := range items {
+					getStoryItem(item, tray.GetUsername())
+				}
+			}
+		}
+
+		PrintMsgSleep(interval1, "DownloadStoryAndPostLiveForever: ")
+	}
+}

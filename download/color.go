@@ -27,12 +27,24 @@ func RedPrintln(a ...interface{}) {
 	rc.Println(a...)
 }
 
-func SleepAndPrint(interval int) {
+func SleepLog(interval int) {
 	rc.Print(time.Now().Format(time.RFC3339))
 	fmt.Print(": sleep ")
 	cc.Print(interval)
 	fmt.Println(" second")
 	time.Sleep(time.Duration(interval) * time.Second)
+}
+
+func PrintMsgSleep(sleepInterval int, msg string) {
+	fmt.Print(msg)
+	SleepLog(sleepInterval)
+}
+
+func UsernameIdColorPrint(username, id interface{}) {
+	CyanPrint(username)
+	fmt.Print(" (")
+	RedPrint(id)
+	fmt.Print(") ")
 }
 
 func printTimelineItemInfo(index int, item instago.IGItem) {

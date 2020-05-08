@@ -28,7 +28,7 @@ func main() {
 		mgr.DownloadTimeline(1)
 	case "story":
 		fmt.Println("Download Stories and Post lives")
-		mgr.DownloadStoryAndPostLive()
+		mgr.DownloadStoryAndPostLiveForever(25, 2, false)
 	case "highlight":
 		fmt.Println("Download all story highlights of all following users")
 		mgr.DownloadStoryHighlights()
