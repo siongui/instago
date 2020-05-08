@@ -105,32 +105,3 @@ func DownloadPostLive(pl instago.IGPostLive, isDownloading map[string]bool) {
 		delete(isDownloading, item.Pk)
 	}
 }
-
-func (m *IGDownloadManager) DownloadStoryAndPostLive() {
-	// channel for waiting DownloadPostLive completed
-	isDownloading := make(map[string]bool)
-
-	sleepInterval := 30 // seconds
-	count := 0
-	for {
-		rt, err := m.apimgr.GetReelsTray()
-		if err != nil {
-			fmt.Println(err)
-			continue
-		}
-
-		go DownloadPostLive(rt.PostLive, isDownloading)
-		go PrintLiveBroadcasts(rt.Broadcasts)
-		if count == 0 {
-			m.DownloadAllStory(rt.Trays)
-			cc.Println("Download all stories finished")
-		} else {
-			DownloadUnreadStory(rt.Trays)
-			cc.Println("Download unread stories finished")
-		}
-		count++
-		count %= 5
-
-		SleepAndPrint(sleepInterval)
-	}
-}

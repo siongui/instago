@@ -129,50 +129,6 @@ func (m *IGDownloadManager) DownloadUserStoryPostliveByName(username string) (er
 	return m.downloadUserStoryPostlive(id)
 }
 
-// DownloadUnreadStory downloads all available stories in IGReelTray.
-func DownloadUnreadStory(trays []instago.IGReelTray) {
-	for _, tray := range trays {
-		//fmt.Println(tray.GetUsername())
-		for _, item := range tray.GetItems() {
-			getStoryItem(item, tray.GetUsername())
-		}
-	}
-}
-
-func (m *IGDownloadManager) fetchUserStory(userId int64, username string, c chan int) {
-	defer func() { c <- 1 }()
-
-	err := m.DownloadUserStoryPostlive(userId)
-	if err != nil {
-		fmt.Println("In fetchUserStorie: fail to fetch " + username)
-		fmt.Println(err)
-	}
-}
-
-// DownloadAllStory downloads all unexpired stories of all users in IGReelTray.
-func (m *IGDownloadManager) DownloadAllStory(trays []instago.IGReelTray) {
-	c := make(chan int)
-	numOfStoryUser := 0
-	for _, tray := range trays {
-		items := tray.GetItems()
-		if len(items) == 0 {
-			numOfStoryUser++
-			go m.fetchUserStory(tray.Id, tray.GetUsername(), c)
-		} else {
-			for _, item := range items {
-				getStoryItem(item, tray.GetUsername())
-			}
-		}
-	}
-
-	// wait all goroutines to finish
-	// FIXME: do not wait all goroutines to finish? sometimes downloading
-	//        postlive takes too long time
-	for i := 0; i < numOfStoryUser; i++ {
-		<-c
-	}
-}
-
 func (m *IGDownloadManager) getStoryItemLayer(item instago.IGItem, username string, layer int, isdone map[string]string) {
 	getStoryItem(item, username)
 	for _, reelmention := range item.ReelMentions {
