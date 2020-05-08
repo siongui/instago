@@ -227,3 +227,12 @@ func TestExtractUsernameIdFromFilename(t *testing.T) {
 		return
 	}
 }
+
+func ExampleGetReelMediaUnixTimesInUserStoryDir(t *testing.T) {
+	utimes, err := GetReelMediaUnixTimesInUserStoryDir("instagram")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	t.Log(utimes)
+}

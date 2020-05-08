@@ -1,6 +1,7 @@
 package igdl
 
 import (
+	"io/ioutil"
 	"path"
 	"regexp"
 	"strconv"
@@ -217,5 +218,31 @@ func ExtractUsernameIdFromFilename(filename string) (username, id string) {
 	}
 	username = pieces[0]
 	id = pieces[1]
+	return
+}
+
+func GetReelMediaUnixTimesInUserStoryDir(username string) (utimes []string, err error) {
+	infos, err := ioutil.ReadDir(GetUserStoryDir(username))
+	if err != nil {
+		return
+	}
+
+	for _, info := range infos {
+		if info.Mode().IsRegular() {
+			filename := info.Name()
+			if strings.Contains(filename, username+"-") &&
+				strings.Contains(filename, "-story-") {
+
+				// remove ext
+				f1 := strings.TrimSuffix(filename, path.Ext(filename))
+
+				pieces := strings.Split(f1, "-")
+				if len(pieces) > 0 {
+					utime := pieces[len(pieces)-1]
+					utimes = append(utimes, utime)
+				}
+			}
+		}
+	}
 	return
 }
