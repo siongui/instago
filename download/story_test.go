@@ -56,3 +56,13 @@ func ExampleDownloadUserStoryLayer(t *testing.T) {
 
 	mgr.DownloadUserStoryLayer(25025320, 2)
 }
+
+func ExampleDownloadStoryAndPostLiveForever(t *testing.T) {
+	mgr, err := NewInstagramDownloadManager("auth.json")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	mgr.DownloadStoryAndPostLiveForever(25, 2, false)
+}

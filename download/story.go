@@ -281,6 +281,23 @@ func (m *IGDownloadManager) DownloadZeroItemUsers(c chan instago.IGReelTray, int
 	}
 }
 
+func isLatestReelMediaDownloaded(username string, latestReelMedia int64) bool {
+	utimes, err := GetReelMediaUnixTimesInUserStoryDir(username)
+	if err != nil {
+		// check not exist here?
+		fmt.Println("In isLatestReelMediaDownloaded", err)
+		return false
+	}
+
+	lrm := strconv.FormatInt(latestReelMedia, 10)
+	for _, utime := range utimes {
+		if lrm == utime {
+			return true
+		}
+	}
+	return false
+}
+
 // Use (25, 2, false) as arguments is good. will not cause http 429
 func (m *IGDownloadManager) DownloadStoryAndPostLiveForever(interval1, interval2 int, verbose bool) {
 	// channel for waiting DownloadPostLive completed
@@ -306,6 +323,20 @@ func (m *IGDownloadManager) DownloadStoryAndPostLiveForever(interval1, interval2
 			username := tray.GetUsername()
 			id := tray.Id
 			items := tray.GetItems()
+
+			if isLatestReelMediaDownloaded(username, tray.LatestReelMedia) {
+				if verbose {
+					UsernameIdColorPrint(username, id)
+					fmt.Println(" all downloaded")
+				}
+				continue
+			}
+
+			if verbose {
+				UsernameIdColorPrint(username, id)
+				fmt.Println(" has undownloaded items")
+			}
+
 			if len(items) == 0 {
 				if verbose {
 					UsernameIdColorPrint(username, id)
