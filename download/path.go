@@ -57,10 +57,16 @@ func getPostFilePath(username, id, code, url string, timestamp int64) string {
 	return path.Join(userPostsDir, buildFilename(url, username, id, "-post-", code+"-", timestamp))
 }
 
+func GetUserDir(username string) (dir string) {
+	return path.Join(outputDir, username)
+}
+
+func GetUserStoryDir(username string) (dir string) {
+	return path.Join(GetUserDir(username), "stories")
+}
+
 func getStoryFilePath(username, id, code, url string, timestamp int64) string {
-	userDir := path.Join(outputDir, username)
-	userStoriesDir := path.Join(userDir, "stories")
-	return path.Join(userStoriesDir, buildFilename(url, username, id, "-story-", code+"-", timestamp))
+	return path.Join(GetUserStoryDir(username), buildFilename(url, username, id, "-story-", code+"-", timestamp))
 }
 
 func appendUsernameToFilename(username, id, filename string, appendIdUsernames [][2]string) string {
@@ -94,9 +100,6 @@ func appendUsernameToFilename(username, id, filename string, appendIdUsernames [
 
 // same as getStoryFilePath, except adding usernames in reel_mentions
 func getStoryFilePath2(username, id, code, url string, timestamp int64, rms []instago.ItemReelMention) string {
-	userDir := path.Join(outputDir, username)
-	userStoriesDir := path.Join(userDir, "stories")
-
 	filename := buildFilename(url, username, id, "-story-", code+"-", timestamp)
 	appendIdUsernames := [][2]string{}
 	for _, rm := range rms {
@@ -105,7 +108,7 @@ func getStoryFilePath2(username, id, code, url string, timestamp int64, rms []in
 	}
 	filename = appendUsernameToFilename(username, id, filename, appendIdUsernames)
 
-	return path.Join(userStoriesDir, filename)
+	return path.Join(GetUserStoryDir(username), filename)
 }
 
 func getPostLiveFilePath(username, id, url, typ string, timestamp int64) string {
