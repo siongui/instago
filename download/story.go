@@ -10,11 +10,11 @@ import (
 	"github.com/siongui/instago"
 )
 
-func GetStoryItem(item instago.IGItem, username string) (err error) {
+func GetStoryItem(item instago.IGItem, username string) (isDownloaded bool, err error) {
 	return getStoryItem(item, username)
 }
 
-func getStoryItem(item instago.IGItem, username string) (err error) {
+func getStoryItem(item instago.IGItem, username string) (isDownloaded bool, err error) {
 	if !(item.MediaType == 1 || item.MediaType == 2) {
 		err = errors.New("In getStoryItem: not single photo or video!")
 		fmt.Println(err)
@@ -55,9 +55,11 @@ func getStoryItem(item instago.IGItem, username string) (err error) {
 		// file not exists
 		printDownloadInfo(&item, url, filepath)
 		err = Wget(url, filepath)
-		if err != nil {
-			fmt.Println(err)
-			return err
+		if err == nil {
+			isDownloaded = true
+		} else {
+			log.Println(err)
+			return isDownloaded, err
 		}
 	} else {
 		if err != nil {
