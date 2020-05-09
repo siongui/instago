@@ -260,18 +260,19 @@ func (m *IGDownloadManager) DownloadZeroItemUsers(c chan instago.IGReelTray, int
 					fmt.Println(" downloading...")
 				}
 
-				// FIXME: big postlive will take too long time
-				err := m.DownloadUserStoryPostlive(id)
-				if err == nil {
-					if verbose {
+				go func() {
+					err := m.DownloadUserStoryPostlive(id)
+					if err == nil {
+						if verbose {
+							UsernameIdColorPrint(username, id)
+							fmt.Println(" Download Success.")
+						}
+					} else {
 						UsernameIdColorPrint(username, id)
-						fmt.Println(" Download Success.")
+						fmt.Println(err)
+						queue = append(queue, tray)
 					}
-				} else {
-					UsernameIdColorPrint(username, id)
-					fmt.Println(err)
-					queue = append(queue, tray)
-				}
+				}()
 			}
 			if verbose {
 				fmt.Println("current queue length: ", len(queue))
