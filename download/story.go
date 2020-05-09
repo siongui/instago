@@ -284,8 +284,9 @@ func (m *IGDownloadManager) DownloadZeroItemUsers(c chan instago.IGReelTray, int
 func isLatestReelMediaDownloaded(username string, latestReelMedia int64) bool {
 	utimes, err := GetReelMediaUnixTimesInUserStoryDir(username)
 	if err != nil {
-		// check not exist here?
-		fmt.Println("In isLatestReelMediaDownloaded", err)
+		if !os.IsNotExist(err) {
+			fmt.Println("In isLatestReelMediaDownloaded", err)
+		}
 		return false
 	}
 
