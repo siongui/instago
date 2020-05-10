@@ -383,7 +383,21 @@ func (m *IGDownloadManager) DownloadStoryAndPostLiveForever(interval1, interval2
 				c <- tray
 			} else {
 				for _, item := range items {
-					getStoryItem(item, tray.GetUsername())
+					isDownloaded, err := getStoryItem(item, tray.GetUsername())
+					if err != nil {
+						UsernameIdColorPrint(username, id)
+						fmt.Println(err)
+						c <- tray
+						return
+					}
+					if isDownloaded {
+						for _, reelmention := range item.ReelMentions {
+							PrintReelMentionInfo(reelmention)
+							if !reelmention.User.IsPrivate {
+								m.downloadUserStoryPostlive(reelmention.GetUserId())
+							}
+						}
+					}
 				}
 			}
 		}
