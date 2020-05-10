@@ -289,13 +289,7 @@ func (m *IGDownloadManager) DownloadZeroItemUsers(c chan instago.IGReelTray, int
 						}
 						if isDownloaded {
 							for _, reelmention := range item.ReelMentions {
-								fmt.Print("Reel Mention ")
-								UsernameIdColorPrint(reelmention.GetUsername(), reelmention.GetUserId())
-								if reelmention.User.IsPrivate {
-									fmt.Println("private")
-								} else {
-									fmt.Println("public")
-								}
+								PrintReelMentionInfo(reelmention)
 							}
 						}
 					}

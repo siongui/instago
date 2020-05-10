@@ -82,6 +82,16 @@ func printTimelineItemInfo(index int, item instago.IGItem) {
 	PrintItemInfo(index, &item)
 }
 
+func PrintReelMentionInfo(rm instago.ItemReelMention) {
+	fmt.Print("Reel Mention ")
+	UsernameIdColorPrint(rm.GetUsername(), rm.GetUserId())
+	if rm.User.IsPrivate {
+		fmt.Println("Private")
+	} else {
+		fmt.Println("Public")
+	}
+}
+
 func PrintItemInfo(index int, pi instago.PostItem) {
 	cc.Print(index)
 	fmt.Print(": username: ")
