@@ -388,7 +388,7 @@ func (m *IGDownloadManager) DownloadStoryAndPostLiveForever(interval1, interval2
 						UsernameIdColorPrint(username, id)
 						fmt.Println(err)
 						c <- tray
-						return
+						break
 					}
 					if isDownloaded {
 						for _, reelmention := range item.ReelMentions {
