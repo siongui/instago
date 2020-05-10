@@ -113,13 +113,15 @@ func (m *IGDownloadManager) DownloadAllPosts(username string) {
 // Given user name, download recent posts (usually 12 posts) of the user without
 // login status.
 func DownloadRecentPostsNoLogin(username string) {
-	codes, err := instago.GetRecentPostCodeNoLogin(username)
+	medias, err := instago.GetRecentPostMediaNoLogin(username)
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	for _, code := range codes {
-		DownloadPostNoLogin(code)
+	for _, media := range medias {
+		DownloadPostNoLogin(media.Shortcode)
+		// can NOT use the following call. will get panic
+		//DownloadIGMedia(media)
 	}
 }
