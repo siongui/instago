@@ -77,7 +77,11 @@ func (m *IGDownloadManager) downloadUserStory(id string) (err error) {
 	}
 
 	for _, item := range tray.GetItems() {
-		getStoryItem(item, tray.GetUsername())
+		_, err := getStoryItem(item, tray.GetUsername())
+		if err != nil {
+			log.Println(err)
+			//return
+		}
 	}
 	return
 }
@@ -108,7 +112,11 @@ func (m *IGDownloadManager) downloadUserStoryPostlive(id string) (err error) {
 	}
 
 	for _, item := range ut.Reel.GetItems() {
-		getStoryItem(item, ut.Reel.GetUsername())
+		_, err = getStoryItem(item, ut.Reel.GetUsername())
+		if err != nil {
+			log.Println(err)
+			//return
+		}
 	}
 	return DownloadPostLiveItem(ut.PostLiveItem)
 }
@@ -255,7 +263,7 @@ func (m *IGDownloadManager) DownloadZeroItemUsers(c chan instago.IGReelTray, int
 				tray := queue[0]
 				queue = queue[1:]
 
-				id := tray.Id
+				id := strconv.FormatInt(tray.Id, 10)
 				username := tray.GetUsername()
 				if verbose {
 					UsernameIdColorPrint(username, id)
@@ -263,7 +271,30 @@ func (m *IGDownloadManager) DownloadZeroItemUsers(c chan instago.IGReelTray, int
 				}
 
 				go func() {
-					err := m.DownloadUserStoryPostlive(id)
+					ut, err := m.apimgr.GetUserReelMedia(id)
+					if err != nil {
+						UsernameIdColorPrint(username, id)
+						fmt.Println(err)
+						queue = append(queue, tray)
+						return
+					}
+
+					for _, item := range ut.Reel.GetItems() {
+						isDownloaded, err := getStoryItem(item, ut.Reel.GetUsername())
+						if err != nil {
+							UsernameIdColorPrint(username, id)
+							fmt.Println(err)
+							queue = append(queue, tray)
+							return
+						}
+						if isDownloaded {
+							for _, reelmention := range item.ReelMentions {
+								UsernameIdColorPrint(reelmention.GetUsername(), reelmention.GetUserId())
+							}
+						}
+					}
+
+					err = DownloadPostLiveItem(ut.PostLiveItem)
 					if err == nil {
 						if verbose {
 							UsernameIdColorPrint(username, id)
