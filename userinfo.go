@@ -152,6 +152,11 @@ func GetSharedDataNoLogin(username string) (sd SharedData, err error) {
 	}
 
 	err = json.Unmarshal(getJsonBytes(b), &sd)
+	if err != nil {
+		return
+	}
+
+	err = checkSharedData(sd)
 	return
 }
 
@@ -159,11 +164,6 @@ func GetSharedDataNoLogin(username string) (sd SharedData, err error) {
 // status.
 func GetUserInfoNoLogin(username string) (ui UserInfo, err error) {
 	sd, err := GetSharedDataNoLogin(username)
-	if err != nil {
-		return
-	}
-
-	err = checkSharedData(sd)
 	if err != nil {
 		return
 	}
@@ -186,7 +186,11 @@ func (m *IGApiManager) GetUserInfo(username string) (ui UserInfo, err error) {
 	if err = json.Unmarshal(getJsonBytes(b), &r); err != nil {
 		return
 	}
-	//ui = r.GraphQL.User
+
+	if err = checkSharedData(r); err != nil {
+		return
+	}
+
 	ui = r.EntryData.ProfilePage[0].GraphQL.User
 	return
 }
@@ -236,5 +240,33 @@ func GetUserProfilePicUrlHd(username string) (url string, err error) {
 		return
 	}
 	url = ui.ProfilePicUrlHd
+	return
+}
+
+// GetRecentPostMediaNoLogin returns IGMedia struct of recent posts (usually 12
+// posts if not private) of the given user name without login status.
+func GetRecentPostMediaNoLogin(username string) (medias []IGMedia, err error) {
+	ui, err := GetUserInfoNoLogin(username)
+	if err != nil {
+		return
+	}
+
+	for _, node := range ui.EdgeOwnerToTimelineMedia.Edges {
+		medias = append(medias, node.Node)
+	}
+	return
+}
+
+// GetRecentPostMedia returns IGMedia struct of recent posts (usually 12 posts)
+// of the given user name with logged in status.
+func (m *IGApiManager) GetRecentPostMedia(username string) (medias []IGMedia, err error) {
+	ui, err := m.GetUserInfo(username)
+	if err != nil {
+		return
+	}
+
+	for _, node := range ui.EdgeOwnerToTimelineMedia.Edges {
+		medias = append(medias, node.Node)
+	}
 	return
 }
