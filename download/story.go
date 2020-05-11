@@ -248,14 +248,12 @@ func (m *IGDownloadManager) DownloadZeroItemUsers(c chan instago.IGReelTray, int
 			}
 			if isTrayInQueue(queue, tray) {
 				if verbose {
-					UsernameIdColorPrint(username, id)
-					fmt.Println("exist. ignore.")
+					PrintUsernameIdMsg(username, id, "exist. ignore.")
 				}
 			} else {
 				queue = append(queue, tray)
 				if verbose {
-					UsernameIdColorPrint(username, id)
-					fmt.Println("appended")
+					PrintUsernameIdMsg(username, id, "appended")
 				}
 			}
 		default:
@@ -266,15 +264,13 @@ func (m *IGDownloadManager) DownloadZeroItemUsers(c chan instago.IGReelTray, int
 				id := strconv.FormatInt(tray.Id, 10)
 				username := tray.GetUsername()
 				if verbose {
-					UsernameIdColorPrint(username, id)
-					fmt.Println(" downloading...")
+					PrintUsernameIdMsg(username, id, " downloading...")
 				}
 
 				go func() {
 					ut, err := m.apimgr.GetUserReelMedia(id)
 					if err != nil {
-						UsernameIdColorPrint(username, id)
-						fmt.Println(err)
+						PrintUsernameIdMsg(username, id, err)
 						queue = append(queue, tray)
 						return
 					}
@@ -282,8 +278,7 @@ func (m *IGDownloadManager) DownloadZeroItemUsers(c chan instago.IGReelTray, int
 					for _, item := range ut.Reel.GetItems() {
 						isDownloaded, err := getStoryItem(item, ut.Reel.GetUsername())
 						if err != nil {
-							UsernameIdColorPrint(username, id)
-							fmt.Println(err)
+							PrintUsernameIdMsg(username, id, err)
 							queue = append(queue, tray)
 							return
 						}
@@ -300,20 +295,20 @@ func (m *IGDownloadManager) DownloadZeroItemUsers(c chan instago.IGReelTray, int
 					err = DownloadPostLiveItem(ut.PostLiveItem)
 					if err == nil {
 						if verbose {
-							UsernameIdColorPrint(username, id)
-							fmt.Println(" Download Success.")
+							PrintUsernameIdMsg(username, id, " Download Success.")
 						}
 					} else {
-						UsernameIdColorPrint(username, id)
-						fmt.Println(err)
+						PrintUsernameIdMsg(username, id, err)
 						queue = append(queue, tray)
 					}
 				}()
 			}
 			if verbose {
 				fmt.Println("current queue length: ", len(queue))
+				PrintMsgSleep(interval, "DownloadZeroItemUsers: ")
+			} else {
+				SleepSecond(interval)
 			}
-			PrintMsgSleep(interval, "DownloadZeroItemUsers: ")
 		}
 	}
 }
@@ -364,8 +359,7 @@ func (m *IGDownloadManager) DownloadStoryAndPostLiveForever(interval1, interval2
 
 			if isLatestReelMediaDownloaded(username, tray.LatestReelMedia) {
 				if verbose {
-					UsernameIdColorPrint(username, id)
-					fmt.Println(" all downloaded")
+					PrintUsernameIdMsg(username, id, " all downloaded")
 				}
 				continue
 			}
@@ -385,8 +379,7 @@ func (m *IGDownloadManager) DownloadStoryAndPostLiveForever(interval1, interval2
 				for _, item := range items {
 					isDownloaded, err := getStoryItem(item, tray.GetUsername())
 					if err != nil {
-						UsernameIdColorPrint(username, id)
-						fmt.Println(err)
+						PrintUsernameIdMsg(username, id, err)
 						c <- tray
 						break
 					}
