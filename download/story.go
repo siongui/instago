@@ -234,6 +234,31 @@ func isTrayInQueue(queue []instago.IGReelTray, tray instago.IGReelTray) bool {
 	return false
 }
 
+func (m *IGDownloadManager) GetStoryItemAndReelMentions(item instago.IGItem, username string) (err error) {
+	isDownloaded, err := getStoryItem(item, username)
+	if err != nil {
+		return
+	}
+
+	if isDownloaded {
+		for _, rm := range item.ReelMentions {
+			PrintReelMentionInfo(rm)
+			if !rm.User.IsPrivate {
+				m.downloadUserStoryPostlive(rm.GetUserId())
+				// handle err of m.downloadUserStoryPostlive(rm.GetUserId()) ?
+				/*
+					err = m.downloadUserStoryPostlive(rm.GetUserId())
+					if err != nil {
+						PrintUsernameIdMsg(rm.GetUsername(), rm.GetUserId(), err)
+						return
+					}
+				*/
+			}
+		}
+	}
+	return
+}
+
 func (m *IGDownloadManager) DownloadZeroItemUsers(c chan instago.IGReelTray, interval int, verbose bool) {
 	queue := []instago.IGReelTray{}
 	for {
@@ -276,19 +301,11 @@ func (m *IGDownloadManager) DownloadZeroItemUsers(c chan instago.IGReelTray, int
 					}
 
 					for _, item := range ut.Reel.GetItems() {
-						isDownloaded, err := getStoryItem(item, ut.Reel.GetUsername())
+						err = m.GetStoryItemAndReelMentions(item, ut.Reel.GetUsername())
 						if err != nil {
 							PrintUsernameIdMsg(username, id, err)
 							queue = append(queue, tray)
 							return
-						}
-						if isDownloaded {
-							for _, reelmention := range item.ReelMentions {
-								PrintReelMentionInfo(reelmention)
-								if !reelmention.User.IsPrivate {
-									m.downloadUserStoryPostlive(reelmention.GetUserId())
-								}
-							}
 						}
 					}
 
@@ -377,21 +394,14 @@ func (m *IGDownloadManager) DownloadStoryAndPostLiveForever(interval1, interval2
 				c <- tray
 			} else {
 				for _, item := range items {
-					isDownloaded, err := getStoryItem(item, tray.GetUsername())
+					err = m.GetStoryItemAndReelMentions(item, username)
 					if err != nil {
 						PrintUsernameIdMsg(username, id, err)
 						c <- tray
 						break
 					}
-					if isDownloaded {
-						for _, reelmention := range item.ReelMentions {
-							PrintReelMentionInfo(reelmention)
-							if !reelmention.User.IsPrivate {
-								m.downloadUserStoryPostlive(reelmention.GetUserId())
-							}
-						}
-					}
 				}
+				// is there postlive items in tray here?
 			}
 		}
 
