@@ -282,46 +282,44 @@ func (m *IGDownloadManager) DownloadZeroItemUsers(c chan instago.IGReelTray, int
 				}
 			}
 		default:
-			if len(queue) == 0 {
-				continue
-			}
+			if len(queue) > 0 {
+				tray := queue[0]
+				queue = queue[1:]
 
-			tray := queue[0]
-			queue = queue[1:]
-
-			id := strconv.FormatInt(tray.Id, 10)
-			username := tray.GetUsername()
-			if verbose {
-				PrintUsernameIdMsg(username, id, " downloading...")
-			}
-
-			go func() {
-				ut, err := m.apimgr.GetUserReelMedia(id)
-				if err != nil {
-					PrintUsernameIdMsg(username, id, err)
-					queue = append(queue, tray)
-					return
+				id := strconv.FormatInt(tray.Id, 10)
+				username := tray.GetUsername()
+				if verbose {
+					PrintUsernameIdMsg(username, id, " downloading...")
 				}
 
-				for _, item := range ut.Reel.GetItems() {
-					err = m.GetStoryItemAndReelMentions(item, ut.Reel.GetUsername())
+				go func() {
+					ut, err := m.apimgr.GetUserReelMedia(id)
 					if err != nil {
 						PrintUsernameIdMsg(username, id, err)
 						queue = append(queue, tray)
 						return
 					}
-				}
 
-				err = DownloadPostLiveItem(ut.PostLiveItem)
-				if err == nil {
-					if verbose {
-						PrintUsernameIdMsg(username, id, " Download Success.")
+					for _, item := range ut.Reel.GetItems() {
+						err = m.GetStoryItemAndReelMentions(item, ut.Reel.GetUsername())
+						if err != nil {
+							PrintUsernameIdMsg(username, id, err)
+							queue = append(queue, tray)
+							return
+						}
 					}
-				} else {
-					PrintUsernameIdMsg(username, id, err)
-					queue = append(queue, tray)
-				}
-			}()
+
+					err = DownloadPostLiveItem(ut.PostLiveItem)
+					if err == nil {
+						if verbose {
+							PrintUsernameIdMsg(username, id, " Download Success.")
+						}
+					} else {
+						PrintUsernameIdMsg(username, id, err)
+						queue = append(queue, tray)
+					}
+				}()
+			}
 
 			if verbose {
 				fmt.Println("current queue length: ", len(queue))
