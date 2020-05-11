@@ -243,6 +243,11 @@ func (m *IGDownloadManager) GetStoryItemAndReelMentions(item instago.IGItem, use
 	if isDownloaded {
 		for _, rm := range item.ReelMentions {
 			PrintReelMentionInfo(rm)
+			if rm.GetUsername() == username {
+				fmt.Println("reel mention self. download ignored.")
+				continue
+			}
+
 			if !rm.User.IsPrivate {
 				m.downloadUserStoryPostlive(rm.GetUserId())
 				// handle err of m.downloadUserStoryPostlive(rm.GetUserId()) ?
