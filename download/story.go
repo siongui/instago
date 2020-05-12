@@ -240,6 +240,7 @@ func (m *IGDownloadManager) GetStoryItemAndReelMentions(item instago.IGItem, use
 		return
 	}
 
+	fetched := make(map[string]bool)
 	if isDownloaded {
 		for _, rm := range item.ReelMentions {
 			PrintReelMentionInfo(rm)
@@ -249,7 +250,10 @@ func (m *IGDownloadManager) GetStoryItemAndReelMentions(item instago.IGItem, use
 			}
 
 			if !rm.User.IsPrivate {
-				m.downloadUserStoryPostlive(rm.GetUserId())
+				if _, ok := fetched[rm.GetUsername()]; !ok {
+					m.downloadUserStoryPostlive(rm.GetUserId())
+					fetched[rm.GetUsername()] = true
+				}
 				// handle err of m.downloadUserStoryPostlive(rm.GetUserId()) ?
 				/*
 					err = m.downloadUserStoryPostlive(rm.GetUserId())
