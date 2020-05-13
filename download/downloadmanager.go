@@ -43,3 +43,7 @@ func (m *IGDownloadManager) LoadCollectionList() (err error) {
 func (m *IGDownloadManager) GetReelsTray() (instago.IGReelsTray, error) {
 	return m.apimgr.GetReelsTray()
 }
+
+func (m *IGDownloadManager) GetUserInfoEndPoint(id string) (instago.IGUser, error) {
+	return m.apimgr.GetUserInfoEndPoint(id)
+}

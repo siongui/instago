@@ -151,9 +151,13 @@ func getUserProfilPicFilePath(username, id, url string, timestamp int64) string 
 	return path.Join(userDir, filename)
 }
 
+func GetIdUsernameDir() string {
+	return path.Join(dataDir, "ID-USERNAME")
+}
+
 func GetIdUsernamePath(id, username string) string {
 	filename := id + "-" + username
-	return path.Join(dataDir, "ID-USERNAME", filename)
+	return path.Join(GetIdUsernameDir(), filename)
 }
 
 func GetReelMentionsPath(id, username string) string {
