@@ -56,6 +56,10 @@ func PrintUsernameIdMsg(username, id, msg interface{}) {
 	fmt.Println(msg)
 }
 
+func PrintBestiesItemInfo(item instago.IGItem, username string) {
+	PrintUsernameIdMsg(username, item.GetUserId(), "'s besties item")
+}
+
 func printTimelineItemInfo(index int, item instago.IGItem) {
 	// You're All Caught Up
 	if item.EndOfFeedDemarcator.Title != "" {

@@ -240,6 +240,10 @@ func (m *IGDownloadManager) GetStoryItemAndReelMentions(item instago.IGItem, use
 		return
 	}
 
+	if item.Audience == "besties" {
+		PrintBestiesItemInfo(item, username)
+	}
+
 	fetched := make(map[string]bool)
 	if isDownloaded {
 		for _, rm := range item.ReelMentions {
@@ -389,6 +393,10 @@ func (m *IGDownloadManager) DownloadStoryAndPostLiveForever(interval1, interval2
 					PrintUsernameIdMsg(username, id, " all downloaded")
 				}
 				continue
+			}
+
+			if tray.HasBestiesMedia {
+				PrintUsernameIdMsg(username, id, "has close friend (besties) story item(s)")
 			}
 
 			if verbose {
