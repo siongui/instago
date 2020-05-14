@@ -100,8 +100,10 @@ type IGItem struct {
 	SavedCollectionIds []string     `json:"saved_collection_ids"`
 	Usertags           ItemUsertags `json:"usertags"`
 
-	CanReshare            bool `json:"can_reshare"`
-	SupportsReelReactions bool `json:"supports_reel_reactions"`
+	Audience              string `json:"audience"`
+	CanReshare            bool   `json:"can_reshare"`
+	CanReply              bool   `json:"can_reply"`
+	SupportsReelReactions bool   `json:"supports_reel_reactions"`
 }
 
 // Used to decode JSON in item.
