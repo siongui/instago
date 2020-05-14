@@ -44,10 +44,8 @@ type IGReelTray struct {
 	Muted              bool    `json:"muted"`
 	PrefetchCount      int64   `json:"prefetch_count"`
 
-	// seems to be type conflict in reels tray feed and user story feed
-	// reels tray feed: bool
-	// user media tray feed: int64
-	//HasBestiesMedia    bool  `json:"has_besties_media"`
+	// close friend
+	HasBestiesMedia bool `json:"has_besties_media"`
 
 	Items []IGItem `json:"items"`
 }
