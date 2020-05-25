@@ -85,7 +85,7 @@ func DownloadIGMedia(em instago.IGMedia) (isDownloaded bool, err error) {
 }
 
 // Given username, download all posts of the user without login.
-func DownloadAllPostsNoLogin(username string) {
+func DownloadAllPostsNoLogin(username string) (err error) {
 	medias, err := instago.GetAllPostMediaNoLogin(username)
 	if err != nil {
 		log.Println(err)
@@ -95,6 +95,7 @@ func DownloadAllPostsNoLogin(username string) {
 	for _, media := range medias {
 		DownloadPostNoLogin(media.Shortcode)
 	}
+	return
 }
 
 // Given username, download all posts of the user without login.
