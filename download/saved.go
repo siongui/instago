@@ -195,7 +195,12 @@ func (m *IGDownloadManager) DownloadDependOnCollectionName(name2layer, nameAllpo
 			if name == nameAllpost {
 				if _, isDone := mapAllpost[iddone]; !isDone {
 					log.Println(item.GetUsername(), "download all post (no login)", iddone)
-					go DownloadAllPostsNoLogin(item.GetUsername())
+					go func() {
+						err := DownloadAllPostsNoLogin(item.GetUsername())
+						if err != nil {
+							m.DownloadAllPostsNoLogin(item.GetUsername())
+						}
+					}()
 					mapAllpost[iddone] = true
 				}
 			}
