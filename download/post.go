@@ -97,6 +97,19 @@ func DownloadAllPostsNoLogin(username string) {
 	}
 }
 
+// Given username, download all posts of the user without login.
+func (m *IGDownloadManager) DownloadAllPostsNoLogin(username string) {
+	codes, err := m.apimgr.GetAllPostCode(username)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	for _, code := range codes {
+		DownloadPostNoLogin(code)
+	}
+}
+
 // Given username, download all posts of the user with logged in status.
 func (m *IGDownloadManager) DownloadAllPosts(username string) {
 	codes, err := m.apimgr.GetAllPostCode(username)
