@@ -4,6 +4,7 @@
   "name": "igcookies",
   "description": "Get cookies to access Instagram API",
   "version": "0.1",
+  "incognito": "split",
 
   "browser_action": {
     "default_title": "get IG cookies",
