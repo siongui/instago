@@ -11,6 +11,9 @@ import (
 type IGDownloadManager struct {
 	apimgr      *instago.IGApiManager
 	collections []instago.Collection
+
+	// manager of clean (non-blocked) account
+	mgr2 *IGDownloadManager
 }
 
 // The arguments here is the same as the NewInstagramApiManager of instago.
@@ -28,6 +31,9 @@ func NewInstagramDownloadManager(authFilePath string) (*IGDownloadManager, error
 	}
 
 	m.apimgr, err = instago.NewInstagramApiManager(authFilePath)
+
+	// TODO: check m.apimgr here?
+
 	return &m, err
 }
 
@@ -46,4 +52,13 @@ func (m *IGDownloadManager) GetReelsTray() (instago.IGReelsTray, error) {
 
 func (m *IGDownloadManager) GetUserInfoEndPoint(id string) (instago.IGUser, error) {
 	return m.apimgr.GetUserInfoEndPoint(id)
+}
+
+// Optional. Load another account which is not blocked by any other account.
+func (m *IGDownloadManager) LoadCleanDownloadManager(authFilePath string) (err error) {
+	m2, err := NewInstagramDownloadManager(authFilePath)
+	if err == nil {
+		m.mgr2 = m2
+	}
+	return
 }

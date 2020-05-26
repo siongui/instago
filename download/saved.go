@@ -7,6 +7,51 @@ import (
 	"github.com/siongui/instago"
 )
 
+func (m *IGDownloadManager) SmartDownloadAllPosts(username string) (err error) {
+	err = DownloadAllPostsNoLogin(username)
+	if err == nil {
+		return
+	}
+
+	if m.mgr2 != nil {
+		err = m.mgr2.DownloadAllPosts(username)
+		//err = m.mgr2.DownloadAllPostsNoLogin(username)
+	}
+	return
+}
+
+func (m *IGDownloadManager) SmartDownloadStory(user instago.IGUser) (err error) {
+	// Pk here is user id
+	if user.IsPrivate {
+		return m.DownloadUserStoryPostlive(user.Pk)
+	}
+
+	// in case main account is blocked by some users, we use clean account
+	// (account not blocked) to download public user account
+	if m.mgr2 != nil {
+		return m.mgr2.DownloadUserStoryPostlive(user.Pk)
+	}
+
+	return m.DownloadUserStoryPostlive(user.Pk)
+}
+
+func (m *IGDownloadManager) SmartDownloadPost(item instago.IGItem) (err error) {
+	if item.User.IsPrivate {
+		_, err = m.DownloadPost(item.GetPostCode())
+		return
+	}
+
+	_, err = DownloadPostNoLogin(item.GetPostCode())
+	if err == nil {
+		return
+	}
+
+	if m.mgr2 != nil {
+		_, err = m.mgr2.DownloadPost(item.GetPostCode())
+	}
+	return
+}
+
 // GetPostItem downloads media (photo/video) item in the post.
 func (m *IGDownloadManager) GetPostItem(item instago.IGItem) (isDownloaded bool, err error) {
 	if saveData {
@@ -61,10 +106,7 @@ func (m *IGDownloadManager) GetPostItem(item instago.IGItem) (isDownloaded bool,
 				}
 			} else {
 				// always run here.
-				if item.User.IsPrivate {
-					return m.DownloadPost(item.GetPostCode())
-				}
-				return DownloadPostNoLogin(item.GetPostCode())
+				m.SmartDownloadPost(item)
 			}
 		} else {
 			if err != nil {
@@ -93,8 +135,7 @@ func (m *IGDownloadManager) DownloadSavedPosts(numOfItem int, downloadStory bool
 		if isDownloaded && downloadStory {
 			u := item.GetUsername()
 			if _, ok := username[u]; !ok {
-				// Pk here is user id
-				go m.DownloadUserStoryPostlive(item.User.Pk)
+				go m.SmartDownloadStory(item.User)
 				username[u] = true
 			}
 		}
@@ -117,8 +158,7 @@ func (m *IGDownloadManager) DownloadSavedPostsAndSendItemInCollectionToChannel(n
 		if isDownloaded && downloadStory {
 			u := item.GetUsername()
 			if _, ok := username[u]; !ok {
-				// Pk here is user id
-				go m.DownloadUserStoryPostlive(item.User.Pk)
+				go m.SmartDownloadStory(item.User)
 				username[u] = true
 			}
 		}
@@ -153,8 +193,7 @@ func (m *IGDownloadManager) DownloadSavedCollectionPostsAndSendItemInCollectionT
 		if isDownloaded && downloadStory {
 			u := item.GetUsername()
 			if _, ok := username[u]; !ok {
-				// Pk here is user id
-				go m.DownloadUserStoryPostlive(item.User.Pk)
+				go m.SmartDownloadStory(item.User)
 				username[u] = true
 			}
 		}
@@ -187,6 +226,7 @@ func (m *IGDownloadManager) DownloadDependOnCollectionName(name2layer, nameAllpo
 			if name == name2layer {
 				if _, isDone := map2layer[iddone]; !isDone {
 					log.Println(item.GetUsername(), "download 2layer", iddone)
+					// TODO: smart download 2layer
 					go m.DownloadUserStoryLayer(item.User.Pk, 2)
 					map2layer[iddone] = true
 				}
@@ -195,12 +235,7 @@ func (m *IGDownloadManager) DownloadDependOnCollectionName(name2layer, nameAllpo
 			if name == nameAllpost {
 				if _, isDone := mapAllpost[iddone]; !isDone {
 					log.Println(item.GetUsername(), "download all post (no login)", iddone)
-					go func() {
-						err := DownloadAllPostsNoLogin(item.GetUsername())
-						if err != nil {
-							m.DownloadAllPostsNoLogin(item.GetUsername())
-						}
-					}()
+					go m.SmartDownloadAllPosts(item.GetUsername())
 					mapAllpost[iddone] = true
 				}
 			}
@@ -208,6 +243,7 @@ func (m *IGDownloadManager) DownloadDependOnCollectionName(name2layer, nameAllpo
 			if name == nameHighlight {
 				if _, isDone := mapHighlight[iddone]; !isDone {
 					log.Println(item.GetUsername(), "download highlight", iddone)
+					// TODO: smart download highlights
 					go m.DownloadUserStoryHighlights(item.GetUserId())
 					mapHighlight[iddone] = true
 				}
