@@ -20,6 +20,18 @@ func (m *IGDownloadManager) SmartDownloadAllPosts(username string) (err error) {
 	return
 }
 
+func (m *IGDownloadManager) SmartDownloadHighlights(item instago.IGItem) (err error) {
+	// in case main account is blocked by some users, we use clean account
+	// (account not blocked) to download public user account
+	if m.mgr2 != nil && !item.User.IsPrivate {
+		m.mgr2.DownloadUserStoryHighlights(item.GetUserId())
+		return
+	}
+
+	m.DownloadUserStoryHighlights(item.GetUserId())
+	return
+}
+
 func (m *IGDownloadManager) SmartDownloadStory(user instago.IGUser) (err error) {
 	// Pk here is user id
 	if user.IsPrivate {
@@ -243,8 +255,7 @@ func (m *IGDownloadManager) DownloadDependOnCollectionName(name2layer, nameAllpo
 			if name == nameHighlight {
 				if _, isDone := mapHighlight[iddone]; !isDone {
 					log.Println(item.GetUsername(), "download highlight", iddone)
-					// TODO: smart download highlights
-					go m.DownloadUserStoryHighlights(item.GetUserId())
+					go m.SmartDownloadHighlights(item)
 					mapHighlight[iddone] = true
 				}
 			}
