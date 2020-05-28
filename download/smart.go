@@ -77,17 +77,8 @@ func (m *IGDownloadManager) SmartDownloadStory(user instago.IGUser) (err error) 
 
 func (m *IGDownloadManager) SmartDownloadPost(item instago.IGItem) (isDownloaded bool, err error) {
 	if item.User.IsPrivate {
-		isDownloaded, err = m.DownloadPost(item.GetPostCode())
-		return
+		return m.DownloadPost(item.GetPostCode())
 	}
 
-	isDownloaded, err = DownloadPostNoLogin(item.GetPostCode())
-	if err == nil {
-		return
-	}
-
-	if m.mgr2 != nil {
-		isDownloaded, err = m.mgr2.DownloadPost(item.GetPostCode())
-	}
-	return
+	return m.DownloadPostNoLoginIfPossible(item.GetPostCode())
 }
