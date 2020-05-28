@@ -1,8 +1,39 @@
 package igdl
 
 import (
+	"log"
+
 	"github.com/siongui/instago"
 )
+
+func (m *IGDownloadManager) DownloadPostNoLoginIfPossible(code string) (isDownloaded bool, err error) {
+	em, err := instago.GetPostInfoNoLogin(code)
+	if err == nil {
+		return DownloadIGMedia(em)
+	}
+
+	log.Println(err)
+	log.Println(code, "cannot download without login")
+
+	if m.mgr2 != nil {
+		log.Println("try to download using clean account")
+		em, err = m.mgr2.GetPostInfo(code)
+		if err == nil {
+			return DownloadIGMedia(em)
+		}
+		log.Println(err)
+		log.Println("fail to download using clean account")
+	}
+
+	// Cannot download without login. also cannot download using clean
+	// account. try to download using main account
+	em, err = m.GetPostInfo(code)
+	if err == nil {
+		return DownloadIGMedia(em)
+	}
+	log.Println(err)
+	return
+}
 
 func (m *IGDownloadManager) SmartDownloadAllPosts(username string) (err error) {
 	err = DownloadAllPostsNoLogin(username)
