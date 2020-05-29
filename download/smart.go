@@ -74,17 +74,12 @@ func (m *IGDownloadManager) DownloadPostNoLoginIfPossible(code string) (isDownlo
 	return
 }
 
-func (m *IGDownloadManager) SmartDownloadAllPosts(username string) (err error) {
-	err = DownloadAllPostsNoLogin(username)
-	if err == nil {
-		return
+func (m *IGDownloadManager) SmartDownloadAllPosts(item instago.IGItem) (err error) {
+	if item.User.IsPrivate {
+		return m.DownloadAllPosts(item.GetUsername())
 	}
 
-	if m.mgr2 != nil {
-		err = m.mgr2.DownloadAllPosts(username)
-		//err = m.mgr2.DownloadAllPostsNoLogin(username)
-	}
-	return
+	return m.DownloadAllPostsNoLoginIfPossible(item.GetUsername())
 }
 
 func (m *IGDownloadManager) SmartDownloadHighlights(item instago.IGItem) (err error) {
