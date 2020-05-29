@@ -58,6 +58,10 @@ func (m *IGDownloadManager) GetPostInfo(code string) (instago.IGMedia, error) {
 	return m.apimgr.GetPostInfo(code)
 }
 
+func (m *IGDownloadManager) GetAllPostMedia(username string) ([]instago.IGMedia, error) {
+	return m.apimgr.GetAllPostMedia(username)
+}
+
 // Optional. Load another account which is not blocked by any other account.
 func (m *IGDownloadManager) LoadCleanDownloadManager(authFilePath string) (err error) {
 	m2, err := NewInstagramDownloadManager(authFilePath)

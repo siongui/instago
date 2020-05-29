@@ -6,6 +6,45 @@ import (
 	"github.com/siongui/instago"
 )
 
+func (m *IGDownloadManager) GetAllPostMediaNoLoginIfPossible(username string) (medias []instago.IGMedia, err error) {
+	medias, err = instago.GetAllPostMediaNoLogin(username)
+	if err == nil {
+		return
+	}
+
+	log.Println(err)
+	log.Println(username, "cannot download without login")
+
+	if m.mgr2 != nil {
+		log.Println("try to get all media infos using clean account")
+		medias, err = m.mgr2.GetAllPostMedia(username)
+		if err == nil {
+			return
+		}
+		log.Println(err)
+		log.Println("fail to get all media infos using clean account")
+	}
+
+	// Cannot get without login. also cannot get using clean account.
+	// try to download using main account
+	return m.GetAllPostMedia(username)
+}
+
+// FIXME: only works for public account now
+func (m *IGDownloadManager) DownloadAllPostsNoLoginIfPossible(username string) (err error) {
+	medias, err := m.GetAllPostMediaNoLoginIfPossible(username)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	for _, media := range medias {
+		// check error?
+		m.DownloadPostNoLoginIfPossible(media.Shortcode)
+	}
+	return
+}
+
 func (m *IGDownloadManager) DownloadPostNoLoginIfPossible(code string) (isDownloaded bool, err error) {
 	em, err := instago.GetPostInfoNoLogin(code)
 	if err == nil {
