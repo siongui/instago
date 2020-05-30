@@ -97,17 +97,19 @@ func (m *IGDownloadManager) DownloadSavedPosts(numOfItem int, downloadStory bool
 	}
 }
 
-// DO NOT USE. Test now. Used with DownloadDependOnCollectionName
-func (m *IGDownloadManager) DownloadSavedPostsAndSendItemInCollectionToChannel(numOfItem int, downloadStory bool, c chan instago.IGItem) (err error) {
-	items, err := m.apimgr.GetSavedPosts(numOfItem)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
+func (m *IGDownloadManager) ProcessSavedItems(items []instago.IGItem, downloadStory bool, c chan instago.IGItem) {
 	username := make(map[string]bool)
 	for idx, item := range items {
-		// FIXME: check err
+
+		// check if item in "Stop" collection. if it does, stop
+		// processing and return.
+		for _, id := range item.SavedCollectionIds {
+			if m.CollectionId2Name(id) == "Stop" {
+				return
+			}
+		}
+
+		// check err?
 		PrintItemInfo(idx, &item)
 		isDownloaded, _ := m.GetPostItem(item)
 		if isDownloaded && downloadStory {
@@ -123,7 +125,17 @@ func (m *IGDownloadManager) DownloadSavedPostsAndSendItemInCollectionToChannel(n
 			c <- item
 		}
 	}
+}
 
+// DO NOT USE. Test now. Used with DownloadDependOnCollectionName
+func (m *IGDownloadManager) DownloadSavedPostsAndSendItemInCollectionToChannel(numOfItem int, downloadStory bool, c chan instago.IGItem) (err error) {
+	items, err := m.apimgr.GetSavedPosts(numOfItem)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	m.ProcessSavedItems(items, downloadStory, c)
 	return
 }
 
@@ -140,25 +152,7 @@ func (m *IGDownloadManager) DownloadSavedCollectionPostsAndSendItemInCollectionT
 		return
 	}
 
-	username := make(map[string]bool)
-	for idx, item := range items {
-		// FIXME: check err
-		PrintItemInfo(idx, &item)
-		isDownloaded, _ := m.GetPostItem(item)
-		if isDownloaded && downloadStory {
-			u := item.GetUsername()
-			if _, ok := username[u]; !ok {
-				go m.SmartDownloadStory(item.User)
-				username[u] = true
-			}
-		}
-
-		// if item in collection, send to channel
-		if len(item.SavedCollectionIds) > 0 {
-			c <- item
-		}
-	}
-
+	m.ProcessSavedItems(items, downloadStory, c)
 	return
 }
 
