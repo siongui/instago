@@ -3,6 +3,7 @@ package igdl
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"strings"
 
@@ -26,6 +27,19 @@ func (m *IGDownloadManager) IdToUsername(id string) (username string, err error)
 }
 
 func (m *IGDownloadManager) UsernameToId(username string) (id string, err error) {
+	// Try to get id from local saved data
+	if m.idusernames != nil {
+		id = FindIdFromUsernameInMap(m.idusernames, username)
+		if id != "" {
+			// double check in case someone change username
+			u, err := m.IdToUsername(id)
+			if err == nil && u == username {
+				return id, err
+			}
+		}
+		log.Println("fail to get id from local saved data")
+	}
+
 	// Try to get id without loggin
 	id, err = instago.GetUserId(username)
 	if err == nil {

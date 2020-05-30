@@ -11,6 +11,7 @@ import (
 type IGDownloadManager struct {
 	apimgr      *instago.IGApiManager
 	collections []instago.Collection
+	idusernames map[string][]string
 
 	// manager of clean (non-blocked) account
 	mgr2 *IGDownloadManager
@@ -71,6 +72,14 @@ func (m *IGDownloadManager) LoadCleanDownloadManager(authFilePath string) (err e
 	m2, err := NewInstagramDownloadManager(authFilePath)
 	if err == nil {
 		m.mgr2 = m2
+	}
+	return
+}
+
+func (m *IGDownloadManager) LoadIdUsernameFromDataDir() (err error) {
+	iu, err := BuildIdUsernameMapFromLocalData(GetIdUsernameDir())
+	if err == nil {
+		m.idusernames = iu
 	}
 	return
 }
