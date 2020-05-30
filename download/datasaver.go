@@ -36,7 +36,7 @@ func (m *IGDownloadManager) UsernameToId(username string) (id string, err error)
 	}
 
 	// Try to get id with loggin
-	ui, err := m.apimgr.GetUserInfo(username)
+	ui, err := m.GetUserInfo(username)
 	if err == nil {
 		id = ui.Id
 		if saveData {
