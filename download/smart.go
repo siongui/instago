@@ -39,8 +39,13 @@ func (m *IGDownloadManager) DownloadAllPostsNoLoginIfPossible(username string) (
 	}
 
 	for _, media := range medias {
-		// check error?
-		m.DownloadPostNoLoginIfPossible(media.Shortcode)
+		_, err = m.DownloadPostNoLoginIfPossible(media.Shortcode)
+		if err != nil {
+			// try again
+			log.Println(err)
+			// check err again?
+			m.DownloadPostNoLoginIfPossible(media.Shortcode)
+		}
 	}
 	return
 }
