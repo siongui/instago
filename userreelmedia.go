@@ -9,14 +9,14 @@ import (
 
 const urlUserReelMedia = `https://i.instagram.com/api/v1/feed/user/{{USERID}}/story/`
 
-type userTray struct {
+type UserTray struct {
 	Reel         IGReelTray     `json:"reel"`
 	PostLiveItem IGPostLiveItem `json:"post_live_item"`
 
 	Status string `json:"status"`
 }
 
-func (m *IGApiManager) GetUserReelMedia(userid string) (ut userTray, err error) {
+func (m *IGApiManager) GetUserReelMedia(userid string) (ut UserTray, err error) {
 	url := strings.Replace(urlUserReelMedia, "{{USERID}}", userid, 1)
 	b, err := m.getHTTPResponse(url, "GET")
 	if err != nil {

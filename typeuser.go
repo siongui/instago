@@ -1,5 +1,15 @@
 package instago
 
+import (
+	"strconv"
+)
+
+type User interface {
+	GetUserId() string
+	GetUsername() string
+	IsPublic() bool
+}
+
 type IGFollowUser struct {
 	Pk                         int64  `json:"pk"`
 	Username                   string `json:"username"`
@@ -10,6 +20,18 @@ type IGFollowUser struct {
 	IsVerified                 bool   `json:"is_verified"`
 	HasAnonymousProfilePicture bool   `json:"has_anonymous_profile_picture"`
 	LatestReelMedia            int64  `json:"latest_reel_media"`
+}
+
+func (u IGFollowUser) GetUserId() string {
+	return strconv.FormatInt(u.Pk, 10)
+}
+
+func (u IGFollowUser) GetUsername() string {
+	return u.Username
+}
+
+func (u IGFollowUser) IsPublic() bool {
+	return !u.IsPrivate
 }
 
 type IGUser struct {
@@ -39,4 +61,16 @@ type IGUser struct {
 	Byline               string  `json:"byline"`
 	MutualFollowersCount float64 `json:"mutual_followers_count"`
 	LatestReelMedia      int64   `json:"latest_reel_media"`
+}
+
+func (u IGUser) GetUserId() string {
+	return strconv.FormatInt(u.Pk, 10)
+}
+
+func (u IGUser) GetUsername() string {
+	return u.Username
+}
+
+func (u IGUser) IsPublic() bool {
+	return !u.IsPrivate
 }

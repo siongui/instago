@@ -210,3 +210,21 @@ func (m *IGDownloadManager) DownloadStoryAndPostLiveForever(interval1, interval2
 		PrintMsgSleep(interval1, "DownloadStoryAndPostLiveForever: ")
 	}
 }
+
+func (m *IGDownloadManager) DownloadUnexpiredStoryOfAllFollowingUsers(interval int) (err error) {
+	users, err := m.GetSelfFollowing()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	for _, user := range users {
+		err = m.SmartDownloadUserStoryPostliveLayer(user, 2)
+		if err != nil {
+			log.Println(err)
+		}
+		SleepLog(3)
+	}
+
+	return
+}
