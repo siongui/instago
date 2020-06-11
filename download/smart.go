@@ -149,7 +149,7 @@ func (m *IGDownloadManager) smartDownloadUserStoryPostliveLayer(user instago.Use
 		return
 	} else {
 		fmt.Print("Try to fetch metadata of stories and postlives of")
-		UsernameIdColorPrint(username, id)
+		UsernameIdColorPrint(user.GetUsername(), id)
 		fmt.Println("")
 	}
 

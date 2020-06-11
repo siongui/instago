@@ -170,14 +170,18 @@ func GetScreenshotPath(id, username string) string {
 	return path.Join(outputDir, "Auto-Screenshot", filename)
 }
 
+func GetFollowDir() string {
+	return path.Join(dataDir, "Follow")
+}
+
 func getFollowingPath(id string) string {
 	filename := id + "-following-" + time.Now().Format(time.RFC3339) + ".json"
-	return path.Join(dataDir, "Follow", filename)
+	return path.Join(GetFollowDir(), filename)
 }
 
 func getFollowersPath(id string) string {
 	filename := id + "-followers-" + time.Now().Format(time.RFC3339) + ".json"
-	return path.Join(dataDir, "Follow", filename)
+	return path.Join(GetFollowDir(), filename)
 }
 
 func GetRFC3339String(s string) string {
