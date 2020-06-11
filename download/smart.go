@@ -125,9 +125,10 @@ func (m *IGDownloadManager) SmartDownloadPost(item instago.IGItem) (isDownloaded
 func (m *IGDownloadManager) smartGetStoryItemLayer(item instago.IGItem, username, id string, layer int, isdone map[string]string) {
 	getStoryItem(item, username)
 	for _, rm := range item.ReelMentions {
+		PrintReelMentionInfo(rm)
 		if !rm.User.IsPublic() {
-			UsernameIdColorPrint(rm.GetUsername(), rm.GetUserId())
-			log.Println("is private. ignored.")
+			//UsernameIdColorPrint(rm.GetUsername(), rm.GetUserId())
+			//log.Println("is private. ignored.")
 			continue
 		}
 		m.smartDownloadUserStoryPostliveLayer(rm.GetUsername(), rm.GetUserId(), layer, isdone)

@@ -211,6 +211,7 @@ func (m *IGDownloadManager) DownloadStoryAndPostLiveForever(interval1, interval2
 	}
 }
 
+// sleep "interval" seconds after fetching each user
 func (m *IGDownloadManager) DownloadUnexpiredStoryOfAllFollowingUsers(interval int) (err error) {
 	users, err := m.GetSelfFollowing()
 	if err != nil {
@@ -223,7 +224,7 @@ func (m *IGDownloadManager) DownloadUnexpiredStoryOfAllFollowingUsers(interval i
 		if err != nil {
 			log.Println(err)
 		}
-		SleepLog(3)
+		SleepLog(interval)
 	}
 
 	return

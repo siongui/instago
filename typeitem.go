@@ -153,6 +153,10 @@ func (i ItemReelMention) GetUserId() string {
 	return strconv.FormatInt(i.User.Pk, 10)
 }
 
+func (i ItemReelMention) IsPublic() bool {
+	return !i.User.IsPrivate
+}
+
 // user tags in items
 type ItemUsertags struct {
 	In []struct {

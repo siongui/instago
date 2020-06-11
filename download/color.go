@@ -108,6 +108,17 @@ func PrintReelMentionInfo(rm instago.ItemReelMention) {
 	}
 }
 
+func PrintUserInfo(user instago.User) {
+	fmt.Print("User: ")
+	UsernameIdColorPrint(user.GetUsername(), user.GetUserId())
+	fmt.Print(" , ")
+	if user.IsPublic() {
+		RedPrintln("Public")
+	} else {
+		RedPrintln("Private")
+	}
+}
+
 func PrintItemInfo(index int, pi instago.PostItem) {
 	cc.Print(index)
 	fmt.Print(": username: ")
