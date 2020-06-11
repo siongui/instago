@@ -211,14 +211,7 @@ func (m *IGDownloadManager) DownloadStoryAndPostLiveForever(interval1, interval2
 	}
 }
 
-// sleep "interval" seconds after fetching each user
-func (m *IGDownloadManager) DownloadUnexpiredStoryOfAllFollowingUsers(interval int) (err error) {
-	users, err := m.GetSelfFollowing()
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
+func (m *IGDownloadManager) DownloadUnexpiredStoryOfFollowUsers(users []instago.IGFollowUser, interval int) (err error) {
 	for _, user := range users {
 		err = m.SmartDownloadUserStoryPostliveLayer(user, 2)
 		if err != nil {
@@ -226,6 +219,22 @@ func (m *IGDownloadManager) DownloadUnexpiredStoryOfAllFollowingUsers(interval i
 		}
 		SleepLog(interval)
 	}
-
 	return
+}
+
+// sleep "interval" seconds after fetching each user
+func (m *IGDownloadManager) DownloadUnexpiredStoryOfAllFollowingUsers(interval int) (err error) {
+	log.Println("Load following users from data dir first")
+	users, err := LoadLatestFollowingUsers()
+	if err != nil {
+		log.Println(err)
+		log.Println("Fail to load users from data dir. Try to load following users from Instagram")
+		users, err = m.GetSelfFollowing()
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+
+	return m.DownloadUnexpiredStoryOfFollowUsers(users, interval)
 }

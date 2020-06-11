@@ -126,6 +126,7 @@ func (m *IGDownloadManager) SmartDownloadPost(item instago.IGItem) (isDownloaded
 func (m *IGDownloadManager) smartGetStoryItemLayer(item instago.IGItem, user instago.User, layer int, isdone map[string]string) {
 	getStoryItem(item, user.GetUsername())
 	for _, rm := range item.ReelMentions {
+		fmt.Print("  ")
 		PrintReelMentionInfo(rm)
 		if !rm.User.IsPublic() {
 			//UsernameIdColorPrint(rm.GetUsername(), rm.GetUserId())
@@ -144,11 +145,11 @@ func (m *IGDownloadManager) smartDownloadUserStoryPostliveLayer(user instago.Use
 
 	id := user.GetUserId()
 	if username, ok := isdone[id]; ok {
-		UsernameIdColorPrint(username, id)
+		UsernameIdColorPrint("  "+username, id)
 		fmt.Println("'s stories and postlives are already fetched. ignored")
 		return
 	} else {
-		fmt.Print("Try to fetch metadata of stories and postlives of")
+		fmt.Print("  Try to fetch metadata of stories and postlives of ")
 		UsernameIdColorPrint(user.GetUsername(), id)
 		fmt.Println("")
 	}
@@ -169,7 +170,7 @@ func (m *IGDownloadManager) smartDownloadUserStoryPostliveLayer(user instago.Use
 	// FIXME: tray.GetUsername() is ""
 	//isdone[id] = tray.GetUsername()
 	isdone[id] = user.GetUsername()
-	UsernameIdColorPrint(user.GetUsername(), id)
+	UsernameIdColorPrint("  "+user.GetUsername(), id)
 	fmt.Println("'s metadata of stories and postlives are fetched successfully")
 
 	for _, item := range tray.GetItems() {
