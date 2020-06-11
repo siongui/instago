@@ -1,8 +1,10 @@
 package igdl
 
 import (
+	"errors"
 	"io/ioutil"
 	"log"
+	"os"
 	"path"
 	"sort"
 	"strings"
@@ -66,4 +68,42 @@ func DiffFollowData(dir, keyword string) (err error) {
 	log.Println(x0, "-", x1)
 	DiffFollowUsers(users1, users0)
 	return
+}
+
+func GetLatestFile(dir, keyword string) (latest os.FileInfo, err error) {
+	infos, err := ioutil.ReadDir(dir)
+	if err != nil {
+		return
+	}
+
+	if len(infos) == 0 {
+		err = errors.New("no files in dir")
+		return
+	}
+
+	latest = infos[0]
+	for _, info := range infos {
+		if strings.Contains(info.Name(), keyword) {
+			if info.ModTime().After(latest.ModTime()) {
+				latest = info
+			}
+		}
+	}
+
+	if !strings.Contains(latest.Name(), keyword) {
+		err = errors.New("no filename contains keyword")
+		return
+	}
+
+	return
+}
+
+func LoadLatestFollowingUsers() (users []instago.IGFollowUser, err error) {
+	latestfile, err := GetLatestFile(GetFollowDir(), "-following-")
+	if err != nil {
+		return
+	}
+
+	p := path.Join(GetFollowDir(), latestfile.Name())
+	return LoadFollowUsers(p)
 }
