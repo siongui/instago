@@ -1,6 +1,7 @@
 package igdl
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -22,6 +23,26 @@ func (m *IGDownloadManager) IdToUsername(id string) (username string, err error)
 	user, err := m.GetUserInfoEndPoint(id)
 	if err == nil {
 		username = user.Username
+	}
+	return
+}
+
+func (m *IGDownloadManager) UsernameToUserFromLocalData(username string) (user instago.IGUser, err error) {
+	// Try to get id from local saved data
+	if m.idusernames == nil {
+		err = errors.New("Please call LoadIdUsernameFromDataDir after NewInstagramDownloadManager")
+		return
+	}
+
+	id := FindIdFromUsernameInMap(m.idusernames, username)
+	if id == "" {
+		err = errors.New("Cannot find id from local data")
+		return
+	}
+
+	user, err = m.GetUserInfoEndPoint(id)
+	if err == nil && user.Username != username {
+		log.Println("Get " + user.Username + " != given " + username)
 	}
 	return
 }
