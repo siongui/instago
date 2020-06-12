@@ -142,10 +142,8 @@ func (m *IGDownloadManager) DownloadUserStoryPostliveByName(username string) (er
 func (m *IGDownloadManager) getStoryItemLayer(item instago.IGItem, username string, layer int, isdone map[string]string) {
 	getStoryItem(item, username)
 	for _, reelmention := range item.ReelMentions {
-		// Pk is user id
-		id := strconv.FormatInt(reelmention.User.Pk, 10)
-		//m.downloadUserStoryLayer(id, layer, isdone)
-		m.downloadUserStoryPostliveLayer(id, layer, isdone)
+		//m.downloadUserStoryLayer(reelmention, layer, isdone)
+		m.downloadUserStoryPostliveLayer(reelmention, layer, isdone)
 	}
 }
 
@@ -175,12 +173,13 @@ func (m *IGDownloadManager) downloadUserStoryLayer(id string, layer int, isdone 
 	return
 }
 
-func (m *IGDownloadManager) downloadUserStoryPostliveLayer(id string, layer int, isdone map[string]string) (err error) {
+func (m *IGDownloadManager) downloadUserStoryPostliveLayer(user instago.User, layer int, isdone map[string]string) (err error) {
 	if layer < 1 {
 		return
 	}
 	layer--
 
+	id := user.GetUserId()
 	if username, ok := isdone[id]; ok {
 		log.Println(username, id, "already fetched")
 		return
@@ -207,20 +206,25 @@ func (m *IGDownloadManager) downloadUserStoryPostliveLayer(id string, layer int,
 // DownloadUserStoryByNameLayer downloads unexpired stories (last 24 hours) of
 // the given user name, and also stories of reel mentions.
 func (m *IGDownloadManager) DownloadUserStoryByNameLayer(username string, layer int) (err error) {
-	id, err := m.UsernameToId(username)
+	user, err := m.UsernameToUser(username)
 	if err != nil {
 		return
 	}
 
 	isdone := make(map[string]string)
-	//return m.downloadUserStoryLayer(id, layer, isdone)
-	return m.downloadUserStoryPostliveLayer(id, layer, isdone)
+	//return m.downloadUserStoryLayer(user, layer, isdone)
+	return m.downloadUserStoryPostliveLayer(user, layer, isdone)
 }
 
 // DownloadUserStoryLayer is the same as DownloadUserStoryByNameLayer, except
 // int64 id passed as argument.
 func (m *IGDownloadManager) DownloadUserStoryLayer(userId int64, layer int) (err error) {
+	user, err := m.GetUserInfoEndPoint(strconv.FormatInt(userId, 10))
+	if err != nil {
+		return
+	}
+
 	isdone := make(map[string]string)
-	//return m.downloadUserStoryLayer(strconv.FormatInt(userId, 10), layer, isdone)
-	return m.downloadUserStoryPostliveLayer(strconv.FormatInt(userId, 10), layer, isdone)
+	//return m.downloadUserStoryLayer(user, layer, isdone)
+	return m.downloadUserStoryPostliveLayer(user, layer, isdone)
 }

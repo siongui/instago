@@ -78,6 +78,18 @@ type UserInfo struct {
 	} `json:"edge_owner_to_timeline_media"`
 }
 
+func (u UserInfo) GetUserId() string {
+	return u.Id
+}
+
+func (u UserInfo) GetUsername() string {
+	return u.Username
+}
+
+func (u UserInfo) IsPublic() bool {
+	return !u.IsPrivate
+}
+
 type dataUserMedia struct {
 	Data struct {
 		User UserInfo `json:"user"`

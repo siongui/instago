@@ -27,10 +27,10 @@ func (m *IGDownloadManager) IdToUsername(id string) (username string, err error)
 	return
 }
 
-func (m *IGDownloadManager) UsernameToUserFromLocalData(username string) (user instago.IGUser, err error) {
+func (m *IGDownloadManager) UsernameToUserFromLocalData(username string) (user instago.User, err error) {
 	// Try to get id from local saved data
 	if m.idusernames == nil {
-		err = errors.New("Please call LoadIdUsernameFromDataDir after NewInstagramDownloadManager")
+		err = errors.New("Please call LoadIdUsernameFromDataDir after NewInstagramDownloadManager if you want to use UsernameToUserFromLocalData.")
 		return
 	}
 
@@ -41,8 +41,33 @@ func (m *IGDownloadManager) UsernameToUserFromLocalData(username string) (user i
 	}
 
 	user, err = m.GetUserInfoEndPoint(id)
-	if err == nil && user.Username != username {
-		log.Println("Get " + user.Username + " != given " + username)
+	if err == nil && user.GetUsername() != username {
+		log.Println("Get " + user.GetUsername() + " != given " + username)
+	}
+	return
+}
+
+func (m *IGDownloadManager) UsernameToUser(username string) (user instago.User, err error) {
+	user, err = m.UsernameToUserFromLocalData(username)
+	if err == nil {
+		return
+	}
+
+	// Try to get user info without loggin via GraphQL
+	user, err = instago.GetUserInfoNoLogin(username)
+	if err == nil {
+		if saveData {
+			saveIdUsername(user.GetUserId(), user.GetUsername())
+		}
+		return
+	}
+
+	// Try to get user info with loggin via GraphQL
+	user, err = m.GetUserInfo(username)
+	if err == nil {
+		if saveData {
+			saveIdUsername(user.GetUserId(), user.GetUsername())
+		}
 	}
 	return
 }
