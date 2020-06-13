@@ -100,19 +100,14 @@ func (m *IGDownloadManager) SmartDownloadHighlights(item instago.IGItem) (err er
 	return
 }
 
-func (m *IGDownloadManager) SmartDownloadStory(user instago.IGUser) (err error) {
-	// Pk here is user id
-	if user.IsPrivate {
-		return m.DownloadUserStoryPostlive(user.Pk)
-	}
-
+func (m *IGDownloadManager) SmartDownloadStory(user instago.User) (err error) {
 	// in case main account is blocked by some users, we use clean account
 	// (account not blocked) to download public user account
-	if m.mgr2 != nil {
-		return m.mgr2.DownloadUserStoryPostlive(user.Pk)
+	if m.mgr2 != nil && user.IsPublic() {
+		return m.mgr2.downloadUserStoryPostlive(user.GetUserId())
 	}
 
-	return m.DownloadUserStoryPostlive(user.Pk)
+	return m.downloadUserStoryPostlive(user.GetUserId())
 }
 
 func (m *IGDownloadManager) SmartDownloadPost(item instago.IGItem) (isDownloaded bool, err error) {
@@ -184,4 +179,11 @@ func (m *IGDownloadManager) SmartDownloadUserStoryPostliveLayer(user instago.Use
 	PrintUserInfo(user)
 	isdone := make(map[string]string)
 	return m.smartDownloadUserStoryPostliveLayer(user, layer, isdone)
+}
+
+func (m *IGDownloadManager) SmartGetUserReelMedia(user instago.User) (instago.UserTray, error) {
+	if user.IsPublic() && m.mgr2 != nil {
+		return m.mgr2.GetUserReelMedia(user.GetUserId())
+	}
+	return m.GetUserReelMedia(user.GetUserId())
 }

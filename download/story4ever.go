@@ -37,9 +37,9 @@ func (m *IGDownloadManager) GetStoryItemAndReelMentions(item instago.IGItem, use
 				continue
 			}
 
-			if !rm.User.IsPrivate {
+			if rm.IsPublic() {
 				if _, ok := fetched[rm.GetUsername()]; !ok {
-					m.downloadUserStoryPostlive(rm.GetUserId())
+					m.SmartDownloadStory(rm)
 					fetched[rm.GetUsername()] = true
 				}
 				// handle err of m.downloadUserStoryPostlive(rm.GetUserId()) ?
@@ -90,7 +90,7 @@ func (m *IGDownloadManager) DownloadZeroItemUsers(c chan instago.IGReelTray, int
 				}
 
 				go func() {
-					ut, err := m.apimgr.GetUserReelMedia(id)
+					ut, err := m.SmartGetUserReelMedia(tray.User)
 					if err != nil {
 						PrintUsernameIdMsg(username, id, err)
 						queue = append(queue, tray)
