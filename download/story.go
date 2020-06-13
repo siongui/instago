@@ -179,6 +179,7 @@ func (m *IGDownloadManager) downloadUserStoryPostliveLayer(user instago.User, la
 	}
 	layer--
 
+	PrintUserInfo(user)
 	id := user.GetUserId()
 	if username, ok := isdone[id]; ok {
 		log.Println(username, id, "already fetched")
