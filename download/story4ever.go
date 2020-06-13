@@ -90,6 +90,7 @@ func (m *IGDownloadManager) DownloadZeroItemUsers(c chan instago.IGReelTray, int
 				}
 
 				go func() {
+					// FIXME: take besties into account
 					ut, err := m.SmartGetUserReelMedia(tray.User)
 					if err != nil {
 						PrintUsernameIdMsg(username, id, err)
