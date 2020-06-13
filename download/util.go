@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 // Create directory if it does not exist
@@ -54,5 +55,22 @@ func FileToLines(filePath string) (lines []string, err error) {
 		lines = append(lines, scanner.Text())
 	}
 	err = scanner.Err()
+	return
+}
+
+// Given slice of strings, exclude string that starts with //, and also exclude
+// strings contains only whitespace.
+func ExcludeCommentAndWhitespace(lines []string) (elines []string) {
+	for _, line := range lines {
+		if strings.HasPrefix(line, "//") {
+			continue
+		}
+
+		n := strings.TrimSpace(line)
+		if n == "" {
+			continue
+		}
+		elines = append(elines, n)
+	}
 	return
 }
