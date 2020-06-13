@@ -213,7 +213,17 @@ func (m *IGDownloadManager) DownloadStoryAndPostLiveForever(interval1, interval2
 
 func (m *IGDownloadManager) DownloadUnexpiredStoryOfFollowUsers(users []instago.IGFollowUser, interval int) (err error) {
 	for _, user := range users {
-		err = m.SmartDownloadUserStoryPostliveLayer(user, 2)
+		// in case user change privacy, read user info via mobile api
+		// endpoint again
+		u, err := m.GetUserInfoEndPoint(user.GetUserId())
+		if err == nil {
+			err = m.SmartDownloadUserStoryPostliveLayer(u, 2)
+		} else {
+			log.Println(err)
+			log.Println("use old user info data to fetch")
+			err = m.SmartDownloadUserStoryPostliveLayer(user, 2)
+		}
+
 		if err != nil {
 			log.Println(err)
 		}
