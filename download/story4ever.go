@@ -212,19 +212,23 @@ func (m *IGDownloadManager) DownloadStoryAndPostLiveForever(interval1, interval2
 	}
 }
 
+func (m *IGDownloadManager) DownloadUnexpiredStoryOfUser(user instago.User) (err error) {
+	// In case user change privacy, read user info via mobile api endpoint
+	// first.
+	u, err := m.GetUserInfoEndPoint(user.GetUserId())
+	if err == nil {
+		err = m.SmartDownloadUserStoryPostliveLayer(u, 2)
+	} else {
+		log.Println(err)
+		log.Println("Fail to fetch user info via mobile endpoint. use old user info data to fetch")
+		err = m.SmartDownloadUserStoryPostliveLayer(user, 2)
+	}
+	return
+}
+
 func (m *IGDownloadManager) DownloadUnexpiredStoryOfFollowUsers(users []instago.IGFollowUser, interval int) (err error) {
 	for _, user := range users {
-		// in case user change privacy, read user info via mobile api
-		// endpoint again
-		u, err := m.GetUserInfoEndPoint(user.GetUserId())
-		if err == nil {
-			err = m.SmartDownloadUserStoryPostliveLayer(u, 2)
-		} else {
-			log.Println(err)
-			log.Println("use old user info data to fetch")
-			err = m.SmartDownloadUserStoryPostliveLayer(user, 2)
-		}
-
+		err = m.DownloadUnexpiredStoryOfUser(user)
 		if err != nil {
 			log.Println(err)
 		}
