@@ -44,6 +44,19 @@ type UserInfoEndPoint struct {
 		Height int64  `json:"height"`
 		Url    string `json:"url"`
 	} `json:"hd_profile_pic_versions"`
+	HdProfilePicUrlInfo struct {
+		Url    string `json:"url"`
+		Width  int64  `json:"width"`
+		Height int64  `json:"height"`
+	} `json:"hd_profile_pic_url_info"`
+	MutualFollowersCount           int64  `json:"mutual_followers_count"`
+	ProfileContext                 string `json:"profile_context"`
+	ProfileContextLinksWithUserIds []struct {
+		Start    int64  `json:"start"`
+		End      int64  `json:"end"`
+		Username string `json:"username"`
+	} `json:"profile_context_links_with_user_ids"`
+	ProfileContextMutualFollowIds []int64 `json:"profile_context_mutual_follow_ids"`
 }
 
 func (u UserInfoEndPoint) GetUserId() string {

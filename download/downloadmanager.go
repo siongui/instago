@@ -51,7 +51,7 @@ func (m *IGDownloadManager) GetReelsTray() (instago.IGReelsTray, error) {
 	return m.apimgr.GetReelsTray()
 }
 
-func (m *IGDownloadManager) GetUserInfoEndPoint(id string) (instago.IGUser, error) {
+func (m *IGDownloadManager) GetUserInfoEndPoint(id string) (instago.UserInfoEndPoint, error) {
 	return m.apimgr.GetUserInfoEndPoint(id)
 }
 
