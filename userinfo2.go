@@ -56,7 +56,27 @@ type UserInfoEndPoint struct {
 		End      int64  `json:"end"`
 		Username string `json:"username"`
 	} `json:"profile_context_links_with_user_ids"`
-	ProfileContextMutualFollowIds []int64 `json:"profile_context_mutual_follow_ids"`
+	ProfileContextMutualFollowIds              []int64 `json:"profile_context_mutual_follow_ids"`
+	HasHighlightReels                          bool    `json:"has_highlight_reels"`
+	CanBeReportedAsFraud                       bool    `json:"can_be_reported_as_fraud"`
+	IsBusiness                                 bool    `json:"is_business"`
+	AccountType                                int64   `json:"account_type"`
+	ProfessionalConversionSuggestedAccountType int64   `json:"professional_conversion_suggested_account_type"`
+	//is_call_to_action_enabled
+	//personal_account_ads_page_name
+	//personal_account_ads_page_id
+	IncludeDirectBlacklistStatus   bool `json:"include_direct_blacklist_status"`
+	IsPotentialBusiness            bool `json:"is_potential_business"`
+	ShowPostInsightsEntryPoint     bool `json:"show_post_insights_entry_point"`
+	IsBestie                       bool `json:"is_bestie"`
+	HasUnseenBestiesMedia          bool `json:"has_unseen_besties_media"`
+	ShowAccountTransparencyDetails bool `json:"show_account_transparency_details"`
+	ShowLeaveFeedback              bool `json:"show_leave_feedback"`
+	//robi_feedback_source
+	AutoExpandChaining              bool `json:"auto_expand_chaining"`
+	HighlightReshareDisabled        bool `json:"highlight_reshare_disabled"`
+	IsMemorialized                  bool `json:"is_memorialized"`
+	OpenExternalUrlWithInAppBrowser bool `json:"open_external_url_with_in_app_browser"`
 }
 
 func (u UserInfoEndPoint) GetUserId() string {
@@ -72,7 +92,8 @@ func (u UserInfoEndPoint) IsPublic() bool {
 }
 
 type rawUserinfoResp struct {
-	User UserInfoEndPoint `json:"user"`
+	User   UserInfoEndPoint `json:"user"`
+	Status string           `json:"status"`
 }
 
 // FIXME: do not return IGUser
