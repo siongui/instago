@@ -239,6 +239,7 @@ func (m *IGDownloadManager) DownloadUserStoryPostliveByNameLayerIfPublic(usernam
 	if user.IsPublic() {
 		isdone := make(map[string]string)
 		//return m.downloadUserStoryLayer(user, layer, isdone)
+		// FIXME: if reel_mention is private, do not download
 		return m.downloadUserStoryPostliveLayer(user, layer, isdone)
 	}
 	PrintUserInfo(user)

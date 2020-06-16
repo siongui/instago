@@ -152,7 +152,7 @@ func BuildIdUsernameMapFromLocalData(idusernamedir string) (m map[string][]strin
 	for _, info := range infos {
 		//fmt.Println(info.Name())
 
-		a := strings.Split(info.Name(), "-")
+		a := strings.SplitN(info.Name(), "-", 2)
 		if len(a) != 2 {
 			panic(info.Name())
 		}
