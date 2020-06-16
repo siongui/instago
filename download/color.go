@@ -163,7 +163,7 @@ func PrintLiveBroadcasts(bcs []instago.IGBroadcast) {
 		fmt.Println("dash_live_predictive_playback_url: ", bc.DashLivePredictivePlaybackUrl)
 		fmt.Println("cover_frame_url", bc.CoverFrameUrl)
 
-		fmt.Print(bc.BroadcastOwner.Username)
+		fmt.Print("Prefix: " + bc.BroadcastOwner.Username)
 		fmt.Print("-")
 		fmt.Print(bc.BroadcastOwner.Pk)
 		for _, cobcter := range bc.Cobroadcasters {
@@ -172,7 +172,7 @@ func PrintLiveBroadcasts(bcs []instago.IGBroadcast) {
 			fmt.Print("-")
 			fmt.Print(cobcter.Pk)
 		}
-		fmt.Println("")
+		fmt.Println("-")
 	}
 }
 

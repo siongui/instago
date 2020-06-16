@@ -229,3 +229,18 @@ func (m *IGDownloadManager) DownloadUserStoryLayer(userId int64, layer int) (err
 	//return m.downloadUserStoryLayer(user, layer, isdone)
 	return m.downloadUserStoryPostliveLayer(user, layer, isdone)
 }
+
+func (m *IGDownloadManager) DownloadUserStoryPostliveByNameLayerIfPublic(username string, layer int) (err error) {
+	user, err := m.UsernameToUser(username)
+	if err != nil {
+		return
+	}
+
+	if user.IsPublic() {
+		isdone := make(map[string]string)
+		//return m.downloadUserStoryLayer(user, layer, isdone)
+		return m.downloadUserStoryPostliveLayer(user, layer, isdone)
+	}
+	PrintUserInfo(user)
+	return
+}
