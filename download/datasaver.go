@@ -20,7 +20,7 @@ func SetSaveData(b bool) {
 
 // Given id, get username from mobile API endpoint
 func (m *IGDownloadManager) IdToUsername(id string) (username string, err error) {
-	user, err := m.GetUserInfoEndPoint(id)
+	user, err := m.SmartGetUserInfoEndPoint(id)
 	if err == nil {
 		username = user.Username
 	}
@@ -40,7 +40,7 @@ func (m *IGDownloadManager) UsernameToUserFromLocalData(username string) (user i
 		return
 	}
 
-	user, err = m.GetUserInfoEndPoint(id)
+	user, err = m.SmartGetUserInfoEndPoint(id)
 	if err == nil && user.GetUsername() != username {
 		log.Println("Get " + user.GetUsername() + " != given " + username)
 	}

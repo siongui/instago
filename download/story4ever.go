@@ -215,7 +215,7 @@ func (m *IGDownloadManager) DownloadStoryAndPostLiveForever(interval1, interval2
 func (m *IGDownloadManager) DownloadUnexpiredStoryOfUser(user instago.User) (err error) {
 	// In case user change privacy, read user info via mobile api endpoint
 	// first.
-	u, err := m.GetUserInfoEndPoint(user.GetUserId())
+	u, err := m.SmartGetUserInfoEndPoint(user.GetUserId())
 	if err == nil {
 		err = m.SmartDownloadUserStoryPostliveLayer(u, 2)
 	} else {

@@ -181,3 +181,10 @@ func (m *IGDownloadManager) SmartGetUserReelMedia(user instago.User) (instago.Us
 	}
 	return m.GetUserReelMedia(user.GetUserId())
 }
+
+func (m *IGDownloadManager) SmartGetUserInfoEndPoint(id string) (instago.UserInfoEndPoint, error) {
+	if m.mgr2 != nil {
+		return m.mgr2.GetUserInfoEndPoint(id)
+	}
+	return m.GetUserInfoEndPoint(id)
+}
