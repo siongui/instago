@@ -149,13 +149,7 @@ func (m *IGDownloadManager) smartDownloadUserStoryPostliveLayer(user instago.Use
 		fmt.Println("")
 	}
 
-	ut := instago.UserTray{}
-	if user.IsPublic() && m.mgr2 != nil {
-		ut, err = m.mgr2.GetUserReelMedia(id)
-	} else {
-		ut, err = m.GetUserReelMedia(id)
-	}
-
+	ut, err := m.SmartGetUserReelMedia(user)
 	if err != nil {
 		log.Println(err)
 		return
