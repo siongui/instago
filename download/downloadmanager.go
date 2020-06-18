@@ -71,6 +71,10 @@ func (m *IGDownloadManager) GetUserReelMedia(id string) (instago.UserTray, error
 	return m.apimgr.GetUserReelMedia(id)
 }
 
+func (m *IGDownloadManager) GetSavedPosts(numOfItem int) ([]instago.IGItem, error) {
+	return m.apimgr.GetSavedPosts(numOfItem)
+}
+
 // Optional. Load another account which is not blocked by any other account.
 func (m *IGDownloadManager) LoadCleanDownloadManager(authFilePath string) (err error) {
 	m2, err := NewInstagramDownloadManager(authFilePath)

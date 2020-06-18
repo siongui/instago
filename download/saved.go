@@ -76,7 +76,7 @@ func (m *IGDownloadManager) GetPostItem(item instago.IGItem) (isDownloaded bool,
 // -1 means download all saved posts.
 // downloadStory flag will also download unexpired stories of the post user.
 func (m *IGDownloadManager) DownloadSavedPosts(numOfItem int, downloadStory bool) {
-	items, err := m.apimgr.GetSavedPosts(numOfItem)
+	items, err := m.GetSavedPosts(numOfItem)
 	if err != nil {
 		log.Println(err)
 		return
@@ -129,7 +129,7 @@ func (m *IGDownloadManager) ProcessSavedItems(items []instago.IGItem, downloadSt
 
 // DO NOT USE. Test now. Used with DownloadDependOnCollectionName
 func (m *IGDownloadManager) DownloadSavedPostsAndSendItemInCollectionToChannel(numOfItem int, downloadStory bool, c chan instago.IGItem) (err error) {
-	items, err := m.apimgr.GetSavedPosts(numOfItem)
+	items, err := m.GetSavedPosts(numOfItem)
 	if err != nil {
 		log.Println(err)
 		return
@@ -198,10 +198,6 @@ func (m *IGDownloadManager) DownloadDependOnCollectionName(name2layer, nameAllpo
 			}
 		}
 	}
-}
-
-func (m *IGDownloadManager) GetSavedPosts(numOfItem int) (items []instago.IGItem, err error) {
-	return m.apimgr.GetSavedPosts(numOfItem)
 }
 
 func (m *IGDownloadManager) IsInCollection(item instago.IGItem, name string) bool {
