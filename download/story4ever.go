@@ -168,10 +168,11 @@ func (m *IGDownloadManager) DownloadStoryAndPostLiveForever(interval1, interval2
 		go DownloadPostLive(rt.PostLive, isDownloading)
 		go PrintLiveBroadcasts(rt.Broadcasts)
 
-		for index, tray := range rt.Trays {
+		//for index, tray := range rt.Trays {
+		for _, tray := range rt.Trays {
 			username := tray.GetUsername()
 			id := tray.Id
-			items := tray.GetItems()
+			//items := tray.GetItems()
 
 			if isLatestReelMediaDownloaded(username, tray.LatestReelMedia) {
 				if verbose {
@@ -188,24 +189,26 @@ func (m *IGDownloadManager) DownloadStoryAndPostLiveForever(interval1, interval2
 				UsernameIdColorPrint(username, id)
 				fmt.Println(" has undownloaded items")
 			}
-
-			if len(items) == 0 {
-				if verbose {
-					UsernameIdColorPrint(username, id)
-					fmt.Println("#", index, " send to channel")
-				}
-				c <- tray
-			} else {
-				for _, item := range items {
-					err = m.GetStoryItemAndReelMentions(item, username)
-					if err != nil {
-						PrintUsernameIdMsg(username, id, err)
-						c <- tray
-						break
+			c <- tray
+			/*
+				if len(items) == 0 {
+					if verbose {
+						UsernameIdColorPrint(username, id)
+						fmt.Println("#", index, " send to channel")
 					}
+					c <- tray
+				} else {
+					for _, item := range items {
+						err = m.GetStoryItemAndReelMentions(item, username)
+						if err != nil {
+							PrintUsernameIdMsg(username, id, err)
+							c <- tray
+							break
+						}
+					}
+					// is there postlive items in tray here?
 				}
-				// is there postlive items in tray here?
-			}
+			*/
 		}
 
 		PrintMsgSleep(interval1, "DownloadStoryAndPostLiveForever: ")
