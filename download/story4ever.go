@@ -83,7 +83,7 @@ func (m *IGDownloadManager) DownloadZeroItemUsers(c chan instago.IGReelTray, int
 				tray := queue[0]
 				queue = queue[1:]
 
-				id := tray.Id
+				id := strconv.FormatInt(tray.Id, 10)
 				username := tray.GetUsername()
 				if verbose {
 					PrintUsernameIdMsg(username, id, " downloading...")
