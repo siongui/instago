@@ -31,7 +31,7 @@ type IGReelsTray struct {
 }
 
 type IGReelTray struct {
-	Id                 int64   `json:"id"`
+	Id                 string  `json:"id"`
 	LatestReelMedia    int64   `json:"latest_reel_media"`
 	ExpiringAt         float64 `json:"expiring_at"`
 	Seen               float64 `json:"seen"`
