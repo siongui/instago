@@ -11,6 +11,7 @@ package instago
 
 import (
 	"encoding/json"
+	"regexp"
 )
 
 const urlReelsTray = `https://i.instagram.com/api/v1/feed/reels_tray/`
@@ -58,6 +59,11 @@ func (t *IGReelTray) GetItems() []IGItem {
 	return t.Items
 }
 
+func removePride(b []byte) []byte {
+	pattern := regexp.MustCompile(`{"id": "election:pride:.+?"hide_from_feed_unit": true},`)
+	return []byte(pattern.ReplaceAllString(string(b), ""))
+}
+
 func (m *IGApiManager) GetReelsTray() (r IGReelsTray, err error) {
 	b, err := m.getHTTPResponse(urlReelsTray, "GET")
 	if err != nil {
@@ -69,6 +75,6 @@ func (m *IGApiManager) GetReelsTray() (r IGReelsTray, err error) {
 		SaveRawJsonByte("reels_tray-", b)
 	}
 
-	err = json.Unmarshal(b, &r)
+	err = json.Unmarshal(removePride(b), &r)
 	return
 }
