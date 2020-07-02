@@ -124,8 +124,15 @@ func GetQueryHashNoLogin(b []byte) (qh string, err error) {
 
 	patternQh := regexp.MustCompile(`t\.profilePosts\.byUserId\.get.+?queryId:"([a-zA-Z0-9]+)",`)
 	qhtmp := string(patternQh.Find(bJs))
-	qhtmp = strings.Split(qhtmp, `queryId:"`)[1]
-	qh = strings.TrimSuffix(qhtmp, `",`)
+	//qhtmp = strings.Split(qhtmp, `queryId:"`)[1]
+	//qh = strings.TrimSuffix(qhtmp, `",`)
+	qhtmp2 := strings.Split(qhtmp, `queryId:"`)
+	if len(qhtmp2) != 2 {
+		err = errors.New("fail to get queryId")
+		return
+	}
+	qhtmp3 := qhtmp2[1]
+	qh = strings.TrimSuffix(qhtmp3, `",`)
 	return
 }
 
