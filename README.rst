@@ -5,10 +5,10 @@ Instagram Photo, Video, Story, Highlight, Postlive, Following, and Follower in G
 .. image:: https://img.shields.io/badge/Language-Go-blue.svg
    :target: https://golang.org/
 
-.. image:: https://godoc.org/github.com/siongui/instago?status.png
+.. image:: https://godoc.org/github.com/siongui/instago?status.svg
    :target: https://godoc.org/github.com/siongui/instago
 
-.. image:: https://api.travis-ci.org/siongui/instago.png?branch=master
+.. image:: https://api.travis-ci.org/siongui/instago.svg?branch=master
    :target: https://travis-ci.org/siongui/instago
 
 .. image:: https://goreportcard.com/badge/github.com/siongui/instago
