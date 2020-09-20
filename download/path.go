@@ -42,7 +42,7 @@ func buildFilename(url, username, id, middle, last string, timestamp int64) stri
 		ext)
 }
 
-func getPostFilePath2(username, id, code, url string, timestamp int64, taggedusers [][2]string) string {
+func getPostFilePath2(username, id, code, url string, timestamp int64, taggedusers []instago.IGTaggedUser) string {
 	userDir := path.Join(outputDir, username)
 	userPostsDir := path.Join(userDir, "posts")
 
@@ -70,13 +70,13 @@ func getStoryFilePath(username, id, code, url string, timestamp int64) string {
 	return path.Join(GetUserStoryDir(username), buildFilename(url, username, id, "-story-", code+"-", timestamp))
 }
 
-func appendUsernameToFilename(username, id, filename string, appendIdUsernames [][2]string) string {
+func appendUsernameToFilename(username, id, filename string, appendIdUsernames []instago.IGTaggedUser) string {
 	prefix := username + "-" + id
 
 	usednames := make(map[string]bool)
 	usednames[username] = true
 	for _, n := range appendIdUsernames {
-		taggedname := n[1]
+		taggedname := n.Username
 		newprefix := prefix + "-" + taggedname
 		newfilename := strings.Replace(filename, prefix, newprefix, 1)
 
@@ -102,9 +102,9 @@ func appendUsernameToFilename(username, id, filename string, appendIdUsernames [
 // same as getStoryFilePath, except adding usernames in reel_mentions
 func getStoryFilePath2(username, id, code, url string, timestamp int64, rms []instago.ItemReelMention) string {
 	filename := buildFilename(url, username, id, "-story-", code+"-", timestamp)
-	appendIdUsernames := [][2]string{}
+	var appendIdUsernames []instago.IGTaggedUser
 	for _, rm := range rms {
-		pair := [2]string{rm.GetUserId(), rm.GetUsername()}
+		pair := instago.IGTaggedUser{Id: rm.GetUserId(), Username: rm.GetUsername()}
 		appendIdUsernames = append(appendIdUsernames, pair)
 	}
 	filename = appendUsernameToFilename(username, id, filename, appendIdUsernames)

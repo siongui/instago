@@ -42,7 +42,7 @@ func DownloadIGMedia(em instago.IGMedia) (isDownloaded bool, err error) {
 	}
 
 	for index, url := range urls {
-		taggedusers := [][2]string{}
+		var taggedusers []instago.IGTaggedUser
 		if len(urls) == 1 {
 			taggedusers = em.EdgeMediaToTaggedUser.GetIdUsernamePairs()
 		} else {

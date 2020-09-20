@@ -22,7 +22,7 @@ func (m *IGDownloadManager) GetPostItem(item instago.IGItem) (isDownloaded bool,
 	}
 
 	for index, url := range urls {
-		taggedusers := [][2]string{}
+		var taggedusers []instago.IGTaggedUser
 		if len(urls) == 1 {
 			taggedusers = item.Usertags.GetIdUsernamePairs()
 		} else {

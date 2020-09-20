@@ -21,12 +21,12 @@ func TestGetPostFilePath2(t *testing.T) {
 		return
 	}
 
-	username1 := [2]string{"12345", "testuser"}
-	username2 := [2]string{"123456", "testuser111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"}
-	username3 := [2]string{"25025320", "instagram"}
-	username4 := [2]string{"12345", "testuser"}
+	username1 := instago.IGTaggedUser{Id: "12345", Username: "testuser"}
+	username2 := instago.IGTaggedUser{Id: "123456", Username: "testuser111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"}
+	username3 := instago.IGTaggedUser{Id: "25025320", Username: "instagram"}
+	username4 := instago.IGTaggedUser{Id: "12345", Username: "testuser"}
 
-	taggedusers := [][2]string{username1}
+	taggedusers := []instago.IGTaggedUser{username1}
 	path = getPostFilePath2("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, taggedusers)
 	if path != "Instagram/instagram/posts/instagram-25025320-testuser-post-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {
 		t.Error(path)
@@ -34,7 +34,7 @@ func TestGetPostFilePath2(t *testing.T) {
 	}
 
 	// test username more than filename length 256
-	taggedusers2 := [][2]string{username2}
+	taggedusers2 := []instago.IGTaggedUser{username2}
 	path = getPostFilePath2("instagram", "25025320", "Bh7kySfDYq8", "123.jpg", 1520056661, taggedusers2)
 	if path != "Instagram/instagram/posts/instagram-25025320-post-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.jpg" {
 		t.Error(path)
@@ -42,7 +42,7 @@ func TestGetPostFilePath2(t *testing.T) {
 	}
 
 	// test username more than filename length 256
-	taggedusers3 := [][2]string{username2, username1}
+	taggedusers3 := []instago.IGTaggedUser{username2, username1}
 	path = getPostFilePath2("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, taggedusers3)
 	if path != "Instagram/instagram/posts/instagram-25025320-testuser-post-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {
 		t.Error(path)
@@ -50,7 +50,7 @@ func TestGetPostFilePath2(t *testing.T) {
 	}
 
 	// test duplicate username
-	taggedusers4 := [][2]string{username3, username2, username1}
+	taggedusers4 := []instago.IGTaggedUser{username3, username2, username1}
 	path = getPostFilePath2("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, taggedusers4)
 	if path != "Instagram/instagram/posts/instagram-25025320-testuser-post-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {
 		t.Error(path)
@@ -58,7 +58,7 @@ func TestGetPostFilePath2(t *testing.T) {
 	}
 
 	// test duplicate username
-	taggedusers5 := [][2]string{username3, username2, username1, username4}
+	taggedusers5 := []instago.IGTaggedUser{username3, username2, username1, username4}
 	path = getPostFilePath2("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, taggedusers5)
 	if path != "Instagram/instagram/posts/instagram-25025320-testuser-post-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {
 		t.Error(path)

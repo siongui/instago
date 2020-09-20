@@ -134,9 +134,9 @@ func saveReelMentions(rms []instago.ItemReelMention) (err error) {
 	return
 }
 
-func saveTaggedUsers(taggedusers [][2]string) (err error) {
+func saveTaggedUsers(taggedusers []instago.IGTaggedUser) (err error) {
 	for _, user := range taggedusers {
-		err = saveIdUsername(user[0], user[1])
+		err = saveIdUsername(user.Id, user.Username)
 	}
 	return
 }
