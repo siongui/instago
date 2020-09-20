@@ -1,4 +1,4 @@
+dist: focal
 language: go
-
 script:
  - go test -v

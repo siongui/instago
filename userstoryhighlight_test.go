@@ -1,16 +1,12 @@
 package instago
 
 import (
-	"os"
 	"testing"
 )
 
 func ExampleGetUserStoryHighlights(t *testing.T) {
-	mgr := NewInstagramApiManager(
-		os.Getenv("IG_DS_USER_ID"),
-		os.Getenv("IG_SESSIONID"),
-		os.Getenv("IG_CSRFTOKEN"))
-	trays, err := mgr.GetUserStoryHighlights(os.Getenv("IG_TEST_ID"))
+	mgr, err := NewInstagramApiManager("auth.json")
+	trays, err := mgr.GetUserStoryHighlights("25025320")
 	if err != nil {
 		t.Error(err)
 		return
