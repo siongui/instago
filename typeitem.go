@@ -174,9 +174,9 @@ func (i ItemUsertags) GetTaggedUsernames() (usernames []string) {
 	return
 }
 
-func (i ItemUsertags) GetIdUsernamePairs() (pairs [][2]string) {
+func (i ItemUsertags) GetIdUsernamePairs() (pairs []IGTaggedUser) {
 	for _, in := range i.In {
-		pair := [2]string{strconv.FormatInt(in.User.Pk, 10), in.User.Username}
+		pair := IGTaggedUser{Id: strconv.FormatInt(in.User.Pk, 10), Username: in.User.Username}
 		pairs = append(pairs, pair)
 	}
 	return

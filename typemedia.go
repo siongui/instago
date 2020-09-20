@@ -8,13 +8,13 @@ import (
 func PrintTaggedUsers(tu TaggedUsers) {
 	fmt.Println("tagged users:", tu.GetTaggedUsernames())
 	for _, pair := range tu.GetIdUsernamePairs() {
-		fmt.Println("id:", pair[0], ", username:", pair[1])
+		fmt.Println("id:", pair.Id, ", username:", pair.Username)
 	}
 }
 
 type TaggedUsers interface {
 	GetTaggedUsernames() []string
-	GetIdUsernamePairs() [][2]string
+	GetIdUsernamePairs() []IGTaggedUser
 }
 
 func PrintPostItem(pi PostItem) (err error) {
@@ -254,9 +254,9 @@ func (m MediaUsertags) GetTaggedUsernames() (usernames []string) {
 	return
 }
 
-func (m MediaUsertags) GetIdUsernamePairs() (pairs [][2]string) {
+func (m MediaUsertags) GetIdUsernamePairs() (pairs []IGTaggedUser) {
 	for _, edge := range m.Edges {
-		pair := [2]string{edge.Node.User.Id, edge.Node.User.Username}
+		pair := IGTaggedUser{Id: edge.Node.User.Id, Username: edge.Node.User.Username}
 		pairs = append(pairs, pair)
 	}
 	return
