@@ -8,10 +8,14 @@ export PATH := $(GOROOT)/bin:$(GOPATH)/bin:$(PATH)
 
 ALL_GO_SOURCES=$(shell /bin/sh -c "find *.go | grep -v _test.go")
 
-default: userinfo2
+default: webstory
 
 apimgr: fmt
 	@go test -v apimgr.go apimgr_test.go
+
+webstory: fmt
+	@echo "\033[92mTest Getting web story ...\033[0m"
+	@go test -v $(ALL_GO_SOURCES) webstory_test.go
 
 userstory: fmt
 	@echo "\033[92mTest Getting user unexpired stories ...\033[0m"
