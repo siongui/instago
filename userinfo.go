@@ -117,7 +117,7 @@ func GetQueryHashNoLogin(b []byte) (qh string, err error) {
 	patternJs := regexp.MustCompile(`\/static\/bundles\/metro\/ProfilePageContainer\.js\/[a-zA-Z0-9]+?\.js`)
 	jsPath := string(patternJs.Find(b))
 	jsUrl := "https://www.instagram.com" + jsPath
-	bJs, err := getHTTPResponseNoLogin(jsUrl)
+	bJs, err := GetHTTPResponseNoLogin(jsUrl)
 	if err != nil {
 		return
 	}
@@ -142,7 +142,7 @@ func GetQueryHashNoLogin(b []byte) (qh string, err error) {
 //   2. query_hash (for get all codes of posts without login)
 func GetSharedDataQueryHashNoLogin(username string) (sd SharedData, qh string, err error) {
 	url := "https://www.instagram.com/" + username + "/"
-	b, err := getHTTPResponseNoLogin(url)
+	b, err := GetHTTPResponseNoLogin(url)
 	if err != nil {
 		return
 	}
@@ -165,7 +165,7 @@ func GetSharedDataQueryHashNoLogin(username string) (sd SharedData, qh string, e
 // the profile page of given user name.
 func GetSharedDataNoLogin(username string) (sd SharedData, err error) {
 	url := "https://www.instagram.com/" + username + "/"
-	b, err := getHTTPResponseNoLogin(url)
+	b, err := GetHTTPResponseNoLogin(url)
 	if err != nil {
 		return
 	}

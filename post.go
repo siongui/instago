@@ -43,7 +43,7 @@ func (m *IGApiManager) GetPostInfo(code string) (em IGMedia, err error) {
 // Given code of post, return information of the post without login status.
 func GetPostInfoNoLogin(code string) (em IGMedia, err error) {
 	url := CodeToUrl(code) + "?__a=1"
-	b, err := getHTTPResponseNoLogin(url)
+	b, err := GetHTTPResponseNoLogin(url)
 	if err != nil {
 		return
 	}

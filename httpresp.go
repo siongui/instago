@@ -46,7 +46,7 @@ func getHTTPResponseNoLoginWithGis(url, gis string) (b []byte, err error) {
 }
 
 // Send HTTP request and get http response without login.
-func getHTTPResponseNoLogin(url string) (b []byte, err error) {
+func GetHTTPResponseNoLogin(url string) (b []byte, err error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return
