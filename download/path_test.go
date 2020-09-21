@@ -58,14 +58,6 @@ func TestGetPostFilePath(t *testing.T) {
 	}
 }
 
-func TestGetStoryFilePath(t *testing.T) {
-	path := getStoryFilePath("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661)
-	if path != "Instagram/instagram/stories/instagram-25025320-story-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {
-		t.Error(path)
-		return
-	}
-}
-
 func TestGetStoryFilePath2(t *testing.T) {
 	path := getStoryFilePath2("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, nil)
 	if path != "Instagram/instagram/stories/instagram-25025320-story-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {

@@ -36,11 +36,6 @@ func GetUserStoryDir(username string) (dir string) {
 	return path.Join(GetUserDir(username), "stories")
 }
 
-func getStoryFilePath(username, id, code, url string, timestamp int64) string {
-	return path.Join(GetUserStoryDir(username), instago.BuildFilename(url, username, id, "-story-", code+"-", timestamp))
-}
-
-// same as getStoryFilePath, except adding usernames in reel_mentions
 func getStoryFilePath2(username, id, code, url string, timestamp int64, rms []instago.ItemReelMention) string {
 	return path.Join(GetUserStoryDir(username), instago.GetStoryFilename(username, id, code, url, timestamp, rms))
 }
