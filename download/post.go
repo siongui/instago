@@ -68,7 +68,7 @@ func DownloadIGMedia(em instago.IGMedia) (isDownloaded bool, err error) {
 			em.GetTimestamp(),
 			taggedusers)
 		if index > 0 {
-			filepath = appendIndexToFilename(filepath, index)
+			filepath = instago.AppendIndexToFilename(filepath, index)
 		}
 
 		CreateFilepathDirIfNotExist(filepath)

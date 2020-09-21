@@ -52,13 +52,6 @@ func getPostLiveMergedFilePath(vpath, apath string) string {
 	return path.Join(path.Dir(vpath), filename)
 }
 
-// only for post/item with several photos/videos of the same TakenAt time
-func appendIndexToFilename(filename string, index int) string {
-	ext := path.Ext(filename)
-	fne := strings.TrimSuffix(filename, ext)
-	return fne + "-" + strconv.Itoa(index) + ext
-}
-
 func CreateFilepathDirIfNotExist(filepath string) {
 	dir := path.Dir(filepath)
 	err := CreateDirIfNotExist(dir)

@@ -41,7 +41,7 @@ func (m *IGDownloadManager) GetPostItem(item instago.IGItem) (isDownloaded bool,
 			item.GetTimestamp(),
 			taggedusers)
 		if index > 0 {
-			filepath = appendIndexToFilename(filepath, index)
+			filepath = instago.AppendIndexToFilename(filepath, index)
 		}
 
 		CreateFilepathDirIfNotExist(filepath)
