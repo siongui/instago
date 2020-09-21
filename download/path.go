@@ -3,7 +3,6 @@ package igdl
 import (
 	"io/ioutil"
 	"path"
-	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -116,12 +115,6 @@ func getFollowingPath(id string) string {
 func getFollowersPath(id string) string {
 	filename := id + "-followers-" + time.Now().Format(time.RFC3339) + ".json"
 	return path.Join(GetFollowDir(), filename)
-}
-
-func GetRFC3339String(s string) string {
-	// Google search: regex rfc3339 golang
-	pattern := regexp.MustCompile(`([0-9]+)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])[Tt]([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?(([Zz])|([\+|\-]([01][0-9]|2[0-3]):[0-5][0-9]))`)
-	return string(pattern.Find([]byte(s)))
 }
 
 func GetReelMediaUnixTimesInUserStoryDir(username string) (utimes []string, err error) {

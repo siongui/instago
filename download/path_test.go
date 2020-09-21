@@ -179,15 +179,6 @@ func TestGetScreenshotPath(t *testing.T) {
 	}
 }
 
-func TestGetRFC3339String(t *testing.T) {
-	s := "testuser-1234567-post-2018-06-10T09:41:35+08:00--j03-x3BXga-1528594895.jpg"
-	sp := GetRFC3339String(s)
-	if sp != "2018-06-10T09:41:35+08:00" {
-		t.Error(sp)
-		return
-	}
-}
-
 func ExampleGetReelMediaUnixTimesInUserStoryDir(t *testing.T) {
 	utimes, err := GetReelMediaUnixTimesInUserStoryDir("instagram")
 	if err != nil {
