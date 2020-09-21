@@ -190,35 +190,6 @@ func GetRFC3339String(s string) string {
 	return string(pattern.Find([]byte(s)))
 }
 
-func ExtractPostCodeFromFilename(filename string) (code string) {
-	// remove ext
-	f1 := strings.TrimSuffix(filename, path.Ext(filename))
-
-	rfc3339s := GetRFC3339String(f1)
-	pieces := strings.Split(f1, "-"+rfc3339s+"-")
-	if len(pieces) != 2 {
-		return
-	}
-
-	f2 := pieces[1]
-	pieces = strings.Split(f2, "-")
-	if len(pieces) < 2 {
-		return
-	}
-
-	utime := pieces[len(pieces)-1]
-	if len(utime) < 3 && len(pieces) > 2 {
-		utime = pieces[len(pieces)-2]
-	}
-
-	pieces = strings.Split(f2, "-"+utime)
-	if len(pieces) < 1 {
-		return
-	}
-
-	return pieces[0]
-}
-
 func GetReelMediaUnixTimesInUserStoryDir(username string) (utimes []string, err error) {
 	infos, err := ioutil.ReadDir(GetUserStoryDir(username))
 	if err != nil {
