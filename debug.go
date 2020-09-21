@@ -30,7 +30,7 @@ func jsonPrettyPrint(v interface{}) {
 }
 
 func printTimestamp(timestamp int64) {
-	fmt.Println(formatTimestamp(timestamp))
+	fmt.Println(FormatTimestamp(timestamp))
 }
 
 func printPostCount(c int, url string) {
