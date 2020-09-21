@@ -33,7 +33,7 @@ func (m *IGDownloadManager) GetPostItem(item instago.IGItem) (isDownloaded bool,
 			saveTaggedUsers(taggedusers)
 		}
 
-		filepath := getPostFilePath2(
+		filepath := GetPostFilePath(
 			item.GetUsername(),
 			item.GetUserId(),
 			item.GetPostCode(),

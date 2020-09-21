@@ -22,20 +22,11 @@ func SetDataDir(s string) {
 	dataDir = s
 }
 
-func getPostFilePath2(username, id, code, url string, timestamp int64, taggedusers []instago.IGTaggedUser) string {
+func GetPostFilePath(username, id, code, url string, timestamp int64, taggedusers []instago.IGTaggedUser) string {
 	userDir := path.Join(outputDir, username)
 	userPostsDir := path.Join(userDir, "posts")
 
-	filename := instago.BuildFilename(url, username, id, "-post-", code+"-", timestamp)
-	filename = appendUsernameToFilename(username, id, filename, taggedusers)
-
-	return path.Join(userPostsDir, filename)
-}
-
-func getPostFilePath(username, id, code, url string, timestamp int64) string {
-	userDir := path.Join(outputDir, username)
-	userPostsDir := path.Join(userDir, "posts")
-	return path.Join(userPostsDir, instago.BuildFilename(url, username, id, "-post-", code+"-", timestamp))
+	return path.Join(userPostsDir, instago.GetPostFilename(username, id, code, url, timestamp, taggedusers))
 }
 
 func GetUserDir(username string) (dir string) {

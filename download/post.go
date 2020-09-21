@@ -60,7 +60,7 @@ func DownloadIGMedia(em instago.IGMedia) (isDownloaded bool, err error) {
 			return
 		}
 
-		filepath := getPostFilePath2(
+		filepath := GetPostFilePath(
 			em.GetUsername(),
 			em.GetUserId(),
 			em.GetPostCode(),
