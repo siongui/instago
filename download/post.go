@@ -53,7 +53,7 @@ func DownloadIGMedia(em instago.IGMedia) (isDownloaded bool, err error) {
 			saveTaggedUsers(taggedusers)
 		}
 
-		// prefix panic in buildFilename method of path.go
+		// prevent panic in instago.BuildFilename method
 		_, err = instago.StripQueryString(url)
 		if err != nil {
 			log.Println(err)
