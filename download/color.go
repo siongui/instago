@@ -138,7 +138,7 @@ func printDownloadInfo(pi instago.PostItem, url, filepath string) {
 	fmt.Print("username: ")
 	cc.Println(pi.GetUsername())
 	fmt.Print("time: ")
-	cc.Println(formatTimestamp(pi.GetTimestamp()))
+	cc.Println(instago.FormatTimestamp(pi.GetTimestamp()))
 	fmt.Print("post url: ")
 	cc.Println(pi.GetPostUrl())
 

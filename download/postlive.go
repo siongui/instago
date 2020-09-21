@@ -12,7 +12,7 @@ func printPostLiveDownloadInfo(username, url, filepath string, timestamp int64) 
 	fmt.Print("username: ")
 	cc.Println(username)
 	fmt.Print("time: ")
-	cc.Println(formatTimestamp(timestamp))
+	cc.Println(instago.FormatTimestamp(timestamp))
 
 	fmt.Print("Download ")
 	rc.Print(url)

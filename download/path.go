@@ -22,11 +22,6 @@ func SetDataDir(s string) {
 	dataDir = s
 }
 
-func formatTimestamp(timestamp int64) string {
-	t := time.Unix(timestamp, 0)
-	return t.Format(time.RFC3339)
-}
-
 func buildFilename(url, username, id, middle, last string, timestamp int64) string {
 	url, err := instago.StripQueryString(url)
 	if err != nil {
@@ -36,7 +31,7 @@ func buildFilename(url, username, id, middle, last string, timestamp int64) stri
 	ext := path.Ext(path.Base(url))
 	return path.Join(username + "-" + id +
 		middle +
-		formatTimestamp(timestamp) + "-" +
+		instago.FormatTimestamp(timestamp) + "-" +
 		last +
 		strconv.FormatInt(timestamp, 10) +
 		ext)
