@@ -41,7 +41,7 @@ func getStoryItem(item instago.IGItem, username string) (isDownloaded bool, err 
 	// fix missing username issue while print download info
 	item.User.Username = username
 
-	filepath := getStoryFilePath2(
+	filepath := GetStoryFilePath(
 		username,
 		item.GetUserId(),
 		item.GetPostCode(),

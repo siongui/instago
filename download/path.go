@@ -36,7 +36,7 @@ func GetUserStoryDir(username string) (dir string) {
 	return path.Join(GetUserDir(username), "stories")
 }
 
-func getStoryFilePath2(username, id, code, url string, timestamp int64, rms []instago.ItemReelMention) string {
+func GetStoryFilePath(username, id, code, url string, timestamp int64, rms []instago.ItemReelMention) string {
 	return path.Join(GetUserStoryDir(username), instago.GetStoryFilename(username, id, code, url, timestamp, rms))
 }
 

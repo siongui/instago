@@ -58,8 +58,8 @@ func TestGetPostFilePath(t *testing.T) {
 	}
 }
 
-func TestGetStoryFilePath2(t *testing.T) {
-	path := getStoryFilePath2("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, nil)
+func TestGetStoryFilePath(t *testing.T) {
+	path := GetStoryFilePath("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, nil)
 	if path != "Instagram/instagram/stories/instagram-25025320-story-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {
 		t.Error(path)
 		return
@@ -71,7 +71,7 @@ func TestGetStoryFilePath2(t *testing.T) {
 	user4 := instago.IGUser{Pk: 12345, Username: "testuser"}
 
 	rms := []instago.ItemReelMention{{User: user1}}
-	path = getStoryFilePath2("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, rms)
+	path = GetStoryFilePath("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, rms)
 	if path != "Instagram/instagram/stories/instagram-25025320-testuser-story-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {
 		t.Error(path)
 		return
@@ -79,7 +79,7 @@ func TestGetStoryFilePath2(t *testing.T) {
 
 	// test username more than filename length 256
 	rms2 := []instago.ItemReelMention{{User: user2}}
-	path = getStoryFilePath2("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, rms2)
+	path = GetStoryFilePath("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, rms2)
 	if path != "Instagram/instagram/stories/instagram-25025320-story-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {
 		t.Error(path)
 		return
@@ -87,7 +87,7 @@ func TestGetStoryFilePath2(t *testing.T) {
 
 	// test username more than filename length 256
 	rms3 := []instago.ItemReelMention{{User: user2}, {User: user1}}
-	path = getStoryFilePath2("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, rms3)
+	path = GetStoryFilePath("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, rms3)
 	if path != "Instagram/instagram/stories/instagram-25025320-testuser-story-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {
 		t.Error(path)
 		return
@@ -95,7 +95,7 @@ func TestGetStoryFilePath2(t *testing.T) {
 
 	// test duplicate username
 	rms4 := []instago.ItemReelMention{{User: user3}, {User: user2}, {User: user1}}
-	path = getStoryFilePath2("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, rms4)
+	path = GetStoryFilePath("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, rms4)
 	if path != "Instagram/instagram/stories/instagram-25025320-testuser-story-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {
 		t.Error(path)
 		return
@@ -103,7 +103,7 @@ func TestGetStoryFilePath2(t *testing.T) {
 
 	// test duplicate username
 	rms5 := []instago.ItemReelMention{{User: user3}, {User: user2}, {User: user1}, {User: user4}}
-	path = getStoryFilePath2("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, rms5)
+	path = GetStoryFilePath("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, rms5)
 	if path != "Instagram/instagram/stories/instagram-25025320-testuser-story-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {
 		t.Error(path)
 		return
