@@ -41,46 +41,9 @@ func getStoryFilePath(username, id, code, url string, timestamp int64) string {
 	return path.Join(GetUserStoryDir(username), instago.BuildFilename(url, username, id, "-story-", code+"-", timestamp))
 }
 
-func appendUsernameToFilename(username, id, filename string, appendIdUsernames []instago.IGTaggedUser) string {
-	prefix := username + "-" + id
-
-	usednames := make(map[string]bool)
-	usednames[username] = true
-	for _, n := range appendIdUsernames {
-		taggedname := n.Username
-		newprefix := prefix + "-" + taggedname
-		newfilename := strings.Replace(filename, prefix, newprefix, 1)
-
-		// cannot use 256 here. will get filename too long error.
-		// use 240
-		if len(newfilename) > 240 {
-			continue
-		}
-
-		if _, ok := usednames[taggedname]; ok {
-			continue
-		} else {
-			usednames[taggedname] = true
-		}
-
-		prefix = newprefix
-		filename = newfilename
-	}
-
-	return filename
-}
-
 // same as getStoryFilePath, except adding usernames in reel_mentions
 func getStoryFilePath2(username, id, code, url string, timestamp int64, rms []instago.ItemReelMention) string {
-	filename := instago.BuildFilename(url, username, id, "-story-", code+"-", timestamp)
-	var appendIdUsernames []instago.IGTaggedUser
-	for _, rm := range rms {
-		pair := instago.IGTaggedUser{Id: rm.GetUserId(), Username: rm.GetUsername()}
-		appendIdUsernames = append(appendIdUsernames, pair)
-	}
-	filename = appendUsernameToFilename(username, id, filename, appendIdUsernames)
-
-	return path.Join(GetUserStoryDir(username), filename)
+	return path.Join(GetUserStoryDir(username), instago.GetStoryFilename(username, id, code, url, timestamp, rms))
 }
 
 func getPostLiveFilePath(username, id, url, typ string, timestamp int64) string {
