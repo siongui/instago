@@ -219,16 +219,6 @@ func ExtractPostCodeFromFilename(filename string) (code string) {
 	return pieces[0]
 }
 
-func ExtractUsernameIdFromFilename(filename string) (username, id string) {
-	pieces := strings.Split(filename, "-")
-	if len(pieces) < 2 {
-		return
-	}
-	username = pieces[0]
-	id = pieces[1]
-	return
-}
-
 func GetReelMediaUnixTimesInUserStoryDir(username string) (utimes []string, err error) {
 	infos, err := ioutil.ReadDir(GetUserStoryDir(username))
 	if err != nil {

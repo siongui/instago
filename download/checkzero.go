@@ -5,12 +5,14 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/siongui/instago"
 )
 
 func (m *IGDownloadManager) ReDownload(path string, info os.FileInfo) (err error) {
 	if strings.Contains(info.Name(), "-post-") {
 		fmt.Println("Post: ", path)
-		code := ExtractPostCodeFromFilename(info.Name())
+		code := instago.ExtractPostCodeFromFilename(info.Name())
 		if code != "" {
 			fmt.Println(code)
 			//_, err = DownloadPostNoLogin(code)
@@ -20,7 +22,7 @@ func (m *IGDownloadManager) ReDownload(path string, info os.FileInfo) (err error
 	}
 	if strings.Contains(info.Name(), "-story-") {
 		fmt.Println("Story", path)
-		_, id := ExtractUsernameIdFromFilename(filepath.Base(path))
+		_, id := instago.ExtractUsernameIdFromFilename(filepath.Base(path))
 		return m.downloadUserStory(id)
 	}
 	return

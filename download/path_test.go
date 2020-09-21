@@ -219,15 +219,6 @@ func TestExtractPostCodeFromFilename(t *testing.T) {
 	}
 }
 
-func TestExtractUsernameIdFromFilename(t *testing.T) {
-	s := "instagram-25025320-post-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.jpg"
-	username, id := ExtractUsernameIdFromFilename(s)
-	if username != "instagram" || id != "25025320" {
-		t.Error(username, id)
-		return
-	}
-}
-
 func ExampleGetReelMediaUnixTimesInUserStoryDir(t *testing.T) {
 	utimes, err := GetReelMediaUnixTimesInUserStoryDir("instagram")
 	if err != nil {
