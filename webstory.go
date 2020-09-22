@@ -3,7 +3,6 @@ package instago
 import (
 	"encoding/json"
 	"errors"
-	"regexp"
 )
 
 type WebStoryInfo struct {
@@ -16,11 +15,6 @@ type WebStoryInfo struct {
 		Id    int64  `json:"id"`
 		Title string `json:"title"`
 	} `json:"highlight"`
-}
-
-func IsWebStoryUrl(url string) bool {
-	re := regexp.MustCompile(`^https:\/\/www\.instagram\.com\/stories\/[a-zA-Z\d_.]+\/\d+\/$`)
-	return re.MatchString(url)
 }
 
 func GetInfoFromWebStoryUrl(url string) (user WebStoryInfo, err error) {
