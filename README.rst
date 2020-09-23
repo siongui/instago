@@ -27,8 +27,10 @@ Get Instagram_ media (photos and videos), stories, story highlights, postlives,
 following and followers in Go.
 
 This package only access Instagram private and public API:
+
 - Based on this package, Chrome extension igdlcrx_ helps you download stories
   and posts, similiar to `Downloader for Instagram™ + Direct Message`_
+
 - Also based on this package, the package in `download <download>`_ directory
   helps you download media (photos/videos), stories, story highlights, or
   postlives.
