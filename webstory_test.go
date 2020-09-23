@@ -5,7 +5,8 @@ import (
 )
 
 func ExampleGetIdFromWebStoryUrl() {
-	id, err := GetIdFromWebStoryUrl("https://www.instagram.com/stories/highlights/17862445040107085/")
+	m := NewApiManager(nil, nil)
+	id, err := m.GetIdFromWebStoryUrl("https://www.instagram.com/stories/highlights/17862445040107085/")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -17,7 +18,8 @@ func ExampleGetIdFromWebStoryUrl() {
 }
 
 func ExampleGetInfoFromWebStoryUrl() {
-	info, err := GetInfoFromWebStoryUrl("https://www.instagram.com/stories/highlights/17862445040107085/")
+	m := NewApiManager(nil, nil)
+	info, err := m.GetInfoFromWebStoryUrl("https://www.instagram.com/stories/highlights/17862445040107085/")
 	if err != nil {
 		fmt.Println(err)
 		return

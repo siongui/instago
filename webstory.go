@@ -18,14 +18,14 @@ type WebStoryInfo struct {
 	} `json:"highlight"`
 }
 
-func GetInfoFromWebStoryUrl(url string) (user WebStoryInfo, err error) {
+func (m *IGApiManager) GetInfoFromWebStoryUrl(url string) (user WebStoryInfo, err error) {
 	if !IsWebStoryUrl(url) {
 		err = errors.New(url + " is not a valid web story url")
 		return
 	}
 
 	jsonurl := url + "?__a=1"
-	b, err := GetHTTPResponseNoLogin(jsonurl)
+	b, err := m.getHTTPResponse(jsonurl, "GET")
 	if err != nil {
 		return
 	}
@@ -34,13 +34,13 @@ func GetInfoFromWebStoryUrl(url string) (user WebStoryInfo, err error) {
 	return
 }
 
-func GetIdFromWebStoryUrl(url string) (id string, err error) {
-	user, err := GetInfoFromWebStoryUrl(url)
+func (m *IGApiManager) GetIdFromWebStoryUrl(url string) (id string, err error) {
+	user, err := m.GetInfoFromWebStoryUrl(url)
 	id = user.User.Id
 	return
 }
 
-func GetWebGraphqlStoriesJson(reelIds []string, storyQueryHash string) (b []byte, err error) {
+func (m *IGApiManager) GetWebGraphqlStoriesJson(reelIds []string, storyQueryHash string) (b []byte, err error) {
 	if len(reelIds) == 0 {
 		err = errors.New("no reel_ids is given")
 		return
@@ -55,6 +55,6 @@ func GetWebGraphqlStoriesJson(reelIds []string, storyQueryHash string) (b []byte
 	rids = strings.TrimSuffix(rids, ",")
 	url = strings.Replace(url, "{{ReelIds}}", rids, 1)
 
-	b, err = GetHTTPResponseNoLogin(url)
+	b, err = m.getHTTPResponse(url, "GET")
 	return
 }

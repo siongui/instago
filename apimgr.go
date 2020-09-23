@@ -13,6 +13,9 @@ type IGApiManager struct {
 	headers map[string]string
 }
 
+// UserAgent is important for accessing Instagram private API. Some Instagram
+// Private API can only be accessed by Mobile UserAgent and some API only by
+// Desktop UserAgent.
 // Google Search: useragent ios instagram 134.00
 // https://developers.whatismybrowser.com/useragents/parse/31984417-instagram-ios-iphone-11-pro-max-webkit
 var appUserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Instagram 134.0.0.25.116 (iPhone12,5; iOS 13_3_1; en_US; en-US; scale=3.00; 1242x2688; 204771128)"
