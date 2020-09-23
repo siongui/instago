@@ -5,9 +5,8 @@ import (
 )
 
 func IsWebStoryUrl(url string) bool {
-	re1 := regexp.MustCompile(`^https:\/\/www\.instagram\.com\/stories\/[a-zA-Z\d_.]+\/\d+\/$`)
-	re2 := regexp.MustCompile(`^https:\/\/www\.instagram\.com\/stories\/[a-zA-Z\d_.]+\/$`)
-	return re1.MatchString(url) || re2.MatchString(url)
+	re := regexp.MustCompile(`^https:\/\/www\.instagram\.com\/stories\/[a-zA-Z\d_.]+\/\d+\/$`)
+	return re.MatchString(url)
 }
 
 func IsWebRootUrl(url string) bool {

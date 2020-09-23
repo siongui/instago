@@ -16,6 +16,6 @@ func ExampleIsWebStoryUrl() {
 
 	// Output:
 	// true
-	// true
+	// false
 	// false
 }

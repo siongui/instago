@@ -40,11 +40,6 @@ func GetIdFromWebStoryUrl(url string) (id string, err error) {
 	return
 }
 
-func GetIdFromUsernameByStoryUrl(username string) (id string, err error) {
-	url := "https://www.instagram.com/stories/" + username + "/"
-	return GetIdFromWebStoryUrl(url)
-}
-
 func GetWebGraphqlStoriesJson(reelIds []string, storyQueryHash string) (b []byte, err error) {
 	if len(reelIds) == 0 {
 		err = errors.New("no reel_ids is given")
