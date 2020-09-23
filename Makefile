@@ -19,7 +19,7 @@ filename: fmt
 
 webstory: fmt
 	@echo "\033[92mTest Getting web story ...\033[0m"
-	@go test -v $(ALL_GO_SOURCES) webstory_test.go
+	@go test -v $(ALL_GO_SOURCES) webstory_test.go isurl_test.go
 
 userstory: fmt
 	@echo "\033[92mTest Getting user unexpired stories ...\033[0m"
