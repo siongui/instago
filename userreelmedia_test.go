@@ -11,18 +11,25 @@ func ExampleGetUserReelMedia(t *testing.T) {
 		t.Error(err)
 		return
 	}
-
-	ut, err := mgr.GetUserReelMedia(os.Getenv("IG_TEST_ID"))
+	tray, err := mgr.GetUserReelMedia(os.Getenv("IG_TEST_ID"))
 	if err != nil {
 		t.Error(err)
 		return
 	}
 
-	for _, item := range ut.Reel.Items {
-		t.Log(item)
-	}
-
-	for _, bc := range ut.PostLiveItem.Broadcasts {
-		t.Log(bc)
+	//jsonPrettyPrint(tray)
+	//t.Log(tray)
+	for _, item := range tray.GetItems() {
+		urls, err := item.GetMediaUrls()
+		if err != nil {
+			t.Error(err)
+			continue
+		}
+		for _, url := range urls {
+			t.Log(url)
+		}
+		for _, rm := range item.ReelMentions {
+			t.Log(rm.GetUsername(), rm.GetUserId())
+		}
 	}
 }

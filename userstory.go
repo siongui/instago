@@ -1,17 +1,23 @@
 package instago
 
-// Get all unexpired stories of a specific user, without postlive
+// Get a user's unexpired stories and postlive
 
 import (
 	"encoding/json"
 	"strings"
 )
 
-const urlUserStory = `https://i.instagram.com/api/v1/feed/user/{{USERID}}/reel_media/`
+const urlUserStory = `https://i.instagram.com/api/v1/feed/user/{{USERID}}/story/`
 
-// GetUserStory returns unexpired stories of the given user id.
-func (m *IGApiManager) GetUserStory(id string) (tray IGReelTray, err error) {
-	url := strings.Replace(urlUserStory, "{{USERID}}", id, 1)
+type UserTray struct {
+	Reel         IGReelTray     `json:"reel"`
+	PostLiveItem IGPostLiveItem `json:"post_live_item"`
+
+	Status string `json:"status"`
+}
+
+func (m *IGApiManager) GetUserStory(userid string) (ut UserTray, err error) {
+	url := strings.Replace(urlUserStory, "{{USERID}}", userid, 1)
 	b, err := m.getHTTPResponse(url, "GET")
 	if err != nil {
 		return
@@ -19,9 +25,9 @@ func (m *IGApiManager) GetUserStory(id string) (tray IGReelTray, err error) {
 
 	// for development purpose
 	if saveRawJsonByte {
-		SaveRawJsonByte(id+"-reel_media-", b)
+		SaveRawJsonByte(userid+"-story-", b)
 	}
 
-	err = json.Unmarshal(b, &tray)
+	err = json.Unmarshal(b, &ut)
 	return
 }
