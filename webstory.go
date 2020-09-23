@@ -3,6 +3,7 @@ package instago
 import (
 	"encoding/json"
 	"errors"
+	"strings"
 )
 
 type WebStoryInfo struct {
@@ -36,5 +37,29 @@ func GetInfoFromWebStoryUrl(url string) (user WebStoryInfo, err error) {
 func GetIdFromWebStoryUrl(url string) (id string, err error) {
 	user, err := GetInfoFromWebStoryUrl(url)
 	id = user.User.Id
+	return
+}
+
+func GetIdFromUsernameByStoryUrl(username string) (id string, err error) {
+	url := "https://www.instagram.com/stories/" + username + "/"
+	return GetIdFromWebStoryUrl(url)
+}
+
+func GetWebGraphqlStoriesJson(reelIds []string, storyQueryHash string) (b []byte, err error) {
+	if len(reelIds) == 0 {
+		err = errors.New("no reel_ids is given")
+		return
+	}
+	url := `https://www.instagram.com/graphql/query/?query_hash={{QueryHash}}&variables={"reel_ids":[{{ReelIds}}],"tag_names":[],"location_ids":[],"highlight_reel_ids":[],"precomposed_overlay":false,"show_story_viewer_list":true,"story_viewer_fetch_count":50,"story_viewer_cursor":"","stories_video_dash_manifest":false}`
+	url = strings.Replace(url, "{{QueryHash}}", storyQueryHash, 1)
+
+	rids := ""
+	for _, reelId := range reelIds {
+		rids += `"` + reelId + `",`
+	}
+	rids = strings.TrimSuffix(rids, ",")
+	url = strings.Replace(url, "{{ReelIds}}", rids, 1)
+
+	b, err = GetHTTPResponseNoLogin(url)
 	return
 }
