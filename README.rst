@@ -23,15 +23,23 @@ Instagram Photo, Video, Story, Highlight, Postlive, Following, and Follower in G
    :target: https://twitter.com/intent/tweet?text=Wow:&url=%5Bobject%20Object%5D
 
 
-Get Instagram_ media (photos and videos), stories, story highlights, postlives
-(live stream that shared to stories after end), following and followers in Go.
+Get Instagram_ media (photos and videos), stories, story highlights, postlives,
+following and followers in Go.
 
+This package only access Instagram private and public API:
+- Based on this package, Chrome extension igdlcrx_ helps you download stories
+  and posts, similiar to `Downloader for Instagram™ + Direct Message`_
+- Also based on this package, the package in `download <download>`_ directory
+  helps you download media (photos/videos), stories, story highlights, or
+  postlives.
 
 Obtain Cookies
 ++++++++++++++
 
-Use `Chrome extension in this repo <crx-cookies>`_ to get the cookies. Save it
-as *auth.json*. We will use it later to access Instagram API.
+Use `Chrome extension in this repo <crx-cookies>`_ to get the cookies. Load the
+extension using Chrome extension developer mode. Log in to Instagram using
+Chrome. Click on the loaded extension button and save the content as
+*auth.json*. We will use it later to access Instagram API.
 
 
 Terminology
@@ -50,8 +58,7 @@ Usage
 +++++
 
 This package *instago* only access the Instagram public and private API and get
-metadata from the API. If you want to download media (photos/videos), stories,
-story highlights, or postlives, see `download <download>`_ directory.
+metadata from the API.
 
 Install the package by ``go get``:
 
@@ -170,3 +177,5 @@ References
 .. _instagram_private_api_extensions: https://github.com/ping/instagram_private_api_extensions
 .. _NewInstagramApiManager: https://godoc.org/github.com/siongui/instago#NewInstagramApiManager
 .. _issue #2: https://github.com/siongui/instago/issues/2
+.. _igdlcrx: https://github.com/siongui/igdlcrx
+.. _Downloader for Instagram™ + Direct Message: https://chrome.google.com/webstore/detail/downloader-for-instagram/olkpikmlhoaojbbmmpejnimiglejmboe
