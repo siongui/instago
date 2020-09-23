@@ -149,7 +149,7 @@ func (m *IGDownloadManager) smartDownloadUserStoryPostliveLayer(user instago.Use
 		fmt.Println("")
 	}
 
-	ut, err := m.SmartGetUserReelMedia(user)
+	ut, err := m.SmartGetUserStory(user)
 	if err != nil {
 		log.Println(err)
 		return
@@ -175,11 +175,11 @@ func (m *IGDownloadManager) SmartDownloadUserStoryPostliveLayer(user instago.Use
 	return m.smartDownloadUserStoryPostliveLayer(user, layer, isdone)
 }
 
-func (m *IGDownloadManager) SmartGetUserReelMedia(user instago.User) (instago.UserTray, error) {
+func (m *IGDownloadManager) SmartGetUserStory(user instago.User) (instago.UserTray, error) {
 	if user.IsPublic() && m.mgr2 != nil {
-		return m.mgr2.GetUserReelMedia(user.GetUserId())
+		return m.mgr2.GetUserStory(user.GetUserId())
 	}
-	return m.GetUserReelMedia(user.GetUserId())
+	return m.GetUserStory(user.GetUserId())
 }
 
 func (m *IGDownloadManager) SmartGetUserInfoEndPoint(id string) (instago.UserInfoEndPoint, error) {
