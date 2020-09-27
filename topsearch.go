@@ -6,13 +6,38 @@ import (
 	"encoding/json"
 )
 
-const urlTopsearch = `https://www.instagram.com/web/search/topsearch/?query=`
+const urlTopsearch = `https://www.instagram.com/web/search/topsearch/?context=blended&include_reel=true&query=`
 
 // Decode JSON data returned from Instagram topsearch API
 type IGTopsearchResp struct {
 	Users []struct {
-		Position int64  `json:"position"`
-		User     IGUser `json:"user"`
+		Position int64 `json:"position"`
+		// json: cannot unmarshal string into Go struct field IGUser.users.user.pk of type int64
+		User struct {
+			Pk                         string `json:"pk"`
+			Username                   string `json:"username"`
+			FullName                   string `json:"full_name"`
+			IsPrivate                  bool   `json:"is_private"`
+			ProfilePicUrl              string `json:"profile_pic_url"`
+			ProfilePicId               string `json:"profile_pic_id"`
+			IsVerified                 bool   `json:"is_verified"`
+			HasAnonymousProfilePicture bool   `json:"has_anonymous_profile_picture"`
+			MutualFollowersCount       int64  `json:"mutual_followers_count"`
+			//account_badges
+			SocialContext       string `json:"social_context"`
+			SearchSocialContext string `json:"search_social_context"`
+			UnseenCount         int64  `json:"unseen_count"`
+			FriendshipStatus    struct {
+				Following       bool `json:"following"`
+				IsPrivate       bool `json:"is_private"`
+				IncomingRequest bool `json:"incoming_request"`
+				OutgoingRequest bool `json:"outgoing_request"`
+				IsBestie        bool `json:"is_bestie"`
+				IsRestricted    bool `json:"is_restricted"`
+			} `json:"friendship_status"`
+			LatestReelMedia int64 `json:"latest_reel_media"`
+			Seen            int64 `json:"seen"`
+		} `json:"user"`
 	} `json:"users"`
 
 	//TODO: Places ... `json:"places"`
@@ -20,9 +45,11 @@ type IGTopsearchResp struct {
 	Hashtags []struct {
 		Position int64 `json:"position"`
 		Hashtag  struct {
-			Name       string `json:"name"`
-			Id         int64  `json:"id"`
-			MediaCount int64  `json:"media_count"`
+			Name                 string `json:"name"`
+			Id                   int64  `json:"id"`
+			MediaCount           int64  `json:"media_count"`
+			UseDefaultAvatar     bool   `json:"use_default_avatar"`
+			SearchResultSubtitle string `json:"search_result_subtitle"`
 		} `json:"hashtag"`
 	} `json:"hashtags"`
 	HasMore          bool   `json:"has_more"`
