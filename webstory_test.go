@@ -2,7 +2,23 @@ package instago
 
 import (
 	"fmt"
+	"os"
+	"testing"
 )
+
+func TestGetUserStoryByWebGraphql(t *testing.T) {
+	mgr, err := NewInstagramApiManager("auth.json")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	rm, err := mgr.GetUserStoryByWebGraphql(os.Getenv("id"), os.Getenv("storyhash"))
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	t.Log(rm)
+}
 
 func ExampleGetIdFromWebStoryUrl() {
 	m := NewApiManager(nil, nil)

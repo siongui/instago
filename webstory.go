@@ -18,6 +18,45 @@ type WebStoryInfo struct {
 	} `json:"highlight"`
 }
 
+type WebStoryQueryResponse struct {
+	Data struct {
+		ReelsMedia []IGReelMedia `json:"reels_media"`
+	} `json:"data"`
+	Status string `json:"status"`
+}
+
+type IGReelMediaUser struct {
+	Typename          string `json:"__typename"`
+	Id                string `json:"id"`
+	ProfilePicUrl     string `json:"profile_pic_url"`
+	Username          string `json:"username"`
+	FollowedByViewer  bool   `json:"followed_by_viewer"`
+	RequestedByViewer bool   `json:"requested_by_viewer"`
+}
+
+type IGReelMediaItem struct {
+	Audience string `json:"audience"`
+	Typename string `json:"__typename"`
+	Id       string `json:"id"`
+}
+
+// IGReelMedia represent story info of a user. web version of type IGReelTray
+// This struct is returned from web GraphQL query.
+type IGReelMedia struct {
+	Typename        string            `json:"__typename"`
+	Id              string            `json:"id"`
+	LatestReelMedia int64             `json:"latest_reel_media"`
+	CanReply        bool              `json:"can_reply"`
+	Owner           IGReelMediaUser   `json:"owner"`
+	CanReshare      bool              `json:"can_reshare"`
+	ExpiringAt      int64             `json:"expiring_at"`
+	HasBestiesMedia bool              `json:"has_besties_media"`
+	HasPrideMedia   bool              `json:"has_pride_media"`
+	Seen            int64             `json:"seen"`
+	User            IGReelMediaUser   `json:"user"`
+	Items           []IGReelMediaItem `json:"items"`
+}
+
 func (m *IGApiManager) GetInfoFromWebStoryUrl(url string) (user WebStoryInfo, err error) {
 	if !IsWebStoryUrl(url) {
 		err = errors.New(url + " is not a valid web story url")
@@ -56,5 +95,28 @@ func (m *IGApiManager) GetWebGraphqlStoriesJson(reelIds []string, storyQueryHash
 	url = strings.Replace(url, "{{ReelIds}}", rids, 1)
 
 	b, err = m.getHTTPResponse(url, "GET")
+	return
+}
+
+func (m *IGApiManager) GetUserStoryByWebGraphql(id, storyQueryHash string) (rm IGReelMedia, err error) {
+	b, err := m.GetWebGraphqlStoriesJson([]string{id}, storyQueryHash)
+	if err != nil {
+		return
+	}
+
+	rsp := WebStoryQueryResponse{}
+	err = json.Unmarshal(b, &rsp)
+	if err != nil {
+		return
+	}
+	if rsp.Status != "ok" {
+		err = errors.New("response status is not ok")
+		return
+	}
+	if len(rsp.Data.ReelsMedia) != 1 {
+		err = errors.New("response reels_media length is not 1")
+		return
+	}
+	rm = rsp.Data.ReelsMedia[0]
 	return
 }

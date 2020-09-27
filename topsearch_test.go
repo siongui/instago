@@ -6,6 +6,10 @@ import (
 
 func TestTopsearch(t *testing.T) {
 	mgr, err := NewInstagramApiManager("auth.json")
+	if err != nil {
+		t.Error(err)
+		return
+	}
 	tr, err := mgr.Topsearch("instagram")
 	if err != nil {
 		t.Error(err)
