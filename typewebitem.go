@@ -73,3 +73,43 @@ func (i IGReelMediaItem) GetUsername() string {
 func (i IGReelMediaItem) GetUserId() string {
 	return i.Owner.Id
 }
+
+func (i IGReelMediaItem) GetMediaUrl() string {
+	switch i.Typename {
+	case "GraphStoryImage":
+		return i.GetStoryImageUrl()
+	case "GraphStoryVideo":
+		return i.GetStoryVideoUrl()
+	default:
+		return ""
+	}
+	return ""
+}
+
+func (i IGReelMediaItem) GetStoryImageUrl() string {
+	src := ""
+	width := int64(0)
+
+	for _, dr := range i.DisplayResources {
+		if dr.ConfigWidth > width {
+			width = dr.ConfigWidth
+			src = dr.Src
+		}
+	}
+
+	return src
+}
+
+func (i IGReelMediaItem) GetStoryVideoUrl() string {
+	src := ""
+	width := int64(0)
+
+	for _, vr := range i.VideoResources {
+		if vr.ConfigWidth > width {
+			width = vr.ConfigWidth
+			src = vr.Src
+		}
+	}
+
+	return src
+}
