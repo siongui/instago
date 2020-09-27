@@ -40,7 +40,26 @@ type IGTopsearchResp struct {
 		} `json:"user"`
 	} `json:"users"`
 
-	//TODO: Places ... `json:"places"`
+	Places []struct {
+		Position int64 `json:"position"`
+		Place    struct {
+			Location struct {
+				Pk               string  `json:"pk"`
+				Name             string  `json:"name"`
+				Address          string  `json:"address"`
+				City             string  `json:"city"`
+				ShortName        string  `json:"short_name"`
+				Lng              float64 `json:"lng"`
+				Lat              float64 `json:"lat"`
+				ExternalSource   string  `json:"external_source"`
+				FacebookPlacesId int64   `json:"facebook_places_id"`
+			} `json:"location"`
+			Title    string `json:"title"`
+			Subtitle string `json:"subtitle"`
+			//media_bundles
+			Slug string `json:"slug"`
+		} `json:"place"`
+	} `json:"places"`
 
 	Hashtags []struct {
 		Position int64 `json:"position"`

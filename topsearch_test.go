@@ -14,6 +14,9 @@ func TestTopsearch(t *testing.T) {
 	for _, user := range tr.Users {
 		t.Log(user)
 	}
+	for _, place := range tr.Places {
+		t.Log(place)
+	}
 	for _, hashtag := range tr.Hashtags {
 		t.Log(hashtag)
 	}
