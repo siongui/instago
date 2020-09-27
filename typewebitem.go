@@ -65,3 +65,11 @@ type IGReelMediaItem struct {
 	//edge_media_to_sponsor_user
 	//muting_info
 }
+
+func (i IGReelMediaItem) GetUsername() string {
+	return i.Owner.Username
+}
+
+func (i IGReelMediaItem) GetUserId() string {
+	return i.Owner.Id
+}
