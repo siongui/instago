@@ -66,9 +66,21 @@ type IGReelMediaItem struct {
 	ExpiringAtTimestamp int64 `json:"expiring_at_timestamp"`
 	//story_cta_url
 	//story_view_count
-	IsVideo         bool            `json:"is_video"`
-	Owner           IGReelMediaUser `json:"owner"`
-	TrackingToken   string          `json:"tracking_token"`
+	IsVideo       bool            `json:"is_video"`
+	Owner         IGReelMediaUser `json:"owner"`
+	TrackingToken string          `json:"tracking_token"`
+
+	HasAudio bool `json:"has_audio"`
+	//overlay_image_resources
+	VideoDuration  float64 `json:"video_duration"`
+	VideoResources []struct {
+		Src          string `json:"src"`
+		ConfigWidth  int64  `json:"config_width"`
+		ConfigHeight int64  `json:"config_height"`
+		MimeType     string `json:"mime_type"`
+		Profile      string `json:"profile"`
+	} `json:"video_resources"`
+
 	TappableObjects []struct {
 		Typename string  `json:"__typename"`
 		X        float64 `json:"x"`
