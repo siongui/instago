@@ -17,7 +17,11 @@ func TestGetUserStoryByWebGraphql(t *testing.T) {
 		t.Error(err)
 		return
 	}
+
 	t.Log(rm)
+	for _, item := range rm.Items {
+		t.Log(item)
+	}
 }
 
 func ExampleGetIdFromWebStoryUrl() {
