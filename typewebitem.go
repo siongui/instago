@@ -74,6 +74,10 @@ func (i IGReelMediaItem) GetUserId() string {
 	return i.Owner.Id
 }
 
+func (i IGReelMediaItem) GetTimestamp() int64 {
+	return i.TakenAtTimestamp
+}
+
 func (i IGReelMediaItem) GetMediaUrl() string {
 	switch i.Typename {
 	case "GraphStoryImage":

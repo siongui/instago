@@ -20,7 +20,7 @@ func TestGetUserStoryByWebGraphql(t *testing.T) {
 
 	t.Log(rm)
 	for _, item := range rm.Items {
-		t.Log(item.GetUsername(), item.GetUserId(), item.GetMediaUrl())
+		t.Log(item.GetUsername(), item.GetUserId(), item.GetMediaUrl(), FormatTimestamp(item.GetTimestamp()))
 	}
 }
 
