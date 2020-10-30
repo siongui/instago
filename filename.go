@@ -82,7 +82,8 @@ func AppendUsernameToFilename(username, id, filename string, appendIdUsernames [
 
 // GetStoryFilename is the same as getStoryFilePath, except adding usernames in reel_mentions
 func GetStoryFilename(username, id, code, url string, timestamp int64, rms []ItemReelMention) (filename string) {
-	filename = BuildFilename(url, username, id, "-story-", code+"-", timestamp)
+	//filename = BuildFilename(url, username, id, "-story-", code+"-", timestamp)
+	filename = BuildStoryFilename(url, username, id, timestamp)
 	var appendIdUsernames []IGTaggedUser
 	for _, rm := range rms {
 		pair := IGTaggedUser{Id: rm.GetUserId(), Username: rm.GetUsername()}
