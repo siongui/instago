@@ -47,11 +47,14 @@ func BuildFilename(url, username, id, middle, last string, timestamp int64) stri
 
 func GetPostFilename(username, id, code, url string, timestamp int64, taggedusers []IGTaggedUser) (filename string) {
 	filename = BuildFilename(url, username, id, "-post-", code+"-", timestamp)
-	filename = AppendUsernameToFilename(username, id, filename, taggedusers)
+	filename = AppendTaggedUsersToFilename(username, id, filename, taggedusers)
 	return
 }
 
-func AppendUsernameToFilename(username, id, filename string, appendIdUsernames []IGTaggedUser) string {
+func AppendTaggedUsersToFilename(username, id, filename string, appendIdUsernames []IGTaggedUser) string {
+	// cannot use 256 here. will get filename too long error.
+	// use 240
+	filenameLimit := 240
 	prefix := username + "-" + id
 
 	usednames := make(map[string]bool)
@@ -61,9 +64,7 @@ func AppendUsernameToFilename(username, id, filename string, appendIdUsernames [
 		newprefix := prefix + "-" + taggedname
 		newfilename := strings.Replace(filename, prefix, newprefix, 1)
 
-		// cannot use 256 here. will get filename too long error.
-		// use 240
-		if len(newfilename) > 240 {
+		if len(newfilename) > filenameLimit {
 			continue
 		}
 
@@ -89,7 +90,7 @@ func GetStoryFilename(username, id, code, url string, timestamp int64, rms []Ite
 		pair := IGTaggedUser{Id: rm.GetUserId(), Username: rm.GetUsername()}
 		appendIdUsernames = append(appendIdUsernames, pair)
 	}
-	filename = AppendUsernameToFilename(username, id, filename, appendIdUsernames)
+	filename = AppendTaggedUsersToFilename(username, id, filename, appendIdUsernames)
 	return
 }
 
