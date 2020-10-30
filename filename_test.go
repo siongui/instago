@@ -18,7 +18,7 @@ func TestGetPostFilename(t *testing.T) {
 
 	taggedusers := []IGTaggedUser{username1}
 	filename = GetPostFilename("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, taggedusers)
-	if filename != "instagram-25025320-testuser-post-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {
+	if filename != "instagram-25025320-testuser-12345-post-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {
 		t.Error(filename)
 		return
 	}
@@ -34,7 +34,7 @@ func TestGetPostFilename(t *testing.T) {
 	// test username more than filename length 256
 	taggedusers3 := []IGTaggedUser{username2, username1}
 	filename = GetPostFilename("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, taggedusers3)
-	if filename != "instagram-25025320-testuser-post-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {
+	if filename != "instagram-25025320-testuser-12345-post-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {
 		t.Error(filename)
 		return
 	}
@@ -42,7 +42,7 @@ func TestGetPostFilename(t *testing.T) {
 	// test duplicate username
 	taggedusers4 := []IGTaggedUser{username3, username2, username1}
 	filename = GetPostFilename("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, taggedusers4)
-	if filename != "instagram-25025320-testuser-post-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {
+	if filename != "instagram-25025320-testuser-12345-post-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {
 		t.Error(filename)
 		return
 	}
@@ -50,7 +50,7 @@ func TestGetPostFilename(t *testing.T) {
 	// test duplicate username
 	taggedusers5 := []IGTaggedUser{username3, username2, username1, username4}
 	filename = GetPostFilename("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, taggedusers5)
-	if filename != "instagram-25025320-testuser-post-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {
+	if filename != "instagram-25025320-testuser-12345-post-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {
 		t.Error(filename)
 		return
 	}
@@ -80,7 +80,7 @@ func TestGetStoryFilename(t *testing.T) {
 	rms := []ItemReelMention{{User: user1}}
 	filename = GetStoryFilename("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, rms)
 	//if filename != "instagram-25025320-testuser-story-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {
-	if filename != "instagram-25025320-testuser-story-2018-03-03T13:57:41+08:00-1520056661.mp4" {
+	if filename != "instagram-25025320-testuser-12345-story-2018-03-03T13:57:41+08:00-1520056661.mp4" {
 		t.Error(filename)
 		return
 	}
@@ -98,7 +98,7 @@ func TestGetStoryFilename(t *testing.T) {
 	rms3 := []ItemReelMention{{User: user2}, {User: user1}}
 	filename = GetStoryFilename("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, rms3)
 	//if filename != "instagram-25025320-testuser-story-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {
-	if filename != "instagram-25025320-testuser-story-2018-03-03T13:57:41+08:00-1520056661.mp4" {
+	if filename != "instagram-25025320-testuser-12345-story-2018-03-03T13:57:41+08:00-1520056661.mp4" {
 		t.Error(filename)
 		return
 	}
@@ -107,7 +107,7 @@ func TestGetStoryFilename(t *testing.T) {
 	rms4 := []ItemReelMention{{User: user3}, {User: user2}, {User: user1}}
 	filename = GetStoryFilename("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, rms4)
 	//if filename != "instagram-25025320-testuser-story-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {
-	if filename != "instagram-25025320-testuser-story-2018-03-03T13:57:41+08:00-1520056661.mp4" {
+	if filename != "instagram-25025320-testuser-12345-story-2018-03-03T13:57:41+08:00-1520056661.mp4" {
 		t.Error(filename)
 		return
 	}
@@ -116,7 +116,7 @@ func TestGetStoryFilename(t *testing.T) {
 	rms5 := []ItemReelMention{{User: user3}, {User: user2}, {User: user1}, {User: user4}}
 	filename = GetStoryFilename("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, rms5)
 	//if filename != "instagram-25025320-testuser-story-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {
-	if filename != "instagram-25025320-testuser-story-2018-03-03T13:57:41+08:00-1520056661.mp4" {
+	if filename != "instagram-25025320-testuser-12345-story-2018-03-03T13:57:41+08:00-1520056661.mp4" {
 		t.Error(filename)
 		return
 	}

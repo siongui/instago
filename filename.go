@@ -57,8 +57,10 @@ func AppendTaggedUsersToFilename(username, id, filename string, appendIdUsername
 	filenameLimit := 240
 	prefix := username + "-" + id
 
-	usednames := make(map[string]bool)
-	usednames[username] = true
+	usednames := make(map[string]string)
+	usednames[username] = id
+
+	// append tagged name
 	for _, n := range appendIdUsernames {
 		taggedname := n.Username
 		newprefix := prefix + "-" + taggedname
@@ -71,10 +73,24 @@ func AppendTaggedUsersToFilename(username, id, filename string, appendIdUsername
 		if _, ok := usednames[taggedname]; ok {
 			continue
 		} else {
-			usednames[taggedname] = true
+			usednames[taggedname] = n.Id
 		}
 
 		prefix = newprefix
+		filename = newfilename
+	}
+
+	// append tagged id
+	for name2, id2 := range usednames {
+		if name2 == username {
+			continue
+		}
+
+		newfilename := strings.Replace(filename, name2, name2+"-"+id2, 1)
+		if len(newfilename) > filenameLimit {
+			continue
+		}
+
 		filename = newfilename
 	}
 
