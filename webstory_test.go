@@ -6,7 +6,25 @@ import (
 	"testing"
 )
 
-func TestGetUserStoryByWebGraphql(t *testing.T) {
+func ExampleGetWebFeedReelsTray(t *testing.T) {
+	mgr, err := NewInstagramApiManager("auth.json")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	rms, err := mgr.GetWebFeedReelsTray(os.Getenv("url"))
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	//t.Log(rms)
+	for _, rm := range rms {
+		t.Log(rm.User.Username, rm.User.Id)
+	}
+}
+
+func ExampleGetUserStoryByWebGraphql(t *testing.T) {
 	mgr, err := NewInstagramApiManager("auth.json")
 	if err != nil {
 		t.Error(err)

@@ -25,6 +25,21 @@ type WebStoryQueryResponse struct {
 	Status string `json:"status"`
 }
 
+type WebFeedReelsTrayResponse struct {
+	Data struct {
+		User struct {
+			FeedReelsTray struct {
+				EdgeReelsTrayToReel struct {
+					Edges []struct {
+						Node IGReelMedia `json:"node"`
+					} `json:"edges"`
+				} `json:"edge_reels_tray_to_reel"`
+			} `json:"feed_reels_tray"`
+		} `json:"user"`
+	} `json:"data"`
+	Status string `json:"status"`
+}
+
 type IGReelMediaUser struct {
 	Typename          string `json:"__typename"`
 	Id                string `json:"id"`
@@ -112,5 +127,24 @@ func (m *IGApiManager) GetUserStoryByWebGraphql(id, storyQueryHash string) (rm I
 		return
 	}
 	rm = rsp.Data.ReelsMedia[0]
+	return
+}
+
+func (m *IGApiManager) GetWebFeedReelsTray(url string) (rms []IGReelMedia, err error) {
+	b, err := m.getHTTPResponse(url, "GET")
+	if err != nil {
+		return
+	}
+
+	rsp := WebFeedReelsTrayResponse{}
+	err = json.Unmarshal(b, &rsp)
+	if err != nil {
+		return
+	}
+
+	for _, edge := range rsp.Data.User.FeedReelsTray.EdgeReelsTrayToReel.Edges {
+
+		rms = append(rms, edge.Node)
+	}
 	return
 }
