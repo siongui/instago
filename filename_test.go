@@ -56,6 +56,14 @@ func TestGetPostFilename(t *testing.T) {
 	}
 }
 
+func TestBuildStoryFilename(t *testing.T) {
+	filename := BuildStoryFilename("123.jpg?abc=1", "instagram", "25025320", 1520056661)
+	if filename != "instagram-25025320-story-2018-03-03T13:57:41+08:00-1520056661.jpg" {
+		t.Error(filename)
+		return
+	}
+}
+
 func TestGetStoryFilename(t *testing.T) {
 	filename := GetStoryFilename("instagram", "25025320", "Bh7kySfDYq8", "123.mp4", 1520056661, nil)
 	if filename != "instagram-25025320-story-2018-03-03T13:57:41+08:00-Bh7kySfDYq8-1520056661.mp4" {

@@ -10,6 +10,25 @@ import (
 	"strings"
 )
 
+func BuildStoryFilename2(url, username, id, timef, times string) string {
+	url, err := StripQueryString(url)
+	if err != nil {
+		panic(err)
+	}
+
+	ext := path.Ext(path.Base(url))
+	return username + "-" +
+		id +
+		"-story-" +
+		timef + "-" +
+		times +
+		ext
+}
+
+func BuildStoryFilename(url, username, id string, timestamp int64) string {
+	return BuildStoryFilename2(url, username, id, FormatTimestamp(timestamp), strconv.FormatInt(timestamp, 10))
+}
+
 func BuildFilename(url, username, id, middle, last string, timestamp int64) string {
 	url, err := StripQueryString(url)
 	if err != nil {
