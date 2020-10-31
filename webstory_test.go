@@ -12,7 +12,15 @@ func ExampleGetWebFeedReelsTray(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	rms, err := mgr.GetWebFeedReelsTray(os.Getenv("url"))
+
+	url, err := mgr.GetGetWebFeedReelsTrayUrl()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	//t.Log(url)
+
+	rms, err := mgr.GetWebFeedReelsTray(url)
 	if err != nil {
 		t.Error(err)
 		return

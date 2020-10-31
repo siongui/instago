@@ -3,6 +3,7 @@ package instago
 import (
 	"errors"
 	"regexp"
+	"strings"
 )
 
 // https://www.google.com/search?q=instagram+get+query_hash
@@ -36,5 +37,17 @@ func (m *IGApiManager) GetWebQueryHash() (story, unknown1, unknown2 string, err 
 	} else {
 		err = errors.New("fail to get hash string in Consumer.js")
 	}
+	return
+}
+
+func (m *IGApiManager) GetGetWebFeedReelsTrayUrl() (url string, err error) {
+	b, err := m.getHTTPResponse("https://www.instagram.com/", "GET")
+	if err != nil {
+		return
+	}
+
+	patternRT := regexp.MustCompile(`\/graphql\/query\/.+only_stories.+?"`)
+	path := string(patternRT.Find(b))
+	url = "https://www.instagram.com" + strings.TrimSuffix(path, `"`)
 	return
 }
