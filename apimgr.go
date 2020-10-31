@@ -25,6 +25,11 @@ func SetUserAgent(s string) {
 	appUserAgent = s
 }
 
+// GetUserAgent returns current User-Agent header in HTTP requests.
+func GetUserAgent() string {
+	return appUserAgent
+}
+
 // NewInstagramApiManager returns a API manager of a logged-in Instagram user,
 // given the JSON file of cookies of a Instagram logged-in account.
 //
