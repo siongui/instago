@@ -61,10 +61,13 @@ userstorybatch: fmt
 	@echo "\033[92mDownload unexpired stories of multiple users ...\033[0m"
 	@go run example/userstorybatch.go
 
-userstoryhighlight:
+userstoryhighlight: fmt
 	@echo "\033[92mDownload user $(id) story highlights ...\033[0m"
-	@go fmt example/userstoryhighlight.go
 	@go run example/userstoryhighlight.go -id=$(id)
+
+allunexpiredstories: fmt
+	@echo "\033[92mDownload all unexpired stories ...\033[0m"
+	@go run example/userstoryunexpired.go
 
 post_test: fmt
 	@echo "\033[92mDownload post test ...\033[0m"
