@@ -16,9 +16,9 @@ func (m *IGDownloadManager) GetAllPostMediaNoLoginIfPossible(username string) (m
 	log.Println(err)
 	log.Println(username, "cannot download without login")
 
-	if m.mgr2 != nil {
+	if m.IsCleanAccountSet() {
 		log.Println("try to get all media infos using clean account")
-		medias, err = m.mgr2.GetAllPostMedia(username)
+		medias, err = m.GetCleanAccountManager().GetAllPostMedia(username)
 		if err == nil {
 			return
 		}
@@ -60,9 +60,9 @@ func (m *IGDownloadManager) DownloadPostNoLoginIfPossible(code string) (isDownlo
 	log.Println(err)
 	log.Println(code, "cannot download without login")
 
-	if m.mgr2 != nil {
+	if m.IsCleanAccountSet() {
 		log.Println("try to download using clean account")
-		em, err = m.mgr2.GetPostInfo(code)
+		em, err = m.GetCleanAccountManager().GetPostInfo(code)
 		if err == nil {
 			return DownloadIGMedia(em)
 		}
@@ -91,8 +91,8 @@ func (m *IGDownloadManager) SmartDownloadAllPosts(item instago.IGItem) (err erro
 func (m *IGDownloadManager) SmartDownloadHighlights(item instago.IGItem) (err error) {
 	// in case main account is blocked by some users, we use clean account
 	// (account not blocked) to download public user account
-	if m.mgr2 != nil && !item.User.IsPrivate {
-		m.mgr2.DownloadUserStoryHighlights(item.GetUserId())
+	if m.IsCleanAccountSet() && !item.User.IsPrivate {
+		m.GetCleanAccountManager().DownloadUserStoryHighlights(item.GetUserId())
 		return
 	}
 
@@ -103,8 +103,8 @@ func (m *IGDownloadManager) SmartDownloadHighlights(item instago.IGItem) (err er
 func (m *IGDownloadManager) SmartDownloadStory(user instago.User) (err error) {
 	// in case main account is blocked by some users, we use clean account
 	// (account not blocked) to download public user account
-	if m.mgr2 != nil && user.IsPublic() {
-		return m.mgr2.downloadUserStoryPostlive(user.GetUserId())
+	if m.IsCleanAccountSet() && user.IsPublic() {
+		return m.GetCleanAccountManager().downloadUserStoryPostlive(user.GetUserId())
 	}
 
 	return m.downloadUserStoryPostlive(user.GetUserId())
@@ -176,15 +176,15 @@ func (m *IGDownloadManager) SmartDownloadUserStoryPostliveLayer(user instago.Use
 }
 
 func (m *IGDownloadManager) SmartGetUserStory(user instago.User) (instago.UserTray, error) {
-	if user.IsPublic() && m.mgr2 != nil {
-		return m.mgr2.GetUserStory(user.GetUserId())
+	if user.IsPublic() && m.IsCleanAccountSet() {
+		return m.GetCleanAccountManager().GetUserStory(user.GetUserId())
 	}
 	return m.GetUserStory(user.GetUserId())
 }
 
 func (m *IGDownloadManager) SmartGetUserInfoEndPoint(id string) (instago.UserInfoEndPoint, error) {
-	if m.mgr2 != nil {
-		return m.mgr2.GetUserInfoEndPoint(id)
+	if m.IsCleanAccountSet() {
+		return m.GetCleanAccountManager().GetUserInfoEndPoint(id)
 	}
 	return m.GetUserInfoEndPoint(id)
 }

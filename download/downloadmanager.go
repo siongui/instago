@@ -84,6 +84,14 @@ func (m *IGDownloadManager) LoadCleanDownloadManager(authFilePath string) (err e
 	return
 }
 
+func (m *IGDownloadManager) IsCleanAccountSet() bool {
+	return m.mgr2 != nil
+}
+
+func (m *IGDownloadManager) GetCleanAccountManager() *IGDownloadManager {
+	return m.mgr2
+}
+
 func (m *IGDownloadManager) LoadIdUsernameFromDataDir() (err error) {
 	iu, err := BuildIdUsernameMapFromLocalData(GetIdUsernameDir())
 	if err == nil {
