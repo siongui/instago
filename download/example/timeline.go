@@ -7,10 +7,7 @@ import (
 )
 
 func main() {
-	mgr, err := igdl.NewInstagramDownloadManager(
-		"IG_DS_USER_ID",
-		"IG_SESSIONID",
-		"IG_CSRFTOKEN")
+	mgr, err := igdl.NewInstagramDownloadManager("auth.json")
 	if err != nil {
 		fmt.Println(err)
 		return
