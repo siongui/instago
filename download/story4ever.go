@@ -147,8 +147,8 @@ func isLatestReelMediaDownloaded(username string, latestReelMedia int64) bool {
 	return false
 }
 
-// Use (25, 2, false) as arguments is good. will not cause http 429
-func (m *IGDownloadManager) DownloadStoryAndPostLiveForever(interval1, interval2 int, verbose bool) {
+// Use (25, 2, true, false) as arguments is good. will not cause http 429
+func (m *IGDownloadManager) DownloadStoryAndPostLiveForever(interval1, interval2 int, ignoreMuted, verbose bool) {
 	// channel for waiting DownloadPostLive completed
 	isDownloading := make(map[string]bool)
 
@@ -173,6 +173,13 @@ func (m *IGDownloadManager) DownloadStoryAndPostLiveForever(interval1, interval2
 			username := tray.GetUsername()
 			id := tray.Id
 			//items := tray.GetItems()
+
+			if ignoreMuted && tray.Muted {
+				if verbose {
+					PrintUsernameIdMsg(username, id, " is muted && ignoreMuted set. no download")
+				}
+				continue
+			}
 
 			if isLatestReelMediaDownloaded(username, tray.LatestReelMedia) {
 				if verbose {

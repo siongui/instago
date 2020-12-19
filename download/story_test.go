@@ -64,5 +64,5 @@ func ExampleDownloadStoryAndPostLiveForever(t *testing.T) {
 		return
 	}
 
-	mgr.DownloadStoryAndPostLiveForever(25, 2, false)
+	mgr.DownloadStoryAndPostLiveForever(25, 2, true, false)
 }
