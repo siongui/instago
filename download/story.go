@@ -7,41 +7,6 @@ import (
 	"github.com/siongui/instago"
 )
 
-func (m *IGDownloadManager) downloadUserReelMedia(id string) (err error) {
-	tray, err := m.GetUserReelMedia(id)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	for _, item := range tray.GetItems() {
-		_, err := getStoryItem(item, tray.GetUsername())
-		if err != nil {
-			log.Println(err)
-			//return
-		}
-	}
-	return
-}
-
-// DownloadUserReelMediaByName downloads unexpired stories (last 24 hours) of
-// the given user name. No postlives included.
-func (m *IGDownloadManager) DownloadUserReelMediaByName(username string) (err error) {
-	id, err := m.UsernameToId(username)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	return m.downloadUserReelMedia(id)
-}
-
-// DownloadUserReelMedia downloads unexpired stories (last 24 hours) of the
-// given user id. No postlives included.
-func (m *IGDownloadManager) DownloadUserReelMedia(userId int64) (err error) {
-	return m.downloadUserReelMedia(strconv.FormatInt(userId, 10))
-}
-
 func (m *IGDownloadManager) downloadUserStoryPostlive(id string) (err error) {
 	ut, err := m.GetUserStory(id)
 	if err != nil {
@@ -85,32 +50,6 @@ func (m *IGDownloadManager) getStoryItemLayer(item instago.IGItem, username stri
 	}
 }
 
-func (m *IGDownloadManager) downloadUserStoryLayer(id string, layer int, isdone map[string]string) (err error) {
-	if layer < 1 {
-		return
-	}
-	layer--
-
-	if username, ok := isdone[id]; ok {
-		log.Println(username, id, "already fetched")
-		return
-	} else {
-		log.Println("fetching story of", id)
-	}
-
-	tray, err := m.GetUserReelMedia(id)
-	if err != nil {
-		return
-	}
-	isdone[id] = tray.GetUsername()
-	log.Println("fetch story of", tray.GetUsername(), id, "success")
-
-	for _, item := range tray.GetItems() {
-		m.getStoryItemLayer(item, tray.GetUsername(), layer, isdone)
-	}
-	return
-}
-
 func (m *IGDownloadManager) downloadUserStoryPostliveLayer(user instago.User, layer int, isdone map[string]string) (err error) {
 	if layer < 1 {
 		return
@@ -151,7 +90,6 @@ func (m *IGDownloadManager) DownloadUserStoryByNameLayer(username string, layer 
 	}
 
 	isdone := make(map[string]string)
-	//return m.downloadUserStoryLayer(user, layer, isdone)
 	return m.downloadUserStoryPostliveLayer(user, layer, isdone)
 }
 
@@ -164,7 +102,6 @@ func (m *IGDownloadManager) DownloadUserStoryLayer(userId int64, layer int) (err
 	}
 
 	isdone := make(map[string]string)
-	//return m.downloadUserStoryLayer(user, layer, isdone)
 	return m.downloadUserStoryPostliveLayer(user, layer, isdone)
 }
 
@@ -176,7 +113,6 @@ func (m *IGDownloadManager) DownloadUserStoryPostliveByNameLayerIfPublic(usernam
 
 	if user.IsPublic() {
 		isdone := make(map[string]string)
-		//return m.downloadUserStoryLayer(user, layer, isdone)
 		// FIXME: if reel_mention is private, do not download
 		return m.downloadUserStoryPostliveLayer(user, layer, isdone)
 	}

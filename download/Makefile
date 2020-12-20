@@ -76,6 +76,7 @@ post_test: fmt
 story_test: fmt
 	@echo "\033[92mDownload user stories test ...\033[0m"
 	@go test -v $(ALL_GO_SOURCES) story_test.go
+	@go test -v $(ALL_GO_SOURCES) reelmedia_test.go
 
 smart_test: fmt
 	@echo "\033[92mSmart downloading test ...\033[0m"
