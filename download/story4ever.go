@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/siongui/instago"
 )
@@ -18,7 +19,7 @@ func isTrayInQueue(queue []instago.IGReelTray, tray instago.IGReelTray) bool {
 	return false
 }
 
-func (m *IGDownloadManager) GetStoryItemAndReelMentions(item instago.IGItem, username string) (err error) {
+func (m *IGDownloadManager) GetStoryItemAndReelMentions(item instago.IGItem, username string, interval int, getTime map[string]time.Time) (err error) {
 	isDownloaded, err := getStoryItem(item, username)
 	if err != nil {
 		return
@@ -39,7 +40,13 @@ func (m *IGDownloadManager) GetStoryItemAndReelMentions(item instago.IGItem, use
 
 			if rm.IsPublic() {
 				if _, ok := fetched[rm.GetUsername()]; !ok {
+					d := time.Now().Sub(getTime["last"])
+					for d < time.Duration(interval)*time.Second {
+						time.Sleep(time.Duration(interval)*time.Second - d)
+						d = time.Now().Sub(getTime["last"])
+					}
 					m.SmartDownloadStory(rm)
+					getTime["last"] = time.Now()
 					fetched[rm.GetUsername()] = true
 				}
 				// handle err of m.downloadUserStoryPostlive(rm.GetUserId()) ?
@@ -56,7 +63,7 @@ func (m *IGDownloadManager) GetStoryItemAndReelMentions(item instago.IGItem, use
 	return
 }
 
-func (m *IGDownloadManager) DownloadZeroItemUsers(c chan instago.IGReelTray, interval int, verbose bool) {
+func (m *IGDownloadManager) DownloadZeroItemUsers(c chan instago.IGReelTray, interval int, getTime map[string]time.Time, verbose bool) {
 	queue := []instago.IGReelTray{}
 	for {
 		select {
@@ -91,7 +98,13 @@ func (m *IGDownloadManager) DownloadZeroItemUsers(c chan instago.IGReelTray, int
 
 				go func() {
 					// FIXME: take besties into account
+					d := time.Now().Sub(getTime["last"])
+					for d < time.Duration(interval)*time.Second {
+						time.Sleep(time.Duration(interval)*time.Second - d)
+						d = time.Now().Sub(getTime["last"])
+					}
 					ut, err := m.SmartGetUserStory(tray.User)
+					getTime["last"] = time.Now()
 					if err != nil {
 						PrintUsernameIdMsg(username, id, err)
 						queue = append(queue, tray)
@@ -99,7 +112,7 @@ func (m *IGDownloadManager) DownloadZeroItemUsers(c chan instago.IGReelTray, int
 					}
 
 					for _, item := range ut.Reel.GetItems() {
-						err = m.GetStoryItemAndReelMentions(item, ut.Reel.GetUsername())
+						err = m.GetStoryItemAndReelMentions(item, ut.Reel.GetUsername(), interval, getTime)
 						if err != nil {
 							PrintUsernameIdMsg(username, id, err)
 							queue = append(queue, tray)
@@ -147,7 +160,7 @@ func isLatestReelMediaDownloaded(username string, latestReelMedia int64) bool {
 	return false
 }
 
-// Use (25, 2, true, false) as arguments is good. will not cause http 429
+// Try (25, 15, true, false). If http 429 happens, increase the number.
 func (m *IGDownloadManager) DownloadStoryAndPostLiveForever(interval1, interval2 int, ignoreMuted, verbose bool) {
 	// channel for waiting DownloadPostLive completed
 	isDownloading := make(map[string]bool)
@@ -156,7 +169,9 @@ func (m *IGDownloadManager) DownloadStoryAndPostLiveForever(interval1, interval2
 	// double the buffer to 300. 160 or 200 may be ok as well.
 	c := make(chan instago.IGReelTray, 300)
 
-	go m.DownloadZeroItemUsers(c, interval2, verbose)
+	getTime := make(map[string]time.Time)
+	getTime["last"] = time.Now()
+	go m.DownloadZeroItemUsers(c, interval2, getTime, verbose)
 	for {
 		rt, err := m.GetReelsTray()
 		if err != nil {
