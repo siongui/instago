@@ -1,78 +1,16 @@
 package igdl
 
 import (
-	"errors"
-	"fmt"
 	"log"
-	"os"
 	"strconv"
 
 	"github.com/siongui/instago"
 )
 
-func GetStoryItem(item instago.IGItem, username string) (isDownloaded bool, err error) {
-	return getStoryItem(item, username)
-}
-
-func getStoryItem(item instago.IGItem, username string) (isDownloaded bool, err error) {
-	if !(item.MediaType == 1 || item.MediaType == 2) {
-		err = errors.New("In getStoryItem: not single photo or video!")
-		fmt.Println(err)
-		return
-	}
-
-	urls, err := item.GetMediaUrls()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	if len(urls) != 1 {
-		err = errors.New("In getStoryItem: number of download url != 1")
-		fmt.Println(err)
-		return
-	}
-	url := urls[0]
-
-	if saveData {
-		saveIdUsername(item.GetUserId(), username)
-		saveReelMentions(item.ReelMentions)
-	}
-
-	// fix missing username issue while print download info
-	item.User.Username = username
-
-	filepath := GetStoryFilePath(
-		username,
-		item.GetUserId(),
-		item.GetPostCode(),
-		url,
-		item.GetTimestamp(),
-		item.ReelMentions)
-
-	CreateFilepathDirIfNotExist(filepath)
-	// check if file exist
-	if _, err := os.Stat(filepath); os.IsNotExist(err) {
-		// file not exists
-		printDownloadInfo(&item, url, filepath)
-		err = Wget(url, filepath)
-		if err == nil {
-			isDownloaded = true
-		} else {
-			log.Println(err)
-			return isDownloaded, err
-		}
-	} else {
-		if err != nil {
-			log.Println(err)
-		}
-	}
-	return
-}
-
 func (m *IGDownloadManager) downloadUserReelMedia(id string) (err error) {
 	tray, err := m.GetUserReelMedia(id)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 
@@ -91,7 +29,7 @@ func (m *IGDownloadManager) downloadUserReelMedia(id string) (err error) {
 func (m *IGDownloadManager) DownloadUserReelMediaByName(username string) (err error) {
 	id, err := m.UsernameToId(username)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 
@@ -107,7 +45,7 @@ func (m *IGDownloadManager) DownloadUserReelMedia(userId int64) (err error) {
 func (m *IGDownloadManager) downloadUserStoryPostlive(id string) (err error) {
 	ut, err := m.GetUserStory(id)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 
@@ -132,7 +70,7 @@ func (m *IGDownloadManager) DownloadUserStoryPostlive(userId int64) (err error) 
 func (m *IGDownloadManager) DownloadUserStoryPostliveByName(username string) (err error) {
 	id, err := m.UsernameToId(username)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 
