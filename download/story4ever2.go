@@ -9,42 +9,6 @@ import (
 	"github.com/siongui/instago"
 )
 
-func (m *IGDownloadManager) GetStoryItemAndReelMentions2(item instago.IGItem, username string, interval int, getTime map[string]time.Time) (err error) {
-	isDownloaded, err := getStoryItem(item, username)
-	if err != nil {
-		return
-	}
-
-	if item.Audience == "besties" {
-		PrintBestiesItemInfo(item, username)
-	}
-
-	fetched := make(map[string]bool)
-	if isDownloaded {
-		for _, rm := range item.ReelMentions {
-			PrintReelMentionInfo(rm)
-			if rm.GetUsername() == username {
-				fmt.Println("reel mention self. download ignored.")
-				continue
-			}
-
-			if rm.IsPublic() {
-				if _, ok := fetched[rm.GetUsername()]; !ok {
-					d := time.Now().Sub(getTime["last"])
-					for d < time.Duration(interval)*time.Second {
-						time.Sleep(time.Duration(interval)*time.Second - d)
-						d = time.Now().Sub(getTime["last"])
-					}
-					m.downloadUserReelMedia(rm.GetUserId())
-					getTime["last"] = time.Now()
-					fetched[rm.GetUsername()] = true
-				}
-			}
-		}
-	}
-	return
-}
-
 func (m *IGDownloadManager) DownloadZeroItemUsers2(c chan instago.IGReelTray, interval int, getTime map[string]time.Time, verbose bool) {
 	queue := []instago.IGReelTray{}
 	for {
@@ -78,37 +42,22 @@ func (m *IGDownloadManager) DownloadZeroItemUsers2(c chan instago.IGReelTray, in
 					PrintUsernameIdMsg(username, id, " downloading...")
 				}
 
-				go func() {
-					// FIXME: take besties into account
-					d := time.Now().Sub(getTime["last"])
-					for d < time.Duration(interval)*time.Second {
-						time.Sleep(time.Duration(interval)*time.Second - d)
-						d = time.Now().Sub(getTime["last"])
-					}
-					ut, err := m.GetUserReelMedia(id)
-					getTime["last"] = time.Now()
-					if err != nil {
-						PrintUsernameIdMsg(username, id, err)
-						queue = append(queue, tray)
-						return
-					}
-
-					for _, item := range ut.GetItems() {
-						err = m.GetStoryItemAndReelMentions2(item, ut.GetUsername(), interval, getTime)
-						if err != nil {
-							PrintUsernameIdMsg(username, id, err)
-							queue = append(queue, tray)
-							return
-						}
-					}
-				}()
+				d := time.Now().Sub(getTime["last"])
+				for d < time.Duration(interval)*time.Second {
+					time.Sleep(time.Duration(interval)*time.Second - d)
+					d = time.Now().Sub(getTime["last"])
+				}
+				err := m.DownloadUserReelMediaLayer(id, 2, int64(interval))
+				getTime["last"] = time.Now()
+				if err != nil {
+					PrintUsernameIdMsg(username, id, err)
+					queue = append(queue, tray)
+					return
+				}
 			}
 
 			if verbose {
 				fmt.Println("current queue length: ", len(queue))
-				PrintMsgSleep(interval, "DownloadZeroItemUsers: ")
-			} else {
-				SleepSecond(interval)
 			}
 		}
 	}
