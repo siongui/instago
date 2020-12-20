@@ -69,7 +69,7 @@ func getStoryItem(item instago.IGItem, username string) (isDownloaded bool, err 
 	return
 }
 
-func (m *IGDownloadManager) downloadUserStory(id string) (err error) {
+func (m *IGDownloadManager) downloadUserReelMedia(id string) (err error) {
 	tray, err := m.GetUserReelMedia(id)
 	if err != nil {
 		fmt.Println(err)
@@ -86,22 +86,22 @@ func (m *IGDownloadManager) downloadUserStory(id string) (err error) {
 	return
 }
 
-// DownloadUserStoryByName downloads unexpired stories (last 24 hours) of the
-// given user name.
-func (m *IGDownloadManager) DownloadUserStoryByName(username string) (err error) {
+// DownloadUserReelMediaByName downloads unexpired stories (last 24 hours) of
+// the given user name. No postlives included.
+func (m *IGDownloadManager) DownloadUserReelMediaByName(username string) (err error) {
 	id, err := m.UsernameToId(username)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	return m.downloadUserStory(id)
+	return m.downloadUserReelMedia(id)
 }
 
-// DownloadUserStory downloads unexpired stories (last 24 hours) of the given
-// user id.
-func (m *IGDownloadManager) DownloadUserStory(userId int64) (err error) {
-	return m.downloadUserStory(strconv.FormatInt(userId, 10))
+// DownloadUserReelMedia downloads unexpired stories (last 24 hours) of the
+// given user id. No postlives included.
+func (m *IGDownloadManager) DownloadUserReelMedia(userId int64) (err error) {
+	return m.downloadUserReelMedia(strconv.FormatInt(userId, 10))
 }
 
 func (m *IGDownloadManager) downloadUserStoryPostlive(id string) (err error) {

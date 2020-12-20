@@ -5,13 +5,13 @@ import (
 	"testing"
 )
 
-func ExampleDownloadUserStoryByName(t *testing.T) {
+func ExampleDownloadUserReelMediaByName(t *testing.T) {
 	mgr, err := NewInstagramDownloadManager("auth.json")
 	if err != nil {
 		panic(err)
 	}
 
-	mgr.DownloadUserStoryByName("instagram")
+	mgr.DownloadUserReelMediaByName("instagram")
 }
 
 func ExampleDownloadUserStoryByNameLayer(t *testing.T) {

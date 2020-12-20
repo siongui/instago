@@ -20,5 +20,5 @@ func main() {
 	fmt.Println("Download unexpired stories (last 24 hours) of the user")
 	// Given username, the following method will download unexpired stories
 	// of the user.
-	mgr.DownloadUserStoryByName(*id)
+	mgr.DownloadUserReelMediaByName(*id)
 }

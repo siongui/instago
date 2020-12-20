@@ -23,7 +23,7 @@ func (m *IGDownloadManager) ReDownload(path string, info os.FileInfo) (err error
 	if strings.Contains(info.Name(), "-story-") {
 		fmt.Println("Story", path)
 		_, id := instago.ExtractUsernameIdFromFilename(filepath.Base(path))
-		return m.downloadUserStory(id)
+		return m.downloadUserReelMedia(id)
 	}
 	return
 }
