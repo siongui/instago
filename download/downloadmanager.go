@@ -71,6 +71,10 @@ func (m *IGDownloadManager) GetUserStory(id string) (instago.UserTray, error) {
 	return m.apimgr.GetUserStory(id)
 }
 
+func (m *IGDownloadManager) GetUserReelMedia(id string) (instago.IGReelTray, error) {
+	return m.apimgr.GetUserReelMedia(id)
+}
+
 func (m *IGDownloadManager) GetSavedPosts(numOfItem int) ([]instago.IGItem, error) {
 	return m.apimgr.GetSavedPosts(numOfItem)
 }

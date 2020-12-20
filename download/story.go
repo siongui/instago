@@ -70,7 +70,7 @@ func getStoryItem(item instago.IGItem, username string) (isDownloaded bool, err 
 }
 
 func (m *IGDownloadManager) downloadUserStory(id string) (err error) {
-	tray, err := m.apimgr.GetUserReelMedia(id)
+	tray, err := m.GetUserReelMedia(id)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -160,7 +160,7 @@ func (m *IGDownloadManager) downloadUserStoryLayer(id string, layer int, isdone 
 		log.Println("fetching story of", id)
 	}
 
-	tray, err := m.apimgr.GetUserReelMedia(id)
+	tray, err := m.GetUserReelMedia(id)
 	if err != nil {
 		return
 	}
