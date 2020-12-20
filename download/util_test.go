@@ -12,3 +12,15 @@ func TestIsCommandAvailable(t *testing.T) {
 		t.Error("ls111 command should not exist!")
 	}
 }
+
+func ExampleReadNonCommentLines(t *testing.T) {
+	lines, err := ReadNonCommentLines("path/to/your/file")
+
+	if err != nil {
+		panic(err)
+	}
+
+	for _, line := range lines {
+		println(line)
+	}
+}

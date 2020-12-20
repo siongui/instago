@@ -74,3 +74,23 @@ func ExcludeCommentAndWhitespace(lines []string) (elines []string) {
 	}
 	return
 }
+
+// read non-empty lines that does not start with //
+func ReadNonCommentLines(filePath string) (lines []string, err error) {
+	ls, err := FileToLines(filePath)
+	if err != nil {
+		return
+	}
+
+	for _, l := range ls {
+		if strings.HasPrefix(l, "//") {
+			continue
+		}
+		if strings.TrimSpace(l) == "" {
+			continue
+		}
+
+		lines = append(lines, l)
+	}
+	return
+}
