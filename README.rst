@@ -149,6 +149,7 @@ Private API
 - `What is the API Endpoints for the Feeds "People who liked my posts" and "Activities from my followings" · Issue #42 · huttarichard/instagram-private-api · GitHub <https://github.com/huttarichard/instagram-private-api/issues/42>`_
 - `Search · go instagram · GitHub <https://github.com/search?q=go+instagram>`_
   then found `Update timeline API from Get to Post <https://github.com/hieven/go-instagram/commit/6800b3f7b9513fb0084024e405109d939572a961>`_
+- `private API reference - github.com/ping/instagram_private_api <https://github.com/ping/instagram_private_api/blob/master/instagram_private_api/endpoints/feed.py>`_
 
 UNLICENSE
 +++++++++

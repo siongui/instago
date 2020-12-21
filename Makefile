@@ -66,6 +66,10 @@ reelstray: fmt
 	@echo "\033[92mTest Reels Tray Feed ...\033[0m"
 	@go test -v $(ALL_GO_SOURCES) reelstray_test.go
 
+reelsmedia: fmt
+	@echo "\033[92mTest Reels Media Feed ...\033[0m"
+	@go test -v $(ALL_GO_SOURCES) reelsmedia_test.go
+
 toplive: fmt
 	@echo "\033[92mTest top live API...\033[0m"
 	@go test -v $(ALL_GO_SOURCES) toplive_test.go
