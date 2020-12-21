@@ -80,7 +80,7 @@ func (m *IGDownloadManager) GetSavedPosts(numOfItem int) ([]instago.IGItem, erro
 }
 
 func (m *IGDownloadManager) GetMultipleReelsMedia(userids []string) ([]instago.IGReelsMediaTray, error) {
-	return m.apimgr.GetMultipleReelsMedia(numOfItem)
+	return m.apimgr.GetMultipleReelsMedia(userids []string)
 }
 
 // Optional. Load another account which is not blocked by any other account.
