@@ -28,6 +28,89 @@ func IsLatestReelMediaDownloaded(username string, latestReelMedia int64) bool {
 	return false
 }
 
+// the max length of emptyids allowed in the API call  is between 20 to 30.
+func (m *IGDownloadManager) DownloadEmptyIds(emptyids []string) (err error) {
+	trays, err := m.GetMultipleReelsMedia(emptyids)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	for _, tray := range trays {
+		for _, item := range tray.Items {
+			username := tray.User.GetUsername()
+			id := tray.User.GetUserId()
+			_, err = GetStoryItem(item, username)
+			if err != nil {
+				PrintUsernameIdMsg(username, id, err)
+				return
+			}
+		}
+	}
+
+	return
+}
+
+func (m *IGDownloadManager) AccessReelsTrayOnce(ignoreMuted, verbose bool) (err error) {
+	rt, err := m.GetReelsTray()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	go PrintLiveBroadcasts(rt.Broadcasts)
+
+	emptyids := []string{}
+	for index, tray := range rt.Trays {
+		fmt.Print(index, ":")
+
+		username := tray.GetUsername()
+		id := tray.Id
+		//items := tray.GetItems()
+
+		if ignoreMuted && tray.Muted {
+			if verbose {
+				PrintUsernameIdMsg(username, id, " is muted && ignoreMuted set. no download")
+			}
+			continue
+		}
+
+		if IsLatestReelMediaDownloaded(username, tray.LatestReelMedia) {
+			if verbose {
+				PrintUsernameIdMsg(username, id, " all downloaded")
+			}
+			continue
+		}
+
+		if tray.HasBestiesMedia {
+			PrintUsernameIdMsg(username, id, "has close friend (besties) story item(s)")
+		}
+
+		if verbose {
+			UsernameIdColorPrint(username, id)
+			fmt.Println(" has undownloaded items")
+		}
+
+		items := tray.GetItems()
+		if len(items) > 0 {
+			for _, item := range items {
+				_, err = GetStoryItem(item, username)
+				if err != nil {
+					PrintUsernameIdMsg(username, id, err)
+				}
+			}
+		} else {
+			emptyids = append(emptyids, strconv.FormatInt(id, 10))
+		}
+
+		if len(emptyids) > 20 {
+			break
+		}
+	}
+
+	return m.DownloadEmptyIds(emptyids)
+}
+
 func isTrayInQueue(queue []instago.IGReelTray, tray instago.IGReelTray) bool {
 	for _, t := range queue {
 		if t.Id == tray.Id {
