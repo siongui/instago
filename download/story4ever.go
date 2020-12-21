@@ -19,6 +19,9 @@ func isTrayInQueue(queue []instago.IGReelTray, tray instago.IGReelTray) bool {
 	return false
 }
 
+
+// DO NOT USE. Due to Instagram changes the rate limit of private API, use of
+// this method will cause HTTP 429. Will be removed soon.
 func (m *IGDownloadManager) GetStoryItemAndReelMentions(item instago.IGItem, username string, interval int, getTime map[string]time.Time) (err error) {
 	isDownloaded, err := getStoryItem(item, username)
 	if err != nil {
@@ -63,6 +66,8 @@ func (m *IGDownloadManager) GetStoryItemAndReelMentions(item instago.IGItem, use
 	return
 }
 
+// DO NOT USE. Due to Instagram changes the rate limit of private API, use of
+// this method will cause HTTP 429. Will be removed soon.
 func (m *IGDownloadManager) DownloadZeroItemUsers(c chan instago.IGReelTray, interval int, getTime map[string]time.Time, verbose bool) {
 	queue := []instago.IGReelTray{}
 	for {
@@ -158,7 +163,8 @@ func isLatestReelMediaDownloaded(username string, latestReelMedia int64) bool {
 	return false
 }
 
-// Try (25, 15, true, false). If http 429 happens, increase the number.
+// DO NOT USE. Due to Instagram changes the rate limit of private API, use of
+// this method will cause HTTP 429. Will be removed soon.
 func (m *IGDownloadManager) DownloadStoryAndPostLiveForever(interval1, interval2 int, ignoreMuted, verbose bool) {
 	// channel for waiting DownloadPostLive completed
 	isDownloading := make(map[string]bool)
@@ -235,6 +241,8 @@ func (m *IGDownloadManager) DownloadStoryAndPostLiveForever(interval1, interval2
 	}
 }
 
+// DO NOT USE. Due to Instagram changes the rate limit of private API, use of
+// this method will cause HTTP 429. Will be removed soon.
 func (m *IGDownloadManager) DownloadUnexpiredStoryOfUser(user instago.User) (err error) {
 	// In case user change privacy, read user info via mobile api endpoint
 	// first.
@@ -249,6 +257,8 @@ func (m *IGDownloadManager) DownloadUnexpiredStoryOfUser(user instago.User) (err
 	return
 }
 
+// DO NOT USE. Due to Instagram changes the rate limit of private API, use of
+// this method will cause HTTP 429. Will be removed soon.
 func (m *IGDownloadManager) DownloadUnexpiredStoryOfFollowUsers(users []instago.IGFollowUser, interval int) (err error) {
 	for _, user := range users {
 		err = m.DownloadUnexpiredStoryOfUser(user)
@@ -260,7 +270,8 @@ func (m *IGDownloadManager) DownloadUnexpiredStoryOfFollowUsers(users []instago.
 	return
 }
 
-// sleep "interval" seconds after fetching each user
+// DO NOT USE. Due to Instagram changes the rate limit of private API, use of
+// this method will cause HTTP 429. Will be removed soon.
 func (m *IGDownloadManager) DownloadUnexpiredStoryOfAllFollowingUsers(interval int) (err error) {
 	log.Println("Load following users from data dir first")
 	users, err := LoadLatestFollowingUsers()
