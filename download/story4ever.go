@@ -96,40 +96,38 @@ func (m *IGDownloadManager) DownloadZeroItemUsers(c chan instago.IGReelTray, int
 					PrintUsernameIdMsg(username, id, " downloading...")
 				}
 
-				go func() {
-					// FIXME: take besties into account
-					d := time.Now().Sub(getTime["last"])
-					for d < time.Duration(interval)*time.Second {
-						time.Sleep(time.Duration(interval)*time.Second - d)
-						d = time.Now().Sub(getTime["last"])
-					}
-					ut, err := m.SmartGetUserStory(tray.User)
-					getTime["last"] = time.Now()
+				// FIXME: take besties into account
+				d := time.Now().Sub(getTime["last"])
+				for d < time.Duration(interval)*time.Second {
+					time.Sleep(time.Duration(interval)*time.Second - d)
+					d = time.Now().Sub(getTime["last"])
+				}
+				ut, err := m.SmartGetUserStory(tray.User)
+				getTime["last"] = time.Now()
+				if err != nil {
+					PrintUsernameIdMsg(username, id, err)
+					queue = append(queue, tray)
+					return
+				}
+
+				for _, item := range ut.Reel.GetItems() {
+					err = m.GetStoryItemAndReelMentions(item, ut.Reel.GetUsername(), interval, getTime)
 					if err != nil {
 						PrintUsernameIdMsg(username, id, err)
 						queue = append(queue, tray)
 						return
 					}
+				}
 
-					for _, item := range ut.Reel.GetItems() {
-						err = m.GetStoryItemAndReelMentions(item, ut.Reel.GetUsername(), interval, getTime)
-						if err != nil {
-							PrintUsernameIdMsg(username, id, err)
-							queue = append(queue, tray)
-							return
-						}
+				err = DownloadPostLiveItem(ut.PostLiveItem)
+				if err == nil {
+					if verbose {
+						PrintUsernameIdMsg(username, id, " Download Success.")
 					}
-
-					err = DownloadPostLiveItem(ut.PostLiveItem)
-					if err == nil {
-						if verbose {
-							PrintUsernameIdMsg(username, id, " Download Success.")
-						}
-					} else {
-						PrintUsernameIdMsg(username, id, err)
-						queue = append(queue, tray)
-					}
-				}()
+				} else {
+					PrintUsernameIdMsg(username, id, err)
+					queue = append(queue, tray)
+				}
 			}
 
 			if verbose {
