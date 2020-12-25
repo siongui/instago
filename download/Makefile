@@ -113,6 +113,10 @@ test_checkzero: fmt
 	@echo "\033[92mTest check zero files and re-download ...\033[0m"
 	@go test -v $(ALL_GO_SOURCES) checkzero_test.go
 
+test_timelimit: fmt
+	@echo "\033[92mTest check zero files and re-download ...\033[0m"
+	@go test -v $(ALL_GO_SOURCES) timelimit_test.go
+
 test_screenshot: fmt
 	@echo "\033[92mTest screenshot feature ...\033[0m"
 	@go test -v $(ALL_GO_SOURCES) screenshot_test.go
