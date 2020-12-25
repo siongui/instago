@@ -28,9 +28,9 @@ func IsLatestReelMediaDownloaded(username string, latestReelMedia int64) bool {
 	return false
 }
 
-// the max length of emptyids allowed in the API call  is between 20 to 30.
-func (m *IGDownloadManager) DownloadEmptyIds(emptyids []string) (err error) {
-	trays, err := m.GetMultipleReelsMedia(emptyids)
+// the max length of multipleIds allowed in the API call  is between 20 to 30.
+func (m *IGDownloadManager) DownloadStoryOfMultipleId(multipleIds []string) (err error) {
+	trays, err := m.GetMultipleReelsMedia(multipleIds)
 	if err != nil {
 		log.Println(err)
 		return
@@ -51,7 +51,150 @@ func (m *IGDownloadManager) DownloadEmptyIds(emptyids []string) (err error) {
 	return
 }
 
-func (m *IGDownloadManager) AccessReelsTrayOnce(ignoreMuted, verbose bool) (err error) {
+type TrayInfo struct {
+	Id       int64
+	Username string
+	Layer    int
+	//Tray     instago.IGReelTray
+}
+
+func IsTrayInfoInQueue(queue []TrayInfo, ti TrayInfo) bool {
+	for _, t := range queue {
+		if t.Id == ti.Id {
+			return true
+		}
+	}
+	return false
+}
+
+func GetTrayInfoFromQueue(queue []TrayInfo, id int64) (ti TrayInfo, ok bool) {
+	for _, t := range queue {
+		if t.Id == id {
+			ti = t
+			ok = true
+			return
+		}
+	}
+	return
+}
+
+func (m *IGDownloadManager) DownloadTrayInfos(tis []TrayInfo, c chan TrayInfo, interval int, getTime map[string]time.Time, verbose bool) {
+	downloadIds := []string{}
+	for _, ti := range tis {
+		id := strconv.FormatInt(ti.Id, 10)
+		username := ti.Username
+		if verbose {
+			PrintUsernameIdMsg(username, id, " to be batch downloaded")
+		}
+		downloadIds = append(downloadIds, id)
+	}
+
+	// wait at least *interval* seconds until next private API access
+	d := time.Now().Sub(getTime["last"])
+	for d < time.Duration(interval)*time.Second {
+		time.Sleep(time.Duration(interval)*time.Second - d)
+		d = time.Now().Sub(getTime["last"])
+	}
+	// get stories of multiple users at one API access
+	trays, err := m.GetMultipleReelsMedia(downloadIds)
+	getTime["last"] = time.Now()
+	if err != nil {
+		log.Println(err)
+		// sent back to channel to re-download
+		for _, ti := range tis {
+			c <- ti
+		}
+		return
+	}
+
+	// we have story trays of multiple users now. start to download
+	for _, tray := range trays {
+		ti, ok := GetTrayInfoFromQueue(tis, tray.Id)
+		if !ok {
+			log.Println("cannot find", tray.Id, "in queue (impossible to happen)")
+			continue
+		}
+
+		username := tray.User.GetUsername()
+		id := tray.User.GetUserId()
+		if err != nil {
+			PrintUsernameIdMsg(username, id, "downloading ...")
+			return
+		}
+		for _, item := range tray.Items {
+			_, err = getStoryItem(item, username)
+			if err != nil {
+				PrintUsernameIdMsg(username, id, err)
+				return
+			}
+
+			if ti.Layer-1 < 1 {
+				continue
+			}
+			for _, rm := range item.ReelMentions {
+				rmti := TrayInfo{}
+				rmti.Layer = ti.Layer - 1
+				rmti.Id = rm.User.Pk
+				rmti.Username = rm.GetUsername()
+				c <- rmti
+				if verbose {
+					PrintUsernameIdMsg(rmti.Username, rmti.Id, "sent to channel (reel mention)")
+				}
+			}
+		}
+	}
+}
+
+func (m *IGDownloadManager) TrayDownloader(c chan TrayInfo, interval int, getTime map[string]time.Time, verbose bool) {
+	queue := []TrayInfo{}
+	for {
+		select {
+		case ti := <-c:
+			// append to queue if not exist
+			id := ti.Id
+			username := ti.Username
+			if verbose {
+				UsernameIdColorPrint(username, id)
+				log.Println("legnth of channel:", len(c))
+			}
+			if IsTrayInfoInQueue(queue, ti) {
+				if verbose {
+					PrintUsernameIdMsg(username, id, "exist. ignore.")
+				}
+			} else {
+				queue = append(queue, ti)
+				if verbose {
+					PrintUsernameIdMsg(username, id, "appended")
+				}
+			}
+		default:
+			if len(queue) > 0 {
+				tis := []TrayInfo{}
+				if len(queue) > 20 {
+					tis = queue[0:20]
+					queue = queue[20:]
+				} else {
+					tis = queue
+					queue = []TrayInfo{}
+				}
+
+				if len(tis) > 0 {
+					m.DownloadTrayInfos(tis, c, interval, getTime, verbose)
+				}
+			}
+
+			restInterval := 1
+			if verbose {
+				log.Println("current queue length: ", len(queue))
+				PrintMsgSleep(restInterval, "TrayDownloader: ")
+			} else {
+				SleepSecond(restInterval)
+			}
+		}
+	}
+}
+
+func (m *IGDownloadManager) AccessReelsTrayOnce(c chan TrayInfo, ignoreMuted, verbose bool) (err error) {
 	rt, err := m.GetReelsTray()
 	if err != nil {
 		log.Println(err)
@@ -60,7 +203,6 @@ func (m *IGDownloadManager) AccessReelsTrayOnce(ignoreMuted, verbose bool) (err 
 
 	go PrintLiveBroadcasts(rt.Broadcasts)
 
-	emptyids := []string{}
 	for index, tray := range rt.Trays {
 		fmt.Print(index, ":")
 
@@ -91,235 +233,48 @@ func (m *IGDownloadManager) AccessReelsTrayOnce(ignoreMuted, verbose bool) (err 
 			fmt.Println(" has undownloaded items")
 		}
 
-		items := tray.GetItems()
-		if len(items) > 0 {
-			for _, item := range items {
-				_, err = GetStoryItem(item, username)
-				if err != nil {
-					PrintUsernameIdMsg(username, id, err)
-				}
-			}
-		} else {
-			emptyids = append(emptyids, strconv.FormatInt(id, 10))
-		}
-
-		if len(emptyids) > 20 {
-			break
-		}
-	}
-
-	return m.DownloadEmptyIds(emptyids)
-}
-
-func isTrayInQueue(queue []instago.IGReelTray, tray instago.IGReelTray) bool {
-	for _, t := range queue {
-		if t.Id == tray.Id {
-			return true
-		}
-	}
-	return false
-}
-
-// DO NOT USE. Due to Instagram changes the rate limit of private API, use of
-// this method will cause HTTP 429. Will be removed soon.
-func (m *IGDownloadManager) GetStoryItemAndReelMentions(item instago.IGItem, username string, interval int, getTime map[string]time.Time) (err error) {
-	isDownloaded, err := getStoryItem(item, username)
-	if err != nil {
-		return
-	}
-
-	if item.Audience == "besties" {
-		PrintBestiesItemInfo(item, username)
-	}
-
-	fetched := make(map[string]bool)
-	if isDownloaded {
-		for _, rm := range item.ReelMentions {
-			PrintReelMentionInfo(rm)
-			if rm.GetUsername() == username {
-				fmt.Println("reel mention self. download ignored.")
-				continue
-			}
-
-			if rm.IsPublic() {
-				if _, ok := fetched[rm.GetUsername()]; !ok {
-					d := time.Now().Sub(getTime["last"])
-					for d < time.Duration(interval)*time.Second {
-						time.Sleep(time.Duration(interval)*time.Second - d)
-						d = time.Now().Sub(getTime["last"])
-					}
-					m.SmartDownloadStory(rm)
-					getTime["last"] = time.Now()
-					fetched[rm.GetUsername()] = true
-				}
-				// handle err of m.downloadUserStoryPostlive(rm.GetUserId()) ?
-				/*
-					err = m.downloadUserStoryPostlive(rm.GetUserId())
+		ti := TrayInfo{}
+		ti.Layer = 2 // 2: also download its reel mentions in story item
+		ti.Username = username
+		ti.Id = id
+		c <- ti
+		/*
+			items := tray.GetItems()
+			if len(items) > 0 {
+				for _, item := range items {
+					_, err = GetStoryItem(item, username)
 					if err != nil {
-						PrintUsernameIdMsg(rm.GetUsername(), rm.GetUserId(), err)
-						return
+						PrintUsernameIdMsg(username, id, err)
 					}
-				*/
+				}
+			} else {
+				multipleIds = append(multipleIds, strconv.FormatInt(id, 10))
 			}
-		}
+
+			if len(multipleIds) > 20 {
+				break
+			}
+		*/
 	}
+
 	return
 }
 
-// DO NOT USE. Due to Instagram changes the rate limit of private API, use of
-// this method will cause HTTP 429. Will be removed soon.
-func (m *IGDownloadManager) DownloadZeroItemUsers(c chan instago.IGReelTray, interval int, getTime map[string]time.Time, verbose bool) {
-	queue := []instago.IGReelTray{}
-	for {
-		select {
-		case tray := <-c:
-			// append to queue if not exist
-			id := tray.Id
-			username := tray.GetUsername()
-			if verbose {
-				UsernameIdColorPrint(username, id)
-				fmt.Println("legnth of channel:", len(c))
-			}
-			if isTrayInQueue(queue, tray) {
-				if verbose {
-					PrintUsernameIdMsg(username, id, "exist. ignore.")
-				}
-			} else {
-				queue = append(queue, tray)
-				if verbose {
-					PrintUsernameIdMsg(username, id, "appended")
-				}
-			}
-		default:
-			if len(queue) > 0 {
-				tray := queue[0]
-				queue = queue[1:]
-
-				id := strconv.FormatInt(tray.Id, 10)
-				username := tray.GetUsername()
-				if verbose {
-					PrintUsernameIdMsg(username, id, " downloading...")
-				}
-
-				// FIXME: take besties into account
-				d := time.Now().Sub(getTime["last"])
-				for d < time.Duration(interval)*time.Second {
-					time.Sleep(time.Duration(interval)*time.Second - d)
-					d = time.Now().Sub(getTime["last"])
-				}
-				ut, err := m.SmartGetUserStory(tray.User)
-				getTime["last"] = time.Now()
-				if err != nil {
-					PrintUsernameIdMsg(username, id, err)
-					queue = append(queue, tray)
-					return
-				}
-
-				for _, item := range ut.Reel.GetItems() {
-					err = m.GetStoryItemAndReelMentions(item, ut.Reel.GetUsername(), interval, getTime)
-					if err != nil {
-						PrintUsernameIdMsg(username, id, err)
-						queue = append(queue, tray)
-						return
-					}
-				}
-
-				err = DownloadPostLiveItem(ut.PostLiveItem)
-				if err == nil {
-					if verbose {
-						PrintUsernameIdMsg(username, id, " Download Success.")
-					}
-				} else {
-					PrintUsernameIdMsg(username, id, err)
-					queue = append(queue, tray)
-				}
-			}
-
-			if verbose {
-				fmt.Println("current queue length: ", len(queue))
-				PrintMsgSleep(interval, "DownloadZeroItemUsers: ")
-			} else {
-				SleepSecond(interval)
-			}
-		}
-	}
-}
-
-// DO NOT USE. Due to Instagram changes the rate limit of private API, use of
-// this method will cause HTTP 429. Will be removed soon.
-func (m *IGDownloadManager) DownloadStoryAndPostLiveForever(interval1, interval2 int, ignoreMuted, verbose bool) {
-	// channel for waiting DownloadPostLive completed
-	isDownloading := make(map[string]bool)
-
+func (m *IGDownloadManager) DownloadStoryForever(interval1, interval2 int, ignoreMuted, verbose bool) {
 	// usually there are at most 150 trays in reels_tray.
 	// double the buffer to 300. 160 or 200 may be ok as well.
-	c := make(chan instago.IGReelTray, 300)
+	c := make(chan TrayInfo, 300)
 
 	getTime := make(map[string]time.Time)
 	getTime["last"] = time.Now()
-	go m.DownloadZeroItemUsers(c, interval2, getTime, verbose)
+	go m.TrayDownloader(c, interval2, getTime, verbose)
+
 	for {
-		rt, err := m.GetReelsTray()
+		err := m.AccessReelsTrayOnce(c, ignoreMuted, verbose)
 		if err != nil {
 			log.Println(err)
-			continue
 		}
-
-		// TODO: use channel for postlive?
-		go DownloadPostLive(rt.PostLive, isDownloading)
-		go PrintLiveBroadcasts(rt.Broadcasts)
-
-		//for index, tray := range rt.Trays {
-		for _, tray := range rt.Trays {
-			username := tray.GetUsername()
-			id := tray.Id
-			//items := tray.GetItems()
-
-			if ignoreMuted && tray.Muted {
-				if verbose {
-					PrintUsernameIdMsg(username, id, " is muted && ignoreMuted set. no download")
-				}
-				continue
-			}
-
-			if IsLatestReelMediaDownloaded(username, tray.LatestReelMedia) {
-				if verbose {
-					PrintUsernameIdMsg(username, id, " all downloaded")
-				}
-				continue
-			}
-
-			if tray.HasBestiesMedia {
-				PrintUsernameIdMsg(username, id, "has close friend (besties) story item(s)")
-			}
-
-			if verbose {
-				UsernameIdColorPrint(username, id)
-				fmt.Println(" has undownloaded items")
-			}
-			c <- tray
-			/*
-				if len(items) == 0 {
-					if verbose {
-						UsernameIdColorPrint(username, id)
-						fmt.Println("#", index, " send to channel")
-					}
-					c <- tray
-				} else {
-					for _, item := range items {
-						err = m.GetStoryItemAndReelMentions(item, username)
-						if err != nil {
-							PrintUsernameIdMsg(username, id, err)
-							c <- tray
-							break
-						}
-					}
-					// is there postlive items in tray here?
-				}
-			*/
-		}
-
-		PrintMsgSleep(interval1, "DownloadStoryAndPostLiveForever: ")
+		PrintMsgSleep(interval1, "DownloadStoryForever2: ")
 	}
 }
 
