@@ -2,7 +2,6 @@ package igdl
 
 import (
 	"log"
-	"time"
 
 	"github.com/siongui/instago"
 )
@@ -42,15 +41,15 @@ func (m *IGDownloadManager) DownloadUserReelMedia(id string) (err error) {
 	return m.downloadUserReelMedia(id)
 }
 
-func (m *IGDownloadManager) getReelMediaItemLayer(item instago.IGItem, username string, layer, interval int64, isdone map[string]string, getTime map[string]time.Time) {
+func (m *IGDownloadManager) getReelMediaItemLayer(item instago.IGItem, username string, layer, interval int64, isdone map[string]string, tl *TimeLimiter) {
 	getStoryItem(item, username)
 	for _, reelmention := range item.ReelMentions {
 		PrintReelMentionInfo(reelmention)
-		m.downloadUserReelMediaLayer(reelmention.GetUserId(), layer, interval, isdone, getTime)
+		m.downloadUserReelMediaLayer(reelmention.GetUserId(), layer, interval, isdone, tl)
 	}
 }
 
-func (m *IGDownloadManager) downloadUserReelMediaLayer(id string, layer, interval int64, isdone map[string]string, getTime map[string]time.Time) (err error) {
+func (m *IGDownloadManager) downloadUserReelMediaLayer(id string, layer, interval int64, isdone map[string]string, tl *TimeLimiter) (err error) {
 	if layer < 1 {
 		return
 	}
@@ -63,12 +62,9 @@ func (m *IGDownloadManager) downloadUserReelMediaLayer(id string, layer, interva
 		log.Println("fetching story of", id)
 	}
 
-	d := time.Now().Sub(getTime["last"])
-	if d < time.Duration(interval)*time.Second {
-		time.Sleep(time.Duration(interval)*time.Second - d)
-	}
+	tl.WaitAtLeastIntervalAfterLastTime()
 	tray, err := m.GetUserReelMedia(id)
-	getTime["last"] = time.Now()
+	tl.SetLastTimeToNow()
 	if err != nil {
 		return
 	}
@@ -77,15 +73,13 @@ func (m *IGDownloadManager) downloadUserReelMediaLayer(id string, layer, interva
 	log.Println("fetch story of", tray.GetUsername(), id, "success")
 
 	for _, item := range tray.GetItems() {
-		m.getReelMediaItemLayer(item, tray.GetUsername(), layer, interval, isdone, getTime)
+		m.getReelMediaItemLayer(item, tray.GetUsername(), layer, interval, isdone, tl)
 	}
 	return
 }
 
 func (m *IGDownloadManager) DownloadUserReelMediaLayer(id string, layer, interval int64) (err error) {
 	isdone := make(map[string]string)
-	t := time.Unix(time.Now().Unix()-interval-1, 0)
-	getTime := make(map[string]time.Time)
-	getTime["last"] = t
-	return m.downloadUserReelMediaLayer(id, layer, interval, isdone, getTime)
+	tl := NewTimeLimiter(interval)
+	return m.downloadUserReelMediaLayer(id, layer, interval, isdone, tl)
 }
