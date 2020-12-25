@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 	"strconv"
-	"time"
 
 	"github.com/siongui/instago"
 )
@@ -78,7 +77,7 @@ func GetTrayInfoFromQueue(queue []TrayInfo, id int64) (ti TrayInfo, ok bool) {
 	return
 }
 
-func (m *IGDownloadManager) DownloadTrayInfos(tis []TrayInfo, c chan TrayInfo, interval int, getTime map[string]time.Time, verbose bool) {
+func (m *IGDownloadManager) DownloadTrayInfos(tis []TrayInfo, c chan TrayInfo, tl *TimeLimiter, verbose bool) {
 	downloadIds := []string{}
 	for _, ti := range tis {
 		id := strconv.FormatInt(ti.Id, 10)
@@ -90,14 +89,10 @@ func (m *IGDownloadManager) DownloadTrayInfos(tis []TrayInfo, c chan TrayInfo, i
 	}
 
 	// wait at least *interval* seconds until next private API access
-	d := time.Now().Sub(getTime["last"])
-	for d < time.Duration(interval)*time.Second {
-		time.Sleep(time.Duration(interval)*time.Second - d)
-		d = time.Now().Sub(getTime["last"])
-	}
+	tl.WaitAtLeastIntervalAfterLastTime()
 	// get stories of multiple users at one API access
 	trays, err := m.GetMultipleReelsMedia(downloadIds)
-	getTime["last"] = time.Now()
+	tl.SetLastTimeToNow()
 	if err != nil {
 		log.Println(err)
 		// sent back to channel to re-download
@@ -145,7 +140,7 @@ func (m *IGDownloadManager) DownloadTrayInfos(tis []TrayInfo, c chan TrayInfo, i
 	}
 }
 
-func (m *IGDownloadManager) TrayDownloader(c chan TrayInfo, interval int, getTime map[string]time.Time, verbose bool) {
+func (m *IGDownloadManager) TrayDownloader(c chan TrayInfo, tl *TimeLimiter, verbose bool) {
 	queue := []TrayInfo{}
 	for {
 		select {
@@ -179,7 +174,7 @@ func (m *IGDownloadManager) TrayDownloader(c chan TrayInfo, interval int, getTim
 				}
 
 				if len(tis) > 0 {
-					m.DownloadTrayInfos(tis, c, interval, getTime, verbose)
+					m.DownloadTrayInfos(tis, c, tl, verbose)
 				}
 			}
 
@@ -260,14 +255,13 @@ func (m *IGDownloadManager) AccessReelsTrayOnce(c chan TrayInfo, ignoreMuted, ve
 	return
 }
 
-func (m *IGDownloadManager) DownloadStoryForever(interval1, interval2 int, ignoreMuted, verbose bool) {
+func (m *IGDownloadManager) DownloadStoryForever(interval1 int, interval2 int64, ignoreMuted, verbose bool) {
 	// usually there are at most 150 trays in reels_tray.
 	// double the buffer to 300. 160 or 200 may be ok as well.
 	c := make(chan TrayInfo, 300)
 
-	getTime := make(map[string]time.Time)
-	getTime["last"] = time.Now()
-	go m.TrayDownloader(c, interval2, getTime, verbose)
+	tl := NewTimeLimiter(interval2)
+	go m.TrayDownloader(c, tl, verbose)
 
 	for {
 		err := m.AccessReelsTrayOnce(c, ignoreMuted, verbose)
@@ -278,7 +272,7 @@ func (m *IGDownloadManager) DownloadStoryForever(interval1, interval2 int, ignor
 	}
 }
 
-func (m *IGDownloadManager) DownloadStoryForeverViaCleanAccount(interval1, interval2 int, ignoreMuted, verbose bool) {
+func (m *IGDownloadManager) DownloadStoryForeverViaCleanAccount(interval1 int, interval2 int64, ignoreMuted, verbose bool) {
 	if !m.IsCleanAccountSet() {
 		fmt.Println("clean account not set. exit")
 		return
@@ -288,9 +282,8 @@ func (m *IGDownloadManager) DownloadStoryForeverViaCleanAccount(interval1, inter
 	// double the buffer to 300. 160 or 200 may be ok as well.
 	c := make(chan TrayInfo, 300)
 
-	getTime := make(map[string]time.Time)
-	getTime["last"] = time.Now()
-	go m.GetCleanAccountManager().TrayDownloader(c, interval2, getTime, verbose)
+	tl := NewTimeLimiter(interval2)
+	go m.GetCleanAccountManager().TrayDownloader(c, tl, verbose)
 
 	for {
 		err := m.AccessReelsTrayOnce(c, ignoreMuted, verbose)
