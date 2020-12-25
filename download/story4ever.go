@@ -274,7 +274,30 @@ func (m *IGDownloadManager) DownloadStoryForever(interval1, interval2 int, ignor
 		if err != nil {
 			log.Println(err)
 		}
-		PrintMsgSleep(interval1, "DownloadStoryForever2: ")
+		PrintMsgSleep(interval1, "DownloadStoryForever: ")
+	}
+}
+
+func (m *IGDownloadManager) DownloadStoryForeverViaCleanAccount(interval1, interval2 int, ignoreMuted, verbose bool) {
+	if !m.IsCleanAccountSet() {
+		fmt.Println("clean account not set. exit")
+		return
+	}
+
+	// usually there are at most 150 trays in reels_tray.
+	// double the buffer to 300. 160 or 200 may be ok as well.
+	c := make(chan TrayInfo, 300)
+
+	getTime := make(map[string]time.Time)
+	getTime["last"] = time.Now()
+	go m.GetCleanAccountManager().TrayDownloader(c, interval2, getTime, verbose)
+
+	for {
+		err := m.AccessReelsTrayOnce(c, ignoreMuted, verbose)
+		if err != nil {
+			log.Println(err)
+		}
+		PrintMsgSleep(interval1, "DownloadStoryForeverViaCleanAccount: ")
 	}
 }
 
