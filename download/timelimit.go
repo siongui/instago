@@ -11,7 +11,7 @@ type TimeLimiter struct {
 
 func NewTimeLimiter(interval int64) *TimeLimiter {
 	tl := TimeLimiter{
-		LastTime: time.Now(),
+		LastTime: time.Unix(time.Now().Unix()-interval, 0),
 		Interval: interval,
 	}
 	return &tl
