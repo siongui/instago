@@ -11,7 +11,7 @@ type User interface {
 }
 
 type IGFollowUser struct {
-	Pk                         int64  `json:"pk"`
+	Pk                         int64  `json:"pk"` // Pk is user id
 	Username                   string `json:"username"`
 	FullName                   string `json:"full_name"`
 	IsPrivate                  bool   `json:"is_private"`
@@ -19,7 +19,10 @@ type IGFollowUser struct {
 	ProfilePicId               string `json:"profile_pic_id"`
 	IsVerified                 bool   `json:"is_verified"`
 	HasAnonymousProfilePicture bool   `json:"has_anonymous_profile_picture"`
-	LatestReelMedia            int64  `json:"latest_reel_media"`
+	//account_badges
+	LatestReelMedia int64 `json:"latest_reel_media"`
+	//story_reel_media_ids
+	IsFavorite bool `json:"is_favorite"`
 }
 
 func (u IGFollowUser) GetUserId() string {
