@@ -41,8 +41,8 @@ func (m *IGDownloadManager) AccessReelsTrayOnce2Chan(cPublicUser, cPrivateUser c
 		}
 
 		if verbose {
+			PrintUsernameIdMsg(username, id, " has undownloaded items")
 			UsernameIdColorPrint(username, id)
-			fmt.Println(" has undownloaded items")
 		}
 
 		// 2: also download reel mentions in story item
@@ -56,7 +56,7 @@ func (m *IGDownloadManager) AccessReelsTrayOnce2Chan(cPublicUser, cPrivateUser c
 	return
 }
 
-func (m *IGDownloadManager) TwoAccountDownloadStoryForever(interval1 int, interval2 int64, ignoreMuted, verbose bool) {
+func (m *IGDownloadManager) TwoAccountDownloadStoryForever(interval1 int, interval2, interval3 int64, ignoreMuted, verbose bool) {
 	if !m.IsCleanAccountSet() {
 		fmt.Println("clean account not set. exit")
 		return
@@ -67,9 +67,8 @@ func (m *IGDownloadManager) TwoAccountDownloadStoryForever(interval1 int, interv
 	cPublicUser := make(chan TrayInfo, 300)
 	cPrivateUser := make(chan TrayInfo, 300)
 
-	tl := NewTimeLimiter(interval2)
-	go m.GetCleanAccountManager().TrayDownloader(cPublicUser, tl, verbose)
-	go m.PrivateTrayDownloader(cPublicUser, cPrivateUser, verbose)
+	go m.GetCleanAccountManager().TrayDownloader(cPublicUser, NewTimeLimiter(interval2), verbose)
+	go m.PrivateTrayDownloaderViaReelMediaAPI(cPublicUser, cPrivateUser, NewTimeLimiter(interval3), verbose)
 
 	for {
 		err := m.AccessReelsTrayOnce2Chan(cPublicUser, cPrivateUser, ignoreMuted, verbose)
@@ -80,7 +79,7 @@ func (m *IGDownloadManager) TwoAccountDownloadStoryForever(interval1 int, interv
 	}
 }
 
-func (m *IGDownloadManager) PrivateTrayDownloader(cPublicUser, cPrivateUser chan TrayInfo, verbose bool) {
+func (m *IGDownloadManager) PrivateTrayDownloaderViaReelMediaAPI(cPublicUser, cPrivateUser chan TrayInfo, tl *TimeLimiter, verbose bool) {
 	//maxReelsMediaIds := 20
 	queue := []TrayInfo{}
 	for {
@@ -104,7 +103,10 @@ func (m *IGDownloadManager) PrivateTrayDownloader(cPublicUser, cPrivateUser chan
 				ti := queue[0]
 				queue = queue[1:]
 
+				// wait at least *interval* seconds until next private API access (prevent http 429)
+				tl.WaitAtLeastIntervalAfterLastTime()
 				tray, err := m.GetUserReelMedia(strconv.FormatInt(ti.Id, 10))
+				tl.SetLastTimeToNow()
 				if err != nil {
 					log.Println(err)
 					cPrivateUser <- ti
@@ -133,7 +135,7 @@ func (m *IGDownloadManager) PrivateTrayDownloader(cPublicUser, cPrivateUser chan
 				}
 			}
 
-			restInterval := 30
+			restInterval := 1
 			if verbose {
 				log.Println("current private user queue length: ", len(queue))
 				PrintMsgSleep(restInterval, "PrivateTrayDownloader: ")
