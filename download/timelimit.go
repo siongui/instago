@@ -25,6 +25,14 @@ func (tl *TimeLimiter) WaitAtLeastIntervalAfterLastTime() {
 	}
 }
 
+func (tl *TimeLimiter) WaitAtLeastNIntervalAfterLastTime(n int64) {
+	d := time.Now().Sub(tl.LastTime)
+	interval := time.Duration(tl.Interval*n) * time.Second
+	if d < interval {
+		time.Sleep(interval - d)
+	}
+}
+
 func (tl *TimeLimiter) SetLastTimeToNow() {
 	tl.LastTime = time.Now()
 }

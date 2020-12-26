@@ -13,4 +13,7 @@ func TestTimeLimiter(t *testing.T) {
 	tl.SetLastTimeToNow()
 	tl.WaitAtLeastIntervalAfterLastTime()
 	t.Log(time.Now())
+	tl.SetLastTimeToNow()
+	tl.WaitAtLeastNIntervalAfterLastTime(2)
+	t.Log(time.Now())
 }
