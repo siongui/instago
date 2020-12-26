@@ -51,9 +51,9 @@ func UsernameIdColorPrint(username, id interface{}) {
 	fmt.Print(") ")
 }
 
-func PrintUsernameIdMsg(username, id, msg interface{}) {
+func PrintUsernameIdMsg(username, id interface{}, msg ...interface{}) {
 	UsernameIdColorPrint(username, id)
-	fmt.Println(msg)
+	fmt.Println(msg...)
 }
 
 func PrintBestiesItemInfo(item instago.IGItem, username string) {

@@ -155,18 +155,14 @@ func (m *IGDownloadManager) TrayDownloader(c chan TrayInfo, tl *TimeLimiter, ver
 			// append to queue if not exist
 			id := ti.Id
 			username := ti.Username
-			if verbose {
-				UsernameIdColorPrint(username, id)
-				log.Println("legnth of channel:", len(c))
-			}
 			if IsTrayInfoInQueue(queue, ti) {
 				if verbose {
-					PrintUsernameIdMsg(username, id, "exist. ignore.")
+					PrintUsernameIdMsg(username, id, "exist. ignore.", "legnth of channel:", len(c))
 				}
 			} else {
 				queue = append(queue, ti)
 				if verbose {
-					PrintUsernameIdMsg(username, id, "appended")
+					PrintUsernameIdMsg(username, id, "appended", "legnth of channel:", len(c))
 				}
 			}
 		default:
