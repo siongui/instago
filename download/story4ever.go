@@ -141,6 +141,7 @@ func (m *IGDownloadManager) DownloadTrayInfos(tis []TrayInfo, c chan TrayInfo, t
 }
 
 func (m *IGDownloadManager) TrayDownloader(c chan TrayInfo, tl *TimeLimiter, verbose bool) {
+	maxReelsMediaIds := 20
 	queue := []TrayInfo{}
 	for {
 		select {
@@ -165,9 +166,9 @@ func (m *IGDownloadManager) TrayDownloader(c chan TrayInfo, tl *TimeLimiter, ver
 		default:
 			if len(queue) > 0 {
 				tis := []TrayInfo{}
-				if len(queue) > 20 {
-					tis = queue[0:20]
-					queue = queue[20:]
+				if len(queue) > maxReelsMediaIds {
+					tis = queue[0:maxReelsMediaIds]
+					queue = queue[maxReelsMediaIds:]
 				} else {
 					tis = queue
 					queue = []TrayInfo{}
@@ -246,7 +247,7 @@ func (m *IGDownloadManager) AccessReelsTrayOnce(c chan TrayInfo, ignoreMuted, ve
 				multipleIds = append(multipleIds, strconv.FormatInt(id, 10))
 			}
 
-			if len(multipleIds) > 20 {
+			if len(multipleIds) > maxReelsMediaIds {
 				break
 			}
 		*/
