@@ -157,28 +157,28 @@ func (m *IGDownloadManager) TrayDownloader(c chan TrayInfo, tl *TimeLimiter, ver
 			username := ti.Username
 			if IsTrayInfoInQueue(queue, ti) {
 				if verbose {
-					PrintUsernameIdMsg(username, id, "exist. ignore.", "legnth of channel:", len(c))
+					PrintUsernameIdMsg(username, id, "exist. ignore.", "len(channel):", len(c), "len(queue):", len(queue))
 				}
 			} else {
 				queue = append(queue, ti)
 				if verbose {
-					PrintUsernameIdMsg(username, id, "appended", "legnth of channel:", len(c))
+					PrintUsernameIdMsg(username, id, "appended.", "len(channel):", len(c), "len(queue):", len(queue))
 				}
 			}
 		default:
-			if len(queue) > 0 {
-				tis := []TrayInfo{}
-				if len(queue) > maxReelsMediaIds {
-					tis = queue[0:maxReelsMediaIds]
-					queue = queue[maxReelsMediaIds:]
-				} else {
-					tis = queue
-					queue = []TrayInfo{}
-				}
+			tis := []TrayInfo{}
+			for len(queue) > 0 {
+				ti := queue[0]
+				queue = queue[1:]
+				tis = append(tis, ti)
 
-				if len(tis) > 0 {
-					m.DownloadTrayInfos(tis, c, tl, verbose)
+				if len(tis) == maxReelsMediaIds {
+					break
 				}
+			}
+
+			if len(tis) > 0 {
+				m.DownloadTrayInfos(tis, c, tl, verbose)
 			}
 
 			restInterval := 1
