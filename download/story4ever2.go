@@ -3,6 +3,7 @@ package igdl
 import (
 	"fmt"
 	"log"
+	"strconv"
 )
 
 func (m *IGDownloadManager) AccessReelsTrayOnce2Chan(cPublicUser, cPrivateUser chan TrayInfo, ignoreMuted, verbose bool) (err error) {
@@ -68,6 +69,7 @@ func (m *IGDownloadManager) TwoAccountDownloadStoryForever(interval1 int, interv
 
 	tl := NewTimeLimiter(interval2)
 	go m.GetCleanAccountManager().TrayDownloader(cPublicUser, tl, verbose)
+	go m.PrivateTrayDownloader(cPublicUser, cPrivateUser, verbose)
 
 	for {
 		err := m.AccessReelsTrayOnce2Chan(cPublicUser, cPrivateUser, ignoreMuted, verbose)
@@ -75,5 +77,69 @@ func (m *IGDownloadManager) TwoAccountDownloadStoryForever(interval1 int, interv
 			log.Println(err)
 		}
 		PrintMsgSleep(interval1, "TwoAccountDownloadStoryForever: ")
+	}
+}
+
+func (m *IGDownloadManager) PrivateTrayDownloader(cPublicUser, cPrivateUser chan TrayInfo, verbose bool) {
+	//maxReelsMediaIds := 20
+	queue := []TrayInfo{}
+	for {
+		select {
+		case ti := <-cPrivateUser:
+			// append to queue if not exist
+			id := ti.Id
+			username := ti.Username
+			if IsTrayInfoInQueue(queue, ti) {
+				if verbose {
+					PrintUsernameIdMsg(username, id, "exist. ignore.", "len(cPrivateUser):", len(cPrivateUser), "len(queue):", len(queue))
+				}
+			} else {
+				queue = append(queue, ti)
+				if verbose {
+					PrintUsernameIdMsg(username, id, "appended.", "len(cPrivateUser):", len(cPrivateUser), "len(queue):", len(queue))
+				}
+			}
+		default:
+			if len(queue) > 0 {
+				ti := queue[0]
+				queue = queue[1:]
+
+				tray, err := m.GetUserReelMedia(strconv.FormatInt(ti.Id, 10))
+				if err != nil {
+					log.Println(err)
+					cPrivateUser <- ti
+				} else {
+					id := tray.User.GetUserId()
+					username := tray.User.GetUsername()
+					for _, item := range tray.GetItems() {
+						_, err := getStoryItem(item, tray.GetUsername())
+						if err != nil {
+							PrintUsernameIdMsg(username, id, err)
+							continue
+						}
+
+						if ti.Layer-1 < 1 {
+							continue
+						}
+						for _, rm := range item.ReelMentions {
+							if !rm.User.IsPrivate {
+								cPublicUser <- setupTrayInfo(rm.User.Pk, rm.GetUsername(), ti.Layer-1, rm.User.IsPrivate)
+								if verbose {
+									PrintUsernameIdMsg(rm.GetUsername(), rm.User.Pk, "sent to public channel (reel mention)")
+								}
+							}
+						}
+					}
+				}
+			}
+
+			restInterval := 30
+			if verbose {
+				log.Println("current private user queue length: ", len(queue))
+				PrintMsgSleep(restInterval, "PrivateTrayDownloader: ")
+			} else {
+				SleepSecond(restInterval)
+			}
+		}
 	}
 }
