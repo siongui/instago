@@ -67,7 +67,7 @@ func (m *IGDownloadManager) TwoAccountDownloadStoryForever(interval1 int, interv
 	cPublicUser := make(chan TrayInfo, 300)
 	cPrivateUser := make(chan TrayInfo, 300)
 
-	go m.GetCleanAccountManager().TrayDownloader(cPublicUser, NewTimeLimiter(interval2), verbose)
+	go m.GetCleanAccountManager().TrayDownloader(cPublicUser, NewTimeLimiter(interval2), true, verbose)
 	go m.PrivateTrayDownloaderViaReelMediaAPI(cPublicUser, cPrivateUser, NewTimeLimiter(interval3), verbose)
 
 	for {

@@ -87,7 +87,7 @@ func GetTrayInfoFromQueue(queue []TrayInfo, id int64) (ti TrayInfo, ok bool) {
 	return
 }
 
-func (m *IGDownloadManager) DownloadTrayInfos(tis []TrayInfo, c chan TrayInfo, tl *TimeLimiter, verbose bool) {
+func (m *IGDownloadManager) DownloadTrayInfos(tis []TrayInfo, c chan TrayInfo, tl *TimeLimiter, ignorePrivate, verbose bool) {
 	downloadIds := []string{}
 	for _, ti := range tis {
 		id := strconv.FormatInt(ti.Id, 10)
@@ -137,6 +137,10 @@ func (m *IGDownloadManager) DownloadTrayInfos(tis []TrayInfo, c chan TrayInfo, t
 				continue
 			}
 			for _, rm := range item.ReelMentions {
+				if ignorePrivate && rm.User.IsPrivate {
+					continue
+				}
+
 				c <- setupTrayInfo(rm.User.Pk, rm.GetUsername(), ti.Layer-1, rm.User.IsPrivate)
 				if verbose {
 					PrintUsernameIdMsg(rm.GetUsername(), rm.User.Pk, "sent to channel (reel mention)")
@@ -146,7 +150,7 @@ func (m *IGDownloadManager) DownloadTrayInfos(tis []TrayInfo, c chan TrayInfo, t
 	}
 }
 
-func (m *IGDownloadManager) TrayDownloader(c chan TrayInfo, tl *TimeLimiter, verbose bool) {
+func (m *IGDownloadManager) TrayDownloader(c chan TrayInfo, tl *TimeLimiter, ignorePrivate, verbose bool) {
 	maxReelsMediaIds := 20
 	queue := []TrayInfo{}
 	for {
@@ -170,6 +174,11 @@ func (m *IGDownloadManager) TrayDownloader(c chan TrayInfo, tl *TimeLimiter, ver
 			for len(queue) > 0 {
 				ti := queue[0]
 				queue = queue[1:]
+
+				if ignorePrivate && ti.IsPrivate {
+					continue
+				}
+
 				tis = append(tis, ti)
 
 				if len(tis) == maxReelsMediaIds {
@@ -178,7 +187,7 @@ func (m *IGDownloadManager) TrayDownloader(c chan TrayInfo, tl *TimeLimiter, ver
 			}
 
 			if len(tis) > 0 {
-				m.DownloadTrayInfos(tis, c, tl, verbose)
+				m.DownloadTrayInfos(tis, c, tl, ignorePrivate, verbose)
 			}
 
 			restInterval := 1
@@ -261,7 +270,7 @@ func (m *IGDownloadManager) DownloadStoryForever(interval1 int, interval2 int64,
 	c := make(chan TrayInfo, 300)
 
 	tl := NewTimeLimiter(interval2)
-	go m.TrayDownloader(c, tl, verbose)
+	go m.TrayDownloader(c, tl, false, verbose)
 
 	for {
 		err := m.AccessReelsTrayOnce(c, ignoreMuted, verbose)
@@ -283,7 +292,7 @@ func (m *IGDownloadManager) DownloadStoryForeverViaCleanAccount(interval1 int, i
 	c := make(chan TrayInfo, 300)
 
 	tl := NewTimeLimiter(interval2)
-	go m.GetCleanAccountManager().TrayDownloader(c, tl, verbose)
+	go m.GetCleanAccountManager().TrayDownloader(c, tl, true, verbose)
 
 	for {
 		err := m.AccessReelsTrayOnce(c, ignoreMuted, verbose)
