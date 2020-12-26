@@ -51,10 +51,20 @@ func (m *IGDownloadManager) DownloadStoryOfMultipleId(multipleIds []string) (err
 }
 
 type TrayInfo struct {
-	Id       int64
-	Username string
-	Layer    int
+	Id        int64
+	Username  string
+	Layer     int64
+	IsPrivate bool
 	//Tray     instago.IGReelTray
+}
+
+func setupTrayInfo(id int64, username string, layer int64, isPrivate bool) (ti TrayInfo) {
+	return TrayInfo{
+		Id:        id,
+		Username:  username,
+		Layer:     layer,
+		IsPrivate: isPrivate,
+	}
 }
 
 func IsTrayInfoInQueue(queue []TrayInfo, ti TrayInfo) bool {
@@ -127,13 +137,9 @@ func (m *IGDownloadManager) DownloadTrayInfos(tis []TrayInfo, c chan TrayInfo, t
 				continue
 			}
 			for _, rm := range item.ReelMentions {
-				rmti := TrayInfo{}
-				rmti.Layer = ti.Layer - 1
-				rmti.Id = rm.User.Pk
-				rmti.Username = rm.GetUsername()
-				c <- rmti
+				c <- setupTrayInfo(rm.User.Pk, rm.GetUsername(), ti.Layer-1, rm.User.IsPrivate)
 				if verbose {
-					PrintUsernameIdMsg(rmti.Username, rmti.Id, "sent to channel (reel mention)")
+					PrintUsernameIdMsg(rm.GetUsername(), rm.User.Pk, "sent to channel (reel mention)")
 				}
 			}
 		}
@@ -229,11 +235,8 @@ func (m *IGDownloadManager) AccessReelsTrayOnce(c chan TrayInfo, ignoreMuted, ve
 			fmt.Println(" has undownloaded items")
 		}
 
-		ti := TrayInfo{}
-		ti.Layer = 2 // 2: also download its reel mentions in story item
-		ti.Username = username
-		ti.Id = id
-		c <- ti
+		// 2: also download reel mentions in story item
+		c <- setupTrayInfo(id, username, 2, tray.User.IsPrivate)
 		/*
 			items := tray.GetItems()
 			if len(items) > 0 {
