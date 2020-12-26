@@ -37,12 +37,11 @@ func (m *IGDownloadManager) AccessReelsTrayOnce2Chan(cPublicUser, cPrivateUser c
 		}
 
 		if tray.HasBestiesMedia {
-			PrintUsernameIdMsg(username, id, "has close friend (besties) story item(s)")
+			PrintUsernameIdMsg(username, id, " has close friend (besties) story item(s)")
 		}
 
 		if verbose {
 			PrintUsernameIdMsg(username, id, " has undownloaded items")
-			UsernameIdColorPrint(username, id)
 		}
 
 		// 2: also download reel mentions in story item
@@ -124,6 +123,7 @@ func (m *IGDownloadManager) PrivateTrayDownloaderViaReelMediaAPI(cPublicUser, cP
 							continue
 						}
 						for _, rm := range item.ReelMentions {
+							PrintReelMentionInfo(rm)
 							if !rm.User.IsPrivate {
 								cPublicUser <- setupTrayInfo(rm.User.Pk, rm.GetUsername(), ti.Layer-1, rm.User.IsPrivate)
 								if verbose {

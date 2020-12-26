@@ -107,6 +107,9 @@ func (m *IGDownloadManager) DownloadTrayInfos(tis []TrayInfo, c chan TrayInfo, t
 		log.Println(err)
 		// sent back to channel to re-download
 		for _, ti := range tis {
+			if verbose {
+				PrintUsernameIdMsg(ti.Username, ti.Id, " sent back to channel to re-download")
+			}
 			c <- ti
 		}
 		return
@@ -122,10 +125,6 @@ func (m *IGDownloadManager) DownloadTrayInfos(tis []TrayInfo, c chan TrayInfo, t
 
 		username := tray.User.GetUsername()
 		id := tray.User.GetUserId()
-		if err != nil {
-			PrintUsernameIdMsg(username, id, "downloading ...")
-			return
-		}
 		for _, item := range tray.Items {
 			_, err = getStoryItem(item, username)
 			if err != nil {
@@ -137,6 +136,7 @@ func (m *IGDownloadManager) DownloadTrayInfos(tis []TrayInfo, c chan TrayInfo, t
 				continue
 			}
 			for _, rm := range item.ReelMentions {
+				PrintReelMentionInfo(rm)
 				if ignorePrivate && rm.User.IsPrivate {
 					continue
 				}
@@ -232,12 +232,11 @@ func (m *IGDownloadManager) AccessReelsTrayOnce(c chan TrayInfo, ignoreMuted, ve
 		}
 
 		if tray.HasBestiesMedia {
-			PrintUsernameIdMsg(username, id, "has close friend (besties) story item(s)")
+			PrintUsernameIdMsg(username, id, " has close friend (besties) story item(s)")
 		}
 
 		if verbose {
-			UsernameIdColorPrint(username, id)
-			fmt.Println(" has undownloaded items")
+			PrintUsernameIdMsg(username, id, " has undownloaded items")
 		}
 
 		// 2: also download reel mentions in story item
