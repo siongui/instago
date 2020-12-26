@@ -190,6 +190,8 @@ func (m *IGDownloadManager) TrayDownloader(c chan TrayInfo, tl *TimeLimiter, ign
 			if len(tis) < maxReelsMediaIds {
 				if len(tis) > 0 && tl.IsOverNIntervalAfterLastTime(2) {
 					m.DownloadTrayInfos(tis, c, tl, ignorePrivate, verbose)
+				} else {
+					queue = append(queue, tis...)
 				}
 			} else {
 				m.DownloadTrayInfos(tis, c, tl, ignorePrivate, verbose)
