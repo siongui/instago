@@ -33,6 +33,15 @@ func (tl *TimeLimiter) WaitAtLeastNIntervalAfterLastTime(n int64) {
 	}
 }
 
+func (tl *TimeLimiter) IsOverNIntervalAfterLastTime(n int64) bool {
+	d := time.Now().Sub(tl.LastTime)
+	interval := time.Duration(tl.Interval*n) * time.Second
+	if d < interval {
+		return false
+	}
+	return true
+}
+
 func (tl *TimeLimiter) SetLastTimeToNow() {
 	tl.LastTime = time.Now()
 }

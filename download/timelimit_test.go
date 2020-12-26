@@ -16,4 +16,7 @@ func TestTimeLimiter(t *testing.T) {
 	tl.SetLastTimeToNow()
 	tl.WaitAtLeastNIntervalAfterLastTime(2)
 	t.Log(time.Now())
+	if tl.IsOverNIntervalAfterLastTime(2) != true {
+		t.Error("tl.IsOverNIntervalAfterLastTime(2) != true")
+	}
 }
