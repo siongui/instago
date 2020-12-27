@@ -67,7 +67,7 @@ func (m *IGDownloadManager) TwoAccountDownloadStoryForever(interval1 int, interv
 	cPrivateUser := make(chan TrayInfo, 300)
 
 	go m.GetCleanAccountManager().TrayDownloader(cPublicUser, NewTimeLimiter(interval2), true, verbose)
-	go m.PrivateTrayDownloaderViaReelMediaAPI(cPublicUser, cPrivateUser, NewTimeLimiter(interval3), verbose)
+	go m.TrayDownloader2ChanPrivate(cPublicUser, cPrivateUser, NewTimeLimiter(interval3), true, verbose)
 
 	for {
 		err := m.AccessReelsTrayOnce2Chan(cPublicUser, cPrivateUser, ignoreMuted, verbose)
@@ -78,6 +78,66 @@ func (m *IGDownloadManager) TwoAccountDownloadStoryForever(interval1 int, interv
 	}
 }
 
+func (m *IGDownloadManager) TrayDownloader2ChanPrivate(cPublicUser, cPrivateUser chan TrayInfo, tl *TimeLimiter, ignorePrivate, verbose bool) {
+	maxReelsMediaIds := 20
+	queue := []TrayInfo{}
+	for {
+		select {
+		case ti := <-cPrivateUser:
+			// append to queue if not exist
+			id := ti.Id
+			username := ti.Username
+			if IsTrayInfoInQueue(queue, ti) {
+				if verbose {
+					PrintUsernameIdMsg(username, id, "exist. ignore.", "len(cPrivateUser):", len(cPrivateUser), "len(queue):", len(queue))
+				}
+			} else {
+				queue = append(queue, ti)
+				if verbose {
+					PrintUsernameIdMsg(username, id, "appended.", "len(cPrivateUser):", len(cPrivateUser), "len(queue):", len(queue))
+				}
+			}
+		default:
+			tis := []TrayInfo{}
+			for len(queue) > 0 {
+				ti := queue[0]
+				queue = queue[1:]
+
+				// can remove this "if" because cPrivateUser consists of only private user
+				if ignorePrivate && ti.IsPrivate {
+					continue
+				}
+
+				tis = append(tis, ti)
+
+				if len(tis) == maxReelsMediaIds {
+					break
+				}
+			}
+
+			// delay download to reduce API access
+			if len(tis) < maxReelsMediaIds {
+				if len(tis) > 0 && tl.IsOverNIntervalAfterLastTime(2) {
+					m.DownloadTrayInfos(tis, cPublicUser, tl, ignorePrivate, verbose)
+				} else {
+					queue = append(queue, tis...)
+				}
+			} else {
+				m.DownloadTrayInfos(tis, cPublicUser, tl, ignorePrivate, verbose)
+			}
+
+			restInterval := 1
+			if verbose {
+				log.Println("current queue length: ", len(queue))
+				PrintMsgSleep(restInterval, "TrayDownloader2ChanPrivate: ")
+			} else {
+				SleepSecond(restInterval)
+			}
+		}
+	}
+}
+
+// use of ReelMedia API may cause IG to detect phishing?
 func (m *IGDownloadManager) PrivateTrayDownloaderViaReelMediaAPI(cPublicUser, cPrivateUser chan TrayInfo, tl *TimeLimiter, verbose bool) {
 	//maxReelsMediaIds := 20
 	queue := []TrayInfo{}
