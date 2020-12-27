@@ -78,6 +78,8 @@ func (m *IGDownloadManager) downloadUserReelMediaLayer(id string, layer, interva
 	return
 }
 
+// DownloadUserReelMediaLayer downloads reel mentions in the stories as well.
+// Parameter layer 1 is actually the same as DownloadUserReelMedia.
 func (m *IGDownloadManager) DownloadUserReelMediaLayer(id string, layer, interval int64) (err error) {
 	isdone := make(map[string]string)
 	tl := NewTimeLimiter(interval)

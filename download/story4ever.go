@@ -199,11 +199,9 @@ func (m *IGDownloadManager) TrayDownloader(c chan TrayInfo, tl *TimeLimiter, ign
 
 			restInterval := 1
 			if verbose {
-				log.Println("current queue length: ", len(queue))
-				PrintMsgSleep(restInterval, "TrayDownloader: ")
-			} else {
-				SleepSecond(restInterval)
+				log.Println("TrayDownloader: current queue length is ", len(queue))
 			}
+			SleepSecond(restInterval)
 		}
 	}
 }
@@ -270,6 +268,11 @@ func (m *IGDownloadManager) AccessReelsTrayOnce(c chan TrayInfo, ignoreMuted, ve
 	return
 }
 
+// DownloadStoryForever downloads reels tray periodically. interval1 is the
+// interval for access to reels tray API. interval2 is the interval for fetching
+// user stories. ignoreMute will ignore stories of muted users if true. verbose
+// will print more info if true. If not sure, try (90, 60, true, true). If http
+// 429 happens, try to use longer interval.
 func (m *IGDownloadManager) DownloadStoryForever(interval1 int, interval2 int64, ignoreMuted, verbose bool) {
 	// usually there are at most 150 trays in reels_tray.
 	// double the buffer to 300. 160 or 200 may be ok as well.

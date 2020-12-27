@@ -55,6 +55,13 @@ func (m *IGDownloadManager) AccessReelsTrayOnce2Chan(cPublicUser, cPrivateUser c
 	return
 }
 
+// TwoAccountDownloadStoryForever downloads reels tray using two account.
+// interval1 is the interval for periodically accessing reels tray. interval2
+// is the interval for fetching user story via second account. interval3 is the
+// interval for fetching user story via main account. ignoreMuted will ignore
+// fetching stories of muted users if true. verbose will print more info if set
+// to true. If not sure, try (90, 60, 60, true, true). If http 429 happens, try
+// to use longer interval.
 func (m *IGDownloadManager) TwoAccountDownloadStoryForever(interval1 int, interval2, interval3 int64, ignoreMuted, verbose bool) {
 	if !m.IsCleanAccountSet() {
 		fmt.Println("clean account not set. exit")
@@ -129,11 +136,9 @@ func (m *IGDownloadManager) TrayDownloader2ChanPrivate(cPublicUser, cPrivateUser
 
 			restInterval := 1
 			if verbose {
-				log.Println("current queue length: ", len(queue))
-				PrintMsgSleep(restInterval, "TrayDownloader2ChanPrivate: ")
-			} else {
-				SleepSecond(restInterval)
+				log.Println("TrayDownloader2ChanPrivate: current queue length is ", len(queue))
 			}
+			SleepSecond(restInterval)
 		}
 	}
 }
