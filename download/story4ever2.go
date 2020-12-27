@@ -103,10 +103,11 @@ func (m *IGDownloadManager) TrayDownloader2ChanPrivate(cPublicUser, cPrivateUser
 				ti := queue[0]
 				queue = queue[1:]
 
-				// can remove this "if" because cPrivateUser consists of only private user
-				if ignorePrivate && ti.IsPrivate {
-					continue
-				}
+				/*
+					if ignorePrivate && ti.IsPrivate {
+						continue
+					}
+				*/
 
 				tis = append(tis, ti)
 
