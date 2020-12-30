@@ -8,29 +8,6 @@ import (
 	"github.com/siongui/instago"
 )
 
-// the max length of multipleIds allowed in the API call  is between 20 to 30.
-func (m *IGDownloadManager) DownloadStoryOfMultipleId(multipleIds []string) (err error) {
-	trays, err := m.GetMultipleReelsMedia(multipleIds)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	for _, tray := range trays {
-		for _, item := range tray.Items {
-			username := tray.User.GetUsername()
-			id := tray.User.GetUserId()
-			_, err = GetStoryItem(item, username)
-			if err != nil {
-				PrintUsernameIdMsg(username, id, err)
-				return
-			}
-		}
-	}
-
-	return
-}
-
 func (m *IGDownloadManager) DownloadTrayInfos(tis []TrayInfo, c chan TrayInfo, tl *TimeLimiter, ignorePrivate, verbose bool) {
 	downloadIds := []string{}
 	for _, ti := range tis {
