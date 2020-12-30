@@ -8,6 +8,9 @@ import (
 	"github.com/siongui/instago"
 )
 
+// GetStoryItem downloads the given story item. If the story item already exists
+// on local machine, story download will be ignored and isDownloaded is set to
+// false.
 func GetStoryItem(item instago.IGItem, username string) (isDownloaded bool, err error) {
 	return getStoryItem(item, username)
 }

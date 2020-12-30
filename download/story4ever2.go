@@ -29,7 +29,7 @@ func (m *IGDownloadManager) AccessReelsTrayOnce2Chan(cPublicUser, cPrivateUser c
 			continue
 		}
 
-		if IsLatestReelMediaDownloaded(username, tray.LatestReelMedia) {
+		if IsLatestReelMediaExist(username, tray.LatestReelMedia) {
 			if verbose {
 				PrintUsernameIdMsg(username, id, " all downloaded")
 			}

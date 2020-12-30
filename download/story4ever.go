@@ -3,29 +3,10 @@ package igdl
 import (
 	"fmt"
 	"log"
-	"os"
 	"strconv"
 
 	"github.com/siongui/instago"
 )
-
-func IsLatestReelMediaDownloaded(username string, latestReelMedia int64) bool {
-	utimes, err := GetReelMediaUnixTimesInUserStoryDir(username)
-	if err != nil {
-		if !os.IsNotExist(err) {
-			fmt.Println("In IsLatestReelMediaDownloaded", err)
-		}
-		return false
-	}
-
-	lrm := strconv.FormatInt(latestReelMedia, 10)
-	for _, utime := range utimes {
-		if lrm == utime {
-			return true
-		}
-	}
-	return false
-}
 
 // the max length of multipleIds allowed in the API call  is between 20 to 30.
 func (m *IGDownloadManager) DownloadStoryOfMultipleId(multipleIds []string) (err error) {
@@ -229,7 +210,7 @@ func (m *IGDownloadManager) AccessReelsTrayOnce(c chan TrayInfo, ignoreMuted, ve
 			continue
 		}
 
-		if IsLatestReelMediaDownloaded(username, tray.LatestReelMedia) {
+		if IsLatestReelMediaExist(username, tray.LatestReelMedia) {
 			if verbose {
 				PrintUsernameIdMsg(username, id, " all downloaded")
 			}
