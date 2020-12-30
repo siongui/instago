@@ -8,6 +8,37 @@ import (
 	"github.com/siongui/instago"
 )
 
+func ProcessTrayItem(c chan TrayInfo, item instago.IGItem, ti TrayInfo, ignorePrivateReelMention, verbose bool) (err error) {
+	isDownloaded, err := getStoryItem(item, ti.Username)
+	if err != nil {
+		return
+	}
+
+	if ti.Layer-1 < 1 {
+		return
+	}
+
+	if !isDownloaded {
+		return
+	}
+
+	for _, rm := range item.ReelMentions {
+		PrintReelMentionInfo(rm)
+		if rm.User.Pk == ti.Id {
+			continue
+		}
+		if rm.User.IsPrivate && ignorePrivateReelMention {
+			continue
+		}
+		c <- setupTrayInfo(rm.User.Pk, rm.GetUsername(), ti.Layer-1, rm.User.IsPrivate)
+		if verbose {
+			PrintUsernameIdMsg(rm.GetUsername(), rm.User.Pk, "sent to channel (reel mention)")
+		}
+	}
+
+	return
+}
+
 func (m *IGDownloadManager) DownloadTrayInfos(tis []TrayInfo, c chan TrayInfo, tl *TimeLimiter, ignorePrivate, verbose bool) {
 	downloadIds := []string{}
 	for _, ti := range tis {

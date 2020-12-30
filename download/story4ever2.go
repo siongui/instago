@@ -161,7 +161,7 @@ func (m *IGDownloadManager) TrayDownloader2ChanPrivate(cPublicUser, cPrivateUser
 	}
 }
 
-func (m *IGDownloadManager) TrayDownloaderViaStoryAPI(c chan TrayInfo, tl *TimeLimiter, ignorePrivate, verbose bool) {
+func (m *IGDownloadManager) TrayDownloaderViaStoryAPI(c chan TrayInfo, tl *TimeLimiter, ignorePrivateReelMention, verbose bool) {
 	queue := []TrayInfo{}
 	for {
 		select {
@@ -193,34 +193,10 @@ func (m *IGDownloadManager) TrayDownloaderViaStoryAPI(c chan TrayInfo, tl *TimeL
 					c <- ti
 				} else {
 					tray := ut.Reel
-					id := tray.User.GetUserId()
-					username := tray.User.GetUsername()
 					for _, item := range tray.GetItems() {
-						isDownloaded, err := getStoryItem(item, tray.GetUsername())
+						err = ProcessTrayItem(c, item, ti, ignorePrivateReelMention, verbose)
 						if err != nil {
-							PrintUsernameIdMsg(username, id, err)
-							continue
-						}
-
-						if ti.Layer-1 < 1 {
-							continue
-						}
-						if !isDownloaded {
-							continue
-						}
-
-						for _, rm := range item.ReelMentions {
-							PrintReelMentionInfo(rm)
-							if rm.User.Pk == tray.User.Pk {
-								continue
-							}
-							if rm.User.IsPrivate && ignorePrivate {
-								continue
-							}
-							c <- setupTrayInfo(rm.User.Pk, rm.GetUsername(), ti.Layer-1, rm.User.IsPrivate)
-							if verbose {
-								PrintUsernameIdMsg(rm.GetUsername(), rm.User.Pk, "sent to channel (reel mention)")
-							}
+							PrintUsernameIdMsg(ti.Username, ti.Id, err)
 						}
 					}
 				}
