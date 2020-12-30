@@ -194,7 +194,7 @@ func (m *IGDownloadManager) TrayDownloaderViaStoryAPI(c chan TrayInfo, tl *TimeL
 				} else {
 					tray := ut.Reel
 					for _, item := range tray.GetItems() {
-						err = ProcessTrayItem(c, item, ti, ignorePrivateReelMention, verbose)
+						err = ProcessTrayItem(c, item, ti, true, ignorePrivateReelMention, verbose)
 						if err != nil {
 							PrintUsernameIdMsg(ti.Username, ti.Id, err)
 						}

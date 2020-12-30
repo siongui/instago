@@ -8,7 +8,7 @@ import (
 	"github.com/siongui/instago"
 )
 
-func ProcessTrayItem(c chan TrayInfo, item instago.IGItem, ti TrayInfo, ignorePrivateReelMention, verbose bool) (err error) {
+func ProcessTrayItem(c chan TrayInfo, item instago.IGItem, ti TrayInfo, ignoreReelMentionsIfStoryItemExist, ignorePrivateReelMention, verbose bool) (err error) {
 	isDownloaded, err := getStoryItem(item, ti.Username)
 	if err != nil {
 		return
@@ -18,7 +18,7 @@ func ProcessTrayItem(c chan TrayInfo, item instago.IGItem, ti TrayInfo, ignorePr
 		return
 	}
 
-	if !isDownloaded {
+	if !isDownloaded && ignoreReelMentionsIfStoryItemExist {
 		return
 	}
 
@@ -39,7 +39,7 @@ func ProcessTrayItem(c chan TrayInfo, item instago.IGItem, ti TrayInfo, ignorePr
 	return
 }
 
-func (m *IGDownloadManager) DownloadTrayInfos(tis []TrayInfo, c chan TrayInfo, tl *TimeLimiter, ignorePrivate, verbose bool) {
+func (m *IGDownloadManager) DownloadTrayInfos(tis []TrayInfo, c chan TrayInfo, tl *TimeLimiter, ignorePrivateReelMention, verbose bool) {
 	downloadIds := []string{}
 	for _, ti := range tis {
 		id := strconv.FormatInt(ti.Id, 10)
@@ -75,28 +75,10 @@ func (m *IGDownloadManager) DownloadTrayInfos(tis []TrayInfo, c chan TrayInfo, t
 			continue
 		}
 
-		username := tray.User.GetUsername()
-		id := tray.User.GetUserId()
 		for _, item := range tray.Items {
-			_, err = getStoryItem(item, username)
+			err = ProcessTrayItem(c, item, ti, false, ignorePrivateReelMention, verbose)
 			if err != nil {
-				PrintUsernameIdMsg(username, id, err)
-				return
-			}
-
-			if ti.Layer-1 < 1 {
-				continue
-			}
-			for _, rm := range item.ReelMentions {
-				PrintReelMentionInfo(rm)
-				if ignorePrivate && rm.User.IsPrivate {
-					continue
-				}
-
-				c <- setupTrayInfo(rm.User.Pk, rm.GetUsername(), ti.Layer-1, rm.User.IsPrivate)
-				if verbose {
-					PrintUsernameIdMsg(rm.GetUsername(), rm.User.Pk, "sent to channel (reel mention)")
-				}
+				PrintUsernameIdMsg(ti.Username, ti.Id, err)
 			}
 		}
 	}
