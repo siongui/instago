@@ -205,7 +205,7 @@ func (m *IGDownloadManager) TrayDownloaderViaStoryAPI(c chan TrayInfo, tl *TimeL
 						if ti.Layer-1 < 1 {
 							continue
 						}
-						if isDownloaded {
+						if !isDownloaded {
 							continue
 						}
 
