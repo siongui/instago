@@ -31,43 +31,6 @@ func (m *IGDownloadManager) DownloadStoryOfMultipleId(multipleIds []string) (err
 	return
 }
 
-type TrayInfo struct {
-	Id        int64
-	Username  string
-	Layer     int64
-	IsPrivate bool
-	//Tray     instago.IGReelTray
-}
-
-func setupTrayInfo(id int64, username string, layer int64, isPrivate bool) (ti TrayInfo) {
-	return TrayInfo{
-		Id:        id,
-		Username:  username,
-		Layer:     layer,
-		IsPrivate: isPrivate,
-	}
-}
-
-func IsTrayInfoInQueue(queue []TrayInfo, ti TrayInfo) bool {
-	for _, t := range queue {
-		if t.Id == ti.Id {
-			return true
-		}
-	}
-	return false
-}
-
-func GetTrayInfoFromQueue(queue []TrayInfo, id int64) (ti TrayInfo, ok bool) {
-	for _, t := range queue {
-		if t.Id == id {
-			ti = t
-			ok = true
-			return
-		}
-	}
-	return
-}
-
 func (m *IGDownloadManager) DownloadTrayInfos(tis []TrayInfo, c chan TrayInfo, tl *TimeLimiter, ignorePrivate, verbose bool) {
 	downloadIds := []string{}
 	for _, ti := range tis {
