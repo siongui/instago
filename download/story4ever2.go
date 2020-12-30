@@ -196,7 +196,7 @@ func (m *IGDownloadManager) TrayDownloaderViaStoryAPI(c chan TrayInfo, tl *TimeL
 					id := tray.User.GetUserId()
 					username := tray.User.GetUsername()
 					for _, item := range tray.GetItems() {
-						_, err := getStoryItem(item, tray.GetUsername())
+						isDownloaded, err := getStoryItem(item, tray.GetUsername())
 						if err != nil {
 							PrintUsernameIdMsg(username, id, err)
 							continue
@@ -205,8 +205,15 @@ func (m *IGDownloadManager) TrayDownloaderViaStoryAPI(c chan TrayInfo, tl *TimeL
 						if ti.Layer-1 < 1 {
 							continue
 						}
+						if isDownloaded {
+							continue
+						}
+
 						for _, rm := range item.ReelMentions {
 							PrintReelMentionInfo(rm)
+							if rm.User.Pk == tray.User.Pk {
+								continue
+							}
 							if rm.User.IsPrivate && ignorePrivate {
 								continue
 							}
