@@ -39,6 +39,54 @@ func ProcessTrayItem(c chan TrayInfo, item instago.IGItem, ti TrayInfo, ignoreRe
 	return
 }
 
+func ProcessTray(c chan TrayInfo, tray instago.IGReelTray, layer int64, ignoreMuted, verbose bool) {
+	username := tray.GetUsername()
+	id := tray.Id
+	//items := tray.GetItems()
+
+	if ignoreMuted && tray.Muted {
+		if verbose {
+			PrintUsernameIdMsg(username, id, " is muted && ignoreMuted set. no download")
+		}
+		return
+	}
+
+	if IsLatestReelMediaExist(username, tray.LatestReelMedia) {
+		if verbose {
+			PrintUsernameIdMsg(username, id, " all downloaded")
+		}
+		return
+	}
+
+	if tray.HasBestiesMedia {
+		PrintUsernameIdMsg(username, id, " has close friend (besties) story item(s)")
+	}
+
+	if verbose {
+		PrintUsernameIdMsg(username, id, " has undownloaded items")
+	}
+
+	// layer = 2: also download reel mentions in story item
+	c <- setupTrayInfo(id, username, layer, tray.User.IsPrivate)
+	/*
+		items := tray.GetItems()
+		if len(items) > 0 {
+			for _, item := range items {
+				_, err = GetStoryItem(item, username)
+				if err != nil {
+					PrintUsernameIdMsg(username, id, err)
+				}
+			}
+		} else {
+			multipleIds = append(multipleIds, strconv.FormatInt(id, 10))
+		}
+
+		if len(multipleIds) > maxReelsMediaIds {
+			break
+		}
+	*/
+}
+
 func (m *IGDownloadManager) DownloadTrayInfos(tis []TrayInfo, c chan TrayInfo, tl *TimeLimiter, ignorePrivateReelMention, verbose bool) {
 	downloadIds := []string{}
 	for _, ti := range tis {
@@ -151,52 +199,8 @@ func (m *IGDownloadManager) AccessReelsTrayOnce(c chan TrayInfo, ignoreMuted, ve
 
 	for index, tray := range rt.Trays {
 		fmt.Print(index, ":")
-
-		username := tray.GetUsername()
-		id := tray.Id
-		//items := tray.GetItems()
-
-		if ignoreMuted && tray.Muted {
-			if verbose {
-				PrintUsernameIdMsg(username, id, " is muted && ignoreMuted set. no download")
-			}
-			continue
-		}
-
-		if IsLatestReelMediaExist(username, tray.LatestReelMedia) {
-			if verbose {
-				PrintUsernameIdMsg(username, id, " all downloaded")
-			}
-			continue
-		}
-
-		if tray.HasBestiesMedia {
-			PrintUsernameIdMsg(username, id, " has close friend (besties) story item(s)")
-		}
-
-		if verbose {
-			PrintUsernameIdMsg(username, id, " has undownloaded items")
-		}
-
-		// 2: also download reel mentions in story item
-		c <- setupTrayInfo(id, username, 2, tray.User.IsPrivate)
-		/*
-			items := tray.GetItems()
-			if len(items) > 0 {
-				for _, item := range items {
-					_, err = GetStoryItem(item, username)
-					if err != nil {
-						PrintUsernameIdMsg(username, id, err)
-					}
-				}
-			} else {
-				multipleIds = append(multipleIds, strconv.FormatInt(id, 10))
-			}
-
-			if len(multipleIds) > maxReelsMediaIds {
-				break
-			}
-		*/
+		// layer = 2: also download reel mentions in story item
+		ProcessTray(c, tray, 2, ignoreMuted, verbose)
 	}
 
 	return

@@ -18,37 +18,11 @@ func (m *IGDownloadManager) AccessReelsTrayOnce2Chan(cPublicUser, cPrivateUser c
 	for index, tray := range rt.Trays {
 		fmt.Print(index, ":")
 
-		username := tray.GetUsername()
-		id := tray.Id
-		//items := tray.GetItems()
-
-		if ignoreMuted && tray.Muted {
-			if verbose {
-				PrintUsernameIdMsg(username, id, " is muted && ignoreMuted set. no download")
-			}
-			continue
-		}
-
-		if IsLatestReelMediaExist(username, tray.LatestReelMedia) {
-			if verbose {
-				PrintUsernameIdMsg(username, id, " all downloaded")
-			}
-			continue
-		}
-
-		if tray.HasBestiesMedia {
-			PrintUsernameIdMsg(username, id, " has close friend (besties) story item(s)")
-		}
-
-		if verbose {
-			PrintUsernameIdMsg(username, id, " has undownloaded items")
-		}
-
 		// 2: also download reel mentions in story item
 		if tray.User.IsPrivate {
-			cPrivateUser <- setupTrayInfo(id, username, 2, tray.User.IsPrivate)
+			ProcessTray(cPrivateUser, tray, 2, ignoreMuted, verbose)
 		} else {
-			cPublicUser <- setupTrayInfo(id, username, 2, tray.User.IsPrivate)
+			ProcessTray(cPublicUser, tray, 2, ignoreMuted, verbose)
 		}
 	}
 
