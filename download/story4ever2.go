@@ -118,12 +118,12 @@ func (m *IGDownloadManager) TrayDownloader2ChanPrivate(cPublicUser, cPrivateUser
 			// delay download to reduce API access
 			if len(tis) < maxReelsMediaIds {
 				if len(tis) > 0 && tl.IsOverNIntervalAfterLastTime(2) {
-					m.DownloadTrayInfos(tis, cPublicUser, tl, ignorePrivate, verbose)
+					m.DownloadTrayInfos(tis, cPublicUser, tl, false, ignorePrivate, verbose)
 				} else {
 					queue = append(queue, tis...)
 				}
 			} else {
-				m.DownloadTrayInfos(tis, cPublicUser, tl, ignorePrivate, verbose)
+				m.DownloadTrayInfos(tis, cPublicUser, tl, false, ignorePrivate, verbose)
 			}
 
 			restInterval := 1

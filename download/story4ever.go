@@ -87,7 +87,7 @@ func ProcessTray(c chan TrayInfo, tray instago.IGReelTray, layer int64, ignoreMu
 	*/
 }
 
-func (m *IGDownloadManager) DownloadTrayInfos(tis []TrayInfo, c chan TrayInfo, tl *TimeLimiter, ignorePrivateReelMention, verbose bool) {
+func (m *IGDownloadManager) DownloadTrayInfos(tis []TrayInfo, c chan TrayInfo, tl *TimeLimiter, ignoreReelMentionsIfStoryItemExist, ignorePrivateReelMention, verbose bool) {
 	downloadIds := []string{}
 	for _, ti := range tis {
 		id := strconv.FormatInt(ti.Id, 10)
@@ -124,7 +124,7 @@ func (m *IGDownloadManager) DownloadTrayInfos(tis []TrayInfo, c chan TrayInfo, t
 		}
 
 		for _, item := range tray.Items {
-			err = ProcessTrayItem(c, item, ti, false, ignorePrivateReelMention, verbose)
+			err = ProcessTrayItem(c, item, ti, ignoreReelMentionsIfStoryItemExist, ignorePrivateReelMention, verbose)
 			if err != nil {
 				PrintUsernameIdMsg(ti.Username, ti.Id, err)
 			}
@@ -171,12 +171,12 @@ func (m *IGDownloadManager) TrayDownloader(c chan TrayInfo, tl *TimeLimiter, ign
 			// delay download to reduce API access
 			if len(tis) < maxReelsMediaIds {
 				if len(tis) > 0 && tl.IsOverNIntervalAfterLastTime(2) {
-					m.DownloadTrayInfos(tis, c, tl, ignorePrivate, verbose)
+					m.DownloadTrayInfos(tis, c, tl, false, ignorePrivate, verbose)
 				} else {
 					queue = append(queue, tis...)
 				}
 			} else {
-				m.DownloadTrayInfos(tis, c, tl, ignorePrivate, verbose)
+				m.DownloadTrayInfos(tis, c, tl, false, ignorePrivate, verbose)
 			}
 
 			restInterval := 1
