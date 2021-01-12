@@ -55,6 +55,9 @@ func getStoryItem(item instago.IGItem, username string) (isDownloaded bool, err 
 	if _, err := os.Stat(filepath); os.IsNotExist(err) {
 		// file not exists
 		printDownloadInfo(&item, url, filepath)
+		for _, rm := range item.ReelMentions {
+			PrintReelMentionInfo(rm)
+		}
 		err = Wget(url, filepath)
 		if err == nil {
 			isDownloaded = true
