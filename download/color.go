@@ -120,6 +120,7 @@ func PrintTrayInfo(ti TrayInfo) {
 
 func PrintTrayInfoMsg(ti TrayInfo, msg ...interface{}) {
 	PrintTrayInfo(ti)
+	fmt.Print(" , ")
 	fmt.Println(msg...)
 }
 
