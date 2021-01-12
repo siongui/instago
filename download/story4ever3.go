@@ -11,16 +11,14 @@ func (m *IGDownloadManager) TrayDownloader2(c chan TrayInfo, tl *TimeLimiter, ve
 		select {
 		case ti := <-c:
 			// append to queue if not exist
-			id := ti.Id
-			username := ti.Username
 			if IsTrayInfoInQueue(queue, ti) {
 				if verbose {
-					PrintUsernameIdMsg(username, id, "exist. ignore.", "len(channel):", len(c), "len(queue):", len(queue))
+					PrintTrayInfoMsg(ti, "exist. ignore.", "len(channel):", len(c), "len(queue):", len(queue))
 				}
 			} else {
 				queue = append(queue, ti)
 				if verbose {
-					PrintUsernameIdMsg(username, id, "appended.", "len(channel):", len(c), "len(queue):", len(queue))
+					PrintTrayInfoMsg(ti, "appended.", "len(channel):", len(c), "len(queue):", len(queue))
 				}
 			}
 		default:

@@ -84,16 +84,14 @@ func (m *IGDownloadManager) TrayDownloader2ChanPrivate(cPublicUser, cPrivateUser
 		select {
 		case ti := <-cPrivateUser:
 			// append to queue if not exist
-			id := ti.Id
-			username := ti.Username
 			if IsTrayInfoInQueue(queue, ti) {
 				if verbose {
-					PrintUsernameIdMsg(username, id, "exist. ignore.", "len(cPrivateUser):", len(cPrivateUser), "len(queue):", len(queue))
+					PrintTrayInfoMsg(ti, "exist. ignore.", "len(cPrivateUser):", len(cPrivateUser), "len(queue):", len(queue))
 				}
 			} else {
 				queue = append(queue, ti)
 				if verbose {
-					PrintUsernameIdMsg(username, id, "appended.", "len(cPrivateUser):", len(cPrivateUser), "len(queue):", len(queue))
+					PrintTrayInfoMsg(ti, "appended.", "len(cPrivateUser):", len(cPrivateUser), "len(queue):", len(queue))
 				}
 			}
 		default:
@@ -141,16 +139,14 @@ func (m *IGDownloadManager) TrayDownloaderViaStoryAPI(c chan TrayInfo, tl *TimeL
 		select {
 		case ti := <-c:
 			// append to queue if not exist
-			id := ti.Id
-			username := ti.Username
 			if IsTrayInfoInQueue(queue, ti) {
 				if verbose {
-					PrintUsernameIdMsg(username, id, "exist. ignore.", "len(c):", len(c), "len(queue):", len(queue))
+					PrintTrayInfoMsg(ti, "exist. ignore.", "len(c):", len(c), "len(queue):", len(queue))
 				}
 			} else {
 				queue = append(queue, ti)
 				if verbose {
-					PrintUsernameIdMsg(username, id, "appended.", "len(c):", len(c), "len(queue):", len(queue))
+					PrintTrayInfoMsg(ti, "appended.", "len(c):", len(c), "len(queue):", len(queue))
 				}
 			}
 		default:
@@ -193,16 +189,14 @@ func (m *IGDownloadManager) PrivateTrayDownloaderViaReelMediaAPI(cPublicUser, cP
 		select {
 		case ti := <-cPrivateUser:
 			// append to queue if not exist
-			id := ti.Id
-			username := ti.Username
 			if IsTrayInfoInQueue(queue, ti) {
 				if verbose {
-					PrintUsernameIdMsg(username, id, "exist. ignore.", "len(cPrivateUser):", len(cPrivateUser), "len(queue):", len(queue))
+					PrintTrayInfoMsg(ti, "exist. ignore.", "len(cPrivateUser):", len(cPrivateUser), "len(queue):", len(queue))
 				}
 			} else {
 				queue = append(queue, ti)
 				if verbose {
-					PrintUsernameIdMsg(username, id, "appended.", "len(cPrivateUser):", len(cPrivateUser), "len(queue):", len(queue))
+					PrintTrayInfoMsg(ti, "appended.", "len(cPrivateUser):", len(cPrivateUser), "len(queue):", len(queue))
 				}
 			}
 		default:

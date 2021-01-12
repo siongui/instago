@@ -108,6 +108,21 @@ func PrintReelMentionInfo(rm instago.ItemReelMention) {
 	}
 }
 
+func PrintTrayInfo(ti TrayInfo) {
+	UsernameIdColorPrint(ti.Username, ti.Id)
+	fmt.Print(" , ")
+	if ti.IsPrivate {
+		RedPrintln("Private")
+	} else {
+		RedPrintln("Public")
+	}
+}
+
+func PrintTrayInfoMsg(ti TrayInfo, msg ...interface{}) {
+	PrintTrayInfo(ti)
+	fmt.Println(msg...)
+}
+
 func PrintUserComment(user instago.User) {
 	fmt.Println("// https://www.instagram.com/" + user.GetUsername() + "/")
 	fmt.Println("//" + user.GetUserId() + "-" + user.GetUsername())
