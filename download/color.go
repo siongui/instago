@@ -112,9 +112,9 @@ func PrintTrayInfo(ti TrayInfo) {
 	UsernameIdColorPrint(ti.Username, ti.Id)
 	fmt.Print(" , ")
 	if ti.IsPrivate {
-		RedPrintln("Private")
+		RedPrint("Private")
 	} else {
-		RedPrintln("Public")
+		RedPrint("Public")
 	}
 }
 
