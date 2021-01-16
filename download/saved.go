@@ -3,6 +3,7 @@ package igdl
 import (
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/siongui/instago"
 )
@@ -176,7 +177,7 @@ func (m *IGDownloadManager) DownloadDependOnCollectionName(name2layer, nameAllpo
 				if _, isDone := map2layer[iddone]; !isDone {
 					log.Println(item.GetUsername(), "download 2layer", iddone)
 					// TODO: smart download 2layer
-					go m.DownloadUserStoryLayer(item.User.Pk, 2)
+					go m.DownloadUserStoryLayer(strconv.FormatInt(item.User.Pk, 10), 2, 12)
 					map2layer[iddone] = true
 				}
 			}

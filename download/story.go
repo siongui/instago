@@ -2,7 +2,6 @@ package igdl
 
 import (
 	"log"
-	"strconv"
 
 	"github.com/siongui/instago"
 )
@@ -40,14 +39,14 @@ func (m *IGDownloadManager) DownloadUserStoryByName(username string) (err error)
 	return m.downloadUserStory(id)
 }
 
-func (m *IGDownloadManager) getStoryItemLayer(item instago.IGItem, username string, layer int, isdone map[string]string, tl *TimeLimiter) {
+func (m *IGDownloadManager) getStoryItemLayer(item instago.IGItem, username string, layer int64, isdone map[string]string, tl *TimeLimiter) {
 	getStoryItem(item, username)
 	for _, reelmention := range item.ReelMentions {
 		m.downloadUserStoryLayer(reelmention, layer, isdone, tl)
 	}
 }
 
-func (m *IGDownloadManager) downloadUserStoryLayer(user instago.User, layer int, isdone map[string]string, tl *TimeLimiter) (err error) {
+func (m *IGDownloadManager) downloadUserStoryLayer(user instago.User, layer int64, isdone map[string]string, tl *TimeLimiter) (err error) {
 	if layer < 1 {
 		return
 	}
@@ -80,24 +79,24 @@ func (m *IGDownloadManager) downloadUserStoryLayer(user instago.User, layer int,
 	return DownloadPostLiveItem(ut.PostLiveItem)
 }
 
-func (m *IGDownloadManager) DownloadUserStoryByNameLayer(username string, layer int) (err error) {
+func (m *IGDownloadManager) DownloadUserStoryByNameLayer(username string, layer, interval int64) (err error) {
 	user, err := m.UsernameToUser(username)
 	if err != nil {
 		return
 	}
 
 	isdone := make(map[string]string)
-	tl := NewTimeLimiter(12)
+	tl := NewTimeLimiter(interval)
 	return m.downloadUserStoryLayer(user, layer, isdone, tl)
 }
 
-func (m *IGDownloadManager) DownloadUserStoryLayer(userId int64, layer int) (err error) {
-	user, err := m.GetUserInfoEndPoint(strconv.FormatInt(userId, 10))
+func (m *IGDownloadManager) DownloadUserStoryLayer(id string, layer, interval int64) (err error) {
+	user, err := m.GetUserInfoEndPoint(id)
 	if err != nil {
 		return
 	}
 
 	isdone := make(map[string]string)
-	tl := NewTimeLimiter(12)
+	tl := NewTimeLimiter(interval)
 	return m.downloadUserStoryLayer(user, layer, isdone, tl)
 }
