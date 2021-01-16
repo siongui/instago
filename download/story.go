@@ -30,9 +30,7 @@ func (m *IGDownloadManager) DownloadUserStory(id string) (err error) {
 	return m.downloadUserStory(id)
 }
 
-// DownloadUserStoryPostLiveByName is the same as DownloadUserStoryPostlive,
-// except username is given as argument.
-func (m *IGDownloadManager) DownloadUserStoryPostliveByName(username string) (err error) {
+func (m *IGDownloadManager) DownloadUserStoryByName(username string) (err error) {
 	id, err := m.UsernameToId(username)
 	if err != nil {
 		log.Println(err)

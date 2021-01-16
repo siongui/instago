@@ -26,13 +26,13 @@ func ExampleDownloadUserStory(t *testing.T) {
 	}
 }
 
-func ExampleDownloadUserStoryPostliveByName(t *testing.T) {
+func ExampleDownloadUserStoryByName(t *testing.T) {
 	mgr, err := NewInstagramDownloadManager("auth.json")
 	if err != nil {
 		panic(err)
 	}
 
-	err = mgr.DownloadUserStoryPostliveByName("instagram")
+	err = mgr.DownloadUserStoryByName("instagram")
 	if err != nil {
 		panic(err)
 	}

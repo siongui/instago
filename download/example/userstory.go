@@ -21,4 +21,7 @@ func main() {
 	// Given user id, the following method will download unexpired stories
 	// of the user.
 	mgr.DownloadUserStory(*id)
+
+	// mgr.DownloadUserStoryByName can also be used to download user
+	// unexpired stories by username.
 }
