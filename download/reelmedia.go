@@ -41,15 +41,15 @@ func (m *IGDownloadManager) DownloadUserReelMedia(id string) (err error) {
 	return m.downloadUserReelMedia(id)
 }
 
-func (m *IGDownloadManager) getReelMediaItemLayer(item instago.IGItem, username string, layer, interval int64, isdone map[string]string, tl *TimeLimiter) {
+func (m *IGDownloadManager) getReelMediaItemLayer(item instago.IGItem, username string, layer int64, isdone map[string]string, tl *TimeLimiter) {
 	getStoryItem(item, username)
 	for _, reelmention := range item.ReelMentions {
 		PrintReelMentionInfo(reelmention)
-		m.downloadUserReelMediaLayer(reelmention.GetUserId(), layer, interval, isdone, tl)
+		m.downloadUserReelMediaLayer(reelmention.GetUserId(), layer, isdone, tl)
 	}
 }
 
-func (m *IGDownloadManager) downloadUserReelMediaLayer(id string, layer, interval int64, isdone map[string]string, tl *TimeLimiter) (err error) {
+func (m *IGDownloadManager) downloadUserReelMediaLayer(id string, layer int64, isdone map[string]string, tl *TimeLimiter) (err error) {
 	if layer < 1 {
 		return
 	}
@@ -73,7 +73,7 @@ func (m *IGDownloadManager) downloadUserReelMediaLayer(id string, layer, interva
 	log.Println("fetch story of", tray.GetUsername(), id, "success")
 
 	for _, item := range tray.GetItems() {
-		m.getReelMediaItemLayer(item, tray.GetUsername(), layer, interval, isdone, tl)
+		m.getReelMediaItemLayer(item, tray.GetUsername(), layer, isdone, tl)
 	}
 	return
 }
@@ -83,5 +83,5 @@ func (m *IGDownloadManager) downloadUserReelMediaLayer(id string, layer, interva
 func (m *IGDownloadManager) DownloadUserReelMediaLayer(id string, layer, interval int64) (err error) {
 	isdone := make(map[string]string)
 	tl := NewTimeLimiter(interval)
-	return m.downloadUserReelMediaLayer(id, layer, interval, isdone, tl)
+	return m.downloadUserReelMediaLayer(id, layer, isdone, tl)
 }
