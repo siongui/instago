@@ -7,7 +7,7 @@ import (
 	"github.com/siongui/instago"
 )
 
-func (m *IGDownloadManager) downloadUserStoryPostlive(id string) (err error) {
+func (m *IGDownloadManager) downloadUserStory(id string) (err error) {
 	ut, err := m.GetUserStory(id)
 	if err != nil {
 		log.Println(err)
@@ -21,13 +21,15 @@ func (m *IGDownloadManager) downloadUserStoryPostlive(id string) (err error) {
 			//return
 		}
 	}
+
+	// FIXME: it seems PostLiveItem does not exist anymore? remove it?
 	return DownloadPostLiveItem(ut.PostLiveItem)
 }
 
 // DownloadUserStoryPostLive downloads unexpired stories (last 24 hours) and
 // postlive of the given user id.
 func (m *IGDownloadManager) DownloadUserStoryPostlive(userId int64) (err error) {
-	return m.downloadUserStoryPostlive(strconv.FormatInt(userId, 10))
+	return m.downloadUserStory(strconv.FormatInt(userId, 10))
 }
 
 // DownloadUserStoryPostLiveByName is the same as DownloadUserStoryPostlive,
@@ -39,7 +41,7 @@ func (m *IGDownloadManager) DownloadUserStoryPostliveByName(username string) (er
 		return
 	}
 
-	return m.downloadUserStoryPostlive(id)
+	return m.downloadUserStory(id)
 }
 
 func (m *IGDownloadManager) getStoryItemLayer(item instago.IGItem, username string, layer int, isdone map[string]string) {

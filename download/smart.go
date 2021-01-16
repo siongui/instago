@@ -104,10 +104,10 @@ func (m *IGDownloadManager) SmartDownloadStory(user instago.User) (err error) {
 	// in case main account is blocked by some users, we use clean account
 	// (account not blocked) to download public user account
 	if m.IsCleanAccountSet() && user.IsPublic() {
-		return m.GetCleanAccountManager().downloadUserStoryPostlive(user.GetUserId())
+		return m.GetCleanAccountManager().downloadUserStory(user.GetUserId())
 	}
 
-	return m.downloadUserStoryPostlive(user.GetUserId())
+	return m.downloadUserStory(user.GetUserId())
 }
 
 func (m *IGDownloadManager) SmartDownloadPost(item instago.IGItem) (isDownloaded bool, err error) {
