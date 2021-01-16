@@ -14,13 +14,13 @@ func ExampleDownloadUserStoryByNameLayer(t *testing.T) {
 	mgr.DownloadUserStoryByNameLayer("instagram", 2)
 }
 
-func ExampleDownloadUserStoryPostlive(t *testing.T) {
+func ExampleDownloadUserStory(t *testing.T) {
 	mgr, err := NewInstagramDownloadManager("auth.json")
 	if err != nil {
 		panic(err)
 	}
 
-	err = mgr.DownloadUserStoryPostlive(25025320)
+	err = mgr.DownloadUserStory("25025320")
 	if err != nil {
 		panic(err)
 	}

@@ -26,10 +26,8 @@ func (m *IGDownloadManager) downloadUserStory(id string) (err error) {
 	return DownloadPostLiveItem(ut.PostLiveItem)
 }
 
-// DownloadUserStoryPostLive downloads unexpired stories (last 24 hours) and
-// postlive of the given user id.
-func (m *IGDownloadManager) DownloadUserStoryPostlive(userId int64) (err error) {
-	return m.downloadUserStory(strconv.FormatInt(userId, 10))
+func (m *IGDownloadManager) DownloadUserStory(id string) (err error) {
+	return m.downloadUserStory(id)
 }
 
 // DownloadUserStoryPostLiveByName is the same as DownloadUserStoryPostlive,
