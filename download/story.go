@@ -40,15 +40,14 @@ func (m *IGDownloadManager) DownloadUserStoryByName(username string) (err error)
 	return m.downloadUserStory(id)
 }
 
-func (m *IGDownloadManager) getStoryItemLayer(item instago.IGItem, username string, layer int, isdone map[string]string) {
+func (m *IGDownloadManager) getStoryItemLayer(item instago.IGItem, username string, layer int, isdone map[string]string, tl *TimeLimiter) {
 	getStoryItem(item, username)
 	for _, reelmention := range item.ReelMentions {
-		//m.downloadUserStoryLayer(reelmention, layer, isdone)
-		m.downloadUserStoryPostliveLayer(reelmention, layer, isdone)
+		m.downloadUserStoryLayer(reelmention, layer, isdone, tl)
 	}
 }
 
-func (m *IGDownloadManager) downloadUserStoryPostliveLayer(user instago.User, layer int, isdone map[string]string) (err error) {
+func (m *IGDownloadManager) downloadUserStoryLayer(user instago.User, layer int, isdone map[string]string, tl *TimeLimiter) (err error) {
 	if layer < 1 {
 		return
 	}
@@ -63,7 +62,9 @@ func (m *IGDownloadManager) downloadUserStoryPostliveLayer(user instago.User, la
 		log.Println("fetching story of", user.GetUsername(), id)
 	}
 
+	tl.WaitAtLeastIntervalAfterLastTime()
 	ut, err := m.GetUserStory(id)
+	tl.SetLastTimeToNow()
 	if err != nil {
 		return
 	}
@@ -73,14 +74,12 @@ func (m *IGDownloadManager) downloadUserStoryPostliveLayer(user instago.User, la
 	log.Println("fetch story of", tray.GetUsername(), id, "success")
 
 	for _, item := range tray.GetItems() {
-		m.getStoryItemLayer(item, tray.GetUsername(), layer, isdone)
+		m.getStoryItemLayer(item, tray.GetUsername(), layer, isdone, tl)
 	}
 
 	return DownloadPostLiveItem(ut.PostLiveItem)
 }
 
-// DownloadUserStoryByNameLayer downloads unexpired stories (last 24 hours) of
-// the given user name, and also stories of reel mentions.
 func (m *IGDownloadManager) DownloadUserStoryByNameLayer(username string, layer int) (err error) {
 	user, err := m.UsernameToUser(username)
 	if err != nil {
@@ -88,11 +87,10 @@ func (m *IGDownloadManager) DownloadUserStoryByNameLayer(username string, layer 
 	}
 
 	isdone := make(map[string]string)
-	return m.downloadUserStoryPostliveLayer(user, layer, isdone)
+	tl := NewTimeLimiter(12)
+	return m.downloadUserStoryLayer(user, layer, isdone, tl)
 }
 
-// DownloadUserStoryLayer is the same as DownloadUserStoryByNameLayer, except
-// int64 id passed as argument.
 func (m *IGDownloadManager) DownloadUserStoryLayer(userId int64, layer int) (err error) {
 	user, err := m.GetUserInfoEndPoint(strconv.FormatInt(userId, 10))
 	if err != nil {
@@ -100,20 +98,6 @@ func (m *IGDownloadManager) DownloadUserStoryLayer(userId int64, layer int) (err
 	}
 
 	isdone := make(map[string]string)
-	return m.downloadUserStoryPostliveLayer(user, layer, isdone)
-}
-
-func (m *IGDownloadManager) DownloadUserStoryPostliveByNameLayerIfPublic(username string, layer int) (err error) {
-	user, err := m.UsernameToUser(username)
-	if err != nil {
-		return
-	}
-
-	if user.IsPublic() {
-		isdone := make(map[string]string)
-		// FIXME: if reel_mention is private, do not download
-		return m.downloadUserStoryPostliveLayer(user, layer, isdone)
-	}
-	PrintUserInfo(user)
-	return
+	tl := NewTimeLimiter(12)
+	return m.downloadUserStoryLayer(user, layer, isdone, tl)
 }
