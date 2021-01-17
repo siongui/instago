@@ -41,7 +41,7 @@ func (m *IGDownloadManager) TwoAccountDownloadStoryForeverSecondAccountViaStoryA
 	cPublicUser := make(chan TrayInfo, 300)
 	cPrivateUser := make(chan TrayInfo, 300)
 
-	go m.GetCleanAccountManager().TrayDownloaderViaStoryAPI(cPublicUser, NewTimeLimiter(interval2), true, verbose)
+	go m.GetCleanAccountManager().TrayDownloaderViaStoryAPI(cPublicUser, NewTimeLimiter(interval2), true, true, verbose)
 	go m.TrayDownloader2ChanPrivate(cPublicUser, cPrivateUser, NewTimeLimiter(interval3), true, verbose)
 
 	for {
@@ -109,7 +109,7 @@ func (m *IGDownloadManager) TrayDownloader2ChanPrivate(cPublicUser, cPrivateUser
 	}
 }
 
-func (m *IGDownloadManager) TrayDownloaderViaStoryAPI(c chan TrayInfo, tl *TimeLimiter, ignorePrivateReelMention, verbose bool) {
+func (m *IGDownloadManager) TrayDownloaderViaStoryAPI(c chan TrayInfo, tl *TimeLimiter, stackMode, ignorePrivateReelMention, verbose bool) {
 	queue := []TrayInfo{}
 	for {
 		select {
@@ -127,8 +127,14 @@ func (m *IGDownloadManager) TrayDownloaderViaStoryAPI(c chan TrayInfo, tl *TimeL
 			}
 		default:
 			if len(queue) > 0 {
-				ti := queue[0]
-				queue = queue[1:]
+				ti := TrayInfo{}
+				if stackMode {
+					ti = queue[len(queue)-1]
+					queue = queue[:len(queue)-1]
+				} else {
+					ti = queue[0]
+					queue = queue[1:]
+				}
 
 				// wait at least *interval* seconds until next private API access (prevent http 429)
 				tl.WaitAtLeastIntervalAfterLastTime()
