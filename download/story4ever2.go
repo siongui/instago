@@ -30,30 +30,6 @@ func (m *IGDownloadManager) AccessReelsTrayOnce2Chan(cPublicUser, cPrivateUser c
 }
 
 // Under test.
-func (m *IGDownloadManager) TwoAccountDownloadStoryForever(interval1 int, interval2, interval3 int64, ignoreMuted, verbose bool) {
-	if !m.IsCleanAccountSet() {
-		fmt.Println("clean account not set. exit")
-		return
-	}
-
-	// usually there are at most 150 trays in reels_tray.
-	// double the buffer to 300. 160 or 200 may be ok as well.
-	cPublicUser := make(chan TrayInfo, 300)
-	cPrivateUser := make(chan TrayInfo, 300)
-
-	go m.GetCleanAccountManager().TrayDownloader(cPublicUser, NewTimeLimiter(interval2), true, verbose)
-	go m.TrayDownloader2ChanPrivate(cPublicUser, cPrivateUser, NewTimeLimiter(interval3), true, verbose)
-
-	for {
-		err := m.AccessReelsTrayOnce2Chan(cPublicUser, cPrivateUser, ignoreMuted, verbose)
-		if err != nil {
-			log.Println(err)
-		}
-		PrintMsgSleep(interval1, "TwoAccountDownloadStoryForever: ")
-	}
-}
-
-// Under test.
 func (m *IGDownloadManager) TwoAccountDownloadStoryForeverSecondAccountViaStoryAPI(interval1 int, interval2, interval3 int64, ignoreMuted, verbose bool) {
 	if !m.IsCleanAccountSet() {
 		fmt.Println("clean account not set. exit")

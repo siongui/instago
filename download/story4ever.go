@@ -132,7 +132,7 @@ func (m *IGDownloadManager) DownloadTrayInfos(tis []TrayInfo, c chan TrayInfo, t
 	}
 }
 
-func (m *IGDownloadManager) TrayDownloader(c chan TrayInfo, tl *TimeLimiter, ignorePrivate, verbose bool) {
+func (m *IGDownloadManager) TrayDownloader(c chan TrayInfo, tl *TimeLimiter, ignorePrivateUser, ignoreReelMentionsIfStoryItemExist, ignorePrivateReelMention, verbose bool) {
 	maxReelsMediaIds := 20
 	queue := []TrayInfo{}
 	for {
@@ -155,7 +155,7 @@ func (m *IGDownloadManager) TrayDownloader(c chan TrayInfo, tl *TimeLimiter, ign
 				ti := queue[0]
 				queue = queue[1:]
 
-				if ignorePrivate && ti.IsPrivate {
+				if ignorePrivateUser && ti.IsPrivate {
 					continue
 				}
 
@@ -169,12 +169,12 @@ func (m *IGDownloadManager) TrayDownloader(c chan TrayInfo, tl *TimeLimiter, ign
 			// delay download to reduce API access
 			if len(tis) < maxReelsMediaIds {
 				if len(tis) > 0 && tl.IsOverNIntervalAfterLastTime(2) {
-					m.DownloadTrayInfos(tis, c, tl, false, ignorePrivate, verbose)
+					m.DownloadTrayInfos(tis, c, tl, ignoreReelMentionsIfStoryItemExist, ignorePrivateReelMention, verbose)
 				} else {
 					queue = append(queue, tis...)
 				}
 			} else {
-				m.DownloadTrayInfos(tis, c, tl, false, ignorePrivate, verbose)
+				m.DownloadTrayInfos(tis, c, tl, ignoreReelMentionsIfStoryItemExist, ignorePrivateReelMention, verbose)
 			}
 
 			restInterval := 1
@@ -215,7 +215,7 @@ func (m *IGDownloadManager) DownloadStoryForever(interval1 int, interval2 int64,
 	c := make(chan TrayInfo, 300)
 
 	tl := NewTimeLimiter(interval2)
-	go m.TrayDownloader(c, tl, false, verbose)
+	go m.TrayDownloader(c, tl, false, false, false, verbose)
 
 	for {
 		err := m.AccessReelsTrayOnce(c, ignoreMuted, verbose)
