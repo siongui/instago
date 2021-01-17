@@ -226,6 +226,23 @@ func (m *IGDownloadManager) DownloadStoryForever(interval1 int, interval2 int64,
 	}
 }
 
+func (m *IGDownloadManager) DownloadStoryForeverPublicReelMentions(interval1 int, interval2 int64, ignoreMuted, verbose bool) {
+	// usually there are at most 150 trays in reels_tray.
+	// double the buffer to 300. 160 or 200 may be ok as well.
+	c := make(chan TrayInfo, 300)
+
+	tl := NewTimeLimiter(interval2)
+	go m.TrayDownloader(c, tl, false, true, true, verbose)
+
+	for {
+		err := m.AccessReelsTrayOnce(c, ignoreMuted, verbose)
+		if err != nil {
+			log.Println(err)
+		}
+		PrintMsgSleep(interval1, "DownloadStoryForever: ")
+	}
+}
+
 // DO NOT USE. Due to Instagram changes the rate limit of private API, use of
 // this method will cause HTTP 429. Will be removed soon.
 func (m *IGDownloadManager) DownloadUnexpiredStoryOfUser(user instago.User) (err error) {
