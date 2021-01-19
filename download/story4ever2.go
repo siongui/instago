@@ -6,6 +6,8 @@ import (
 	"strconv"
 )
 
+var isFirstAccessReelsTray = true
+
 func (m *IGDownloadManager) AccessReelsTrayOnce2Chan(cPublicUser, cPrivateUser chan TrayInfo, ignoreMuted, verbose bool) (err error) {
 	rt, err := m.GetReelsTray()
 	if err != nil {
@@ -127,6 +129,16 @@ func (m *IGDownloadManager) TrayDownloaderViaStoryAPI(c chan TrayInfo, tl *TimeL
 			}
 		default:
 			if len(queue) > 0 {
+
+				if isFirstAccessReelsTray {
+					// How do I reverse an array in Go?
+					// https://stackoverflow.com/a/19239850
+					for i, j := 0, len(queue)-1; i < j; i, j = i+1, j-1 {
+						queue[i], queue[j] = queue[j], queue[i]
+					}
+					isFirstAccessReelsTray = false
+				}
+
 				ti := TrayInfo{}
 				if stackMode {
 					ti = queue[len(queue)-1]
