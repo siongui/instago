@@ -20,7 +20,7 @@ func CreateDirIfNotExist(dir string) (err error) {
 // systems.
 func Wget(url, filepath string) error {
 	// run shell command `wget URL -O filepath`
-	cmd := exec.Command("wget", url, "-O", filepath, "--timeout=", 7)
+	cmd := exec.Command("wget", url, "-O", filepath, "-T", "7")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	return cmd.Run()
