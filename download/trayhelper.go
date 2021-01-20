@@ -14,7 +14,7 @@ type TrayInfo struct {
 	//Tray     instago.IGReelTray
 }
 
-func setupTrayInfo(id int64, username string, layer int64, isPrivate bool) (ti TrayInfo) {
+func SetupTrayInfo(id int64, username string, layer int64, isPrivate bool) (ti TrayInfo) {
 	return TrayInfo{
 		Id:        id,
 		Username:  username,
