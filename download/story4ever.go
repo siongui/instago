@@ -30,7 +30,7 @@ func ProcessTrayItem(c chan TrayInfo, item instago.IGItem, ti TrayInfo, ignoreRe
 		if rm.User.IsPrivate && ignorePrivateReelMention {
 			continue
 		}
-		c <- SetupTrayInfo(rm.User.Pk, rm.GetUsername(), ti.Layer-1, rm.User.IsPrivate)
+		c <- SetupTrayInfo(rm.User.Pk, rm.GetUsername(), ti.Layer-1, rm.User.IsPrivate, 0)
 		if verbose {
 			PrintUsernameIdMsg(rm.GetUsername(), rm.User.Pk, "sent to channel (reel mention)")
 		}
@@ -67,7 +67,7 @@ func ProcessTray(c chan TrayInfo, tray instago.IGReelTray, layer int64, ignoreMu
 	}
 
 	// layer = 2: also download reel mentions in story item
-	c <- SetupTrayInfo(id, username, layer, tray.User.IsPrivate)
+	c <- SetupTrayInfo(id, username, layer, tray.User.IsPrivate, tray.LatestReelMedia)
 	/*
 		items := tray.GetItems()
 		if len(items) > 0 {

@@ -122,6 +122,12 @@ func (m *IGDownloadManager) TrayDownloaderViaStoryAPI(c chan TrayInfo, tl *TimeL
 					PrintTrayInfoMsg(ti, "exist. ignore.", "len(c):", len(c), "len(queue):", len(queue))
 				}
 			} else {
+				if ti.LatestReelMedia > 0 && IsLatestReelMediaExist(ti.Username, ti.LatestReelMedia) {
+					if verbose {
+						PrintTrayInfoMsg(ti, "reelmedia already latest. ignore.", "len(c):", len(c), "len(queue):", len(queue))
+					}
+					break
+				}
 				queue = append(queue, ti)
 				if verbose {
 					PrintTrayInfoMsg(ti, "appended.", "len(c):", len(c), "len(queue):", len(queue))
