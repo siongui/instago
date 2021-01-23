@@ -181,3 +181,28 @@ func (m *IGDownloadManager) TrayDownloaderViaStoryAPI(c chan TrayInfo, tl *TimeL
 		}
 	}
 }
+
+func (m *IGDownloadManager) DownloadStoryFromUserIdFile(useridfile string, interval int64, verbose bool) (err error) {
+	idstrs, err := ReadNonCommentLines(useridfile)
+	if err != nil {
+		return
+	}
+
+	// usually there are at most 150 trays in reels_tray.
+	// double the buffer to 300. 160 or 200 may be ok as well.
+	c := make(chan TrayInfo, 300)
+
+	for _, idstr := range idstrs {
+		id, err := strconv.ParseInt(idstr, 10, 64)
+		if err != nil {
+			return err
+		}
+
+		// layer = 2: also download reel mentions in story item
+		c <- SetupTrayInfo(id, "", 2, false, 0)
+	}
+
+	m.TrayDownloaderViaStoryAPI(c, NewTimeLimiter(interval), true, true, verbose)
+
+	return
+}
