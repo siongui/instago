@@ -69,6 +69,11 @@ func removeLunar(b []byte) []byte {
 	return []byte(pattern.ReplaceAllString(string(b), ""))
 }
 
+func removeRamadan(b []byte) []byte {
+	pattern := regexp.MustCompile(`{"id":"election:ramadan_2021:.+?"hide_from_feed_unit":true},`)
+	return []byte(pattern.ReplaceAllString(string(b), ""))
+}
+
 func (m *IGApiManager) GetReelsTray() (r IGReelsTray, err error) {
 	b, err := m.getHTTPResponse(urlReelsTray, "GET")
 	if err != nil {
@@ -80,6 +85,6 @@ func (m *IGApiManager) GetReelsTray() (r IGReelsTray, err error) {
 		SaveRawJsonByte("reels_tray-", b)
 	}
 
-	err = json.Unmarshal(removeLunar(b), &r)
+	err = json.Unmarshal(removeRamadan(b), &r)
 	return
 }
