@@ -20,7 +20,7 @@ func IsWebUserUrl(url string) bool {
 }
 
 func IsWebSavedUrl(url string) bool {
-	re := regexp.MustCompile(`^https:\/\/www\.instagram\.com\/[a-zA-Z\d_.]+\/saved/$`)
+	re := regexp.MustCompile(`^https:\/\/www\.instagram\.com\/[a-zA-Z\d_.]+\/saved/all-posts/$`)
 	return re.MatchString(url)
 }
 
