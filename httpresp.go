@@ -17,6 +17,7 @@ func getHTTPResponseNoLoginWithGis(url, gis string) (b []byte, err error) {
 		return
 	}
 
+	req.Header.Set("User-Agent", appUserAgent)
 	req.Header.Set("X-Requested-With", "XMLHttpRequest")
 	req.Header.Set("X-Instagram-GIS", gis)
 
@@ -37,8 +38,20 @@ func getHTTPResponseNoLoginWithGis(url, gis string) (b []byte, err error) {
 }
 
 // Send HTTP request and get http response without login.
-func GetHTTPResponseNoLogin(url string) (b []byte, err error) {
-	resp, err := http.Get(url)
+func GetHTTPResponseNoLogin(url, method string) (b []byte, err error) {
+	if method != "POST" {
+		method = "GET"
+	}
+
+	req, err := http.NewRequest(method, url, nil)
+	if err != nil {
+		return
+	}
+
+	req.Header.Set("User-Agent", appUserAgent)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
 	if err != nil {
 		return
 	}

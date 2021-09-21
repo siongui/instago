@@ -2,8 +2,7 @@
 #   export GOROOT=../go  (=> 6g not found)
 # it is also not allowed to use relative path in GOPATH
 export GOROOT=$(realpath ../../go)
-export GOPATH=$(realpath .)
-export PATH := $(GOROOT)/bin:$(GOPATH)/bin:$(PATH)
+export PATH := $(GOROOT)/bin:$(PATH)
 
 ALL_GO_SOURCES=$(shell /bin/sh -c "find *.go | grep -v _test.go")
 

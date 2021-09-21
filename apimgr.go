@@ -18,7 +18,7 @@ type IGApiManager struct {
 // Desktop UserAgent.
 // Google Search: useragent ios instagram 134.00
 // https://developers.whatismybrowser.com/useragents/parse/31984417-instagram-ios-iphone-11-pro-max-webkit
-var appUserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Instagram 134.0.0.25.116 (iPhone12,5; iOS 13_3_1; en_US; en-US; scale=3.00; 1242x2688; 204771128)"
+var appUserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 14_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Instagram 142.0.0.22.109 (iPhone12,5; iOS 14_1; en_US; en-US; scale=3.00; 1242x2688; 214888322) NW/1"
 
 // SetUserAgent let you set User-Agent header in HTTP requests.
 func SetUserAgent(s string) {
