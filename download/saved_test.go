@@ -15,6 +15,22 @@ func ExampleDownloadSavedPosts(t *testing.T) {
 	mgr.DownloadSavedPosts(12, true)
 }
 
+func ExampleDownloadSavedCollectionPosts(t *testing.T) {
+	mgr, err := NewInstagramDownloadManager("auth.json")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	err = mgr.LoadCollectionList()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	mgr.DownloadSavedCollectionPosts("Data")
+}
+
 func ExampleIsInCollection(t *testing.T) {
 	mgr, err := NewInstagramDownloadManager("auth.json")
 	if err != nil {

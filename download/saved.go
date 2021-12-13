@@ -1,6 +1,7 @@
 package igdl
 
 import (
+	"errors"
 	"log"
 	"os"
 	"strconv"
@@ -98,6 +99,33 @@ func (m *IGDownloadManager) DownloadSavedPosts(numOfItem int, downloadStory bool
 	}
 }
 
+// DownloadSavedCollectionPosts downloads saved posts in given collection name.
+func (m *IGDownloadManager) DownloadSavedCollectionPosts(collectionName string) (err error) {
+	cid := m.CollectionName2Id(collectionName)
+	if cid == "" {
+		log.Println("fail to get collection id of ", collectionName)
+		err = errors.New("fail to get collection id of " + collectionName)
+		return
+	}
+
+	items, err := m.apimgr.GetSavedCollection(cid)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	for idx, item := range items {
+		PrintItemInfo(idx, &item)
+		_, err = m.GetPostItem(item)
+		if err != nil {
+			log.Println(err)
+
+		}
+	}
+
+	return
+}
+
 func (m *IGDownloadManager) ProcessSavedItems(items []instago.IGItem, downloadStory bool, c chan instago.IGItem) {
 	username := make(map[string]bool)
 	for idx, item := range items {
@@ -145,6 +173,8 @@ func (m *IGDownloadManager) DownloadSavedCollectionPostsAndSendItemInCollectionT
 	cid := m.CollectionName2Id(collectionName)
 	if cid == "" {
 		log.Println("fail to get collection id of ", collectionName)
+		err = errors.New("fail to get collection id of " + collectionName)
+		return
 	}
 
 	items, err := m.apimgr.GetSavedCollection(cid)
