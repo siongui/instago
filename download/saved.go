@@ -10,7 +10,9 @@ import (
 )
 
 // GetPostItem downloads media (photo/video) item in the post.
-func (m *IGDownloadManager) GetPostItem(item instago.IGItem) (isDownloaded bool, err error) {
+// If you want best quality download, set isSmartDownload = true.
+// If you get HTTP 429 or cannot access API, set isSmartDownload = false
+func (m *IGDownloadManager) GetPostItem(item instago.IGItem, isSmartDownload bool) (isDownloaded bool, err error) {
 	if saveData {
 		saveIdUsername(item.GetUserId(), item.GetUsername())
 	}
@@ -50,10 +52,9 @@ func (m *IGDownloadManager) GetPostItem(item instago.IGItem) (isDownloaded bool,
 		// check if file exist
 		if _, err := os.Stat(filepath); os.IsNotExist(err) {
 			// file not exists
-			if false {
-				// never run here. Old way of implementation
-				// only for reference. Old way is not good
-				// because not best quality of posts
+			if !isSmartDownload {
+				// not best quality of posts, but less API
+				// access to prevent HTTP 429 too many requests
 				printDownloadInfo(&item, url, filepath)
 				err = Wget(url, filepath)
 				if err != nil {
@@ -62,7 +63,8 @@ func (m *IGDownloadManager) GetPostItem(item instago.IGItem) (isDownloaded bool,
 					isDownloaded = true
 				}
 			} else {
-				// always run here.
+				// best quality of posts, but more API access.
+				// probably cause HTTP 429 too many requests
 				return m.SmartDownloadPost(item)
 			}
 		} else {
@@ -88,7 +90,7 @@ func (m *IGDownloadManager) DownloadSavedPosts(numOfItem int, downloadStory bool
 	for idx, item := range items {
 		// FIXME: check err
 		PrintItemInfo(idx, &item)
-		isDownloaded, _ := m.GetPostItem(item)
+		isDownloaded, _ := m.GetPostItem(item, false)
 		if isDownloaded && downloadStory {
 			u := item.GetUsername()
 			if _, ok := username[u]; !ok {
@@ -100,6 +102,8 @@ func (m *IGDownloadManager) DownloadSavedPosts(numOfItem int, downloadStory bool
 }
 
 // DownloadSavedCollectionPosts downloads saved posts in given collection name.
+// Remember to call (m *IGDownloadManager) LoadCollectionList() before calling
+// this method.
 func (m *IGDownloadManager) DownloadSavedCollectionPosts(collectionName string) (err error) {
 	cid := m.CollectionName2Id(collectionName)
 	if cid == "" {
@@ -116,7 +120,7 @@ func (m *IGDownloadManager) DownloadSavedCollectionPosts(collectionName string) 
 
 	for idx, item := range items {
 		PrintItemInfo(idx, &item)
-		_, err = m.GetPostItem(item)
+		_, err = m.GetPostItem(item, false)
 		if err != nil {
 			log.Println(err)
 
@@ -140,7 +144,7 @@ func (m *IGDownloadManager) ProcessSavedItems(items []instago.IGItem, downloadSt
 
 		// check err?
 		PrintItemInfo(idx, &item)
-		isDownloaded, _ := m.GetPostItem(item)
+		isDownloaded, _ := m.GetPostItem(item, false)
 		if isDownloaded && downloadStory {
 			u := item.GetUsername()
 			if _, ok := username[u]; !ok {

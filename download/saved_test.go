@@ -28,7 +28,7 @@ func ExampleDownloadSavedCollectionPosts(t *testing.T) {
 		return
 	}
 
-	mgr.DownloadSavedCollectionPosts("Data")
+	mgr.DownloadSavedCollectionPosts("Download")
 }
 
 func ExampleIsInCollection(t *testing.T) {

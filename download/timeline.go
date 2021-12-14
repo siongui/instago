@@ -19,7 +19,7 @@ func (m *IGDownloadManager) DownloadTimeline(n int) {
 				if !item.IsRegularMedia() {
 					continue
 				}
-				m.GetPostItem(item)
+				m.GetPostItem(item, false)
 			}
 		}
 
