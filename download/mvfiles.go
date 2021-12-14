@@ -66,6 +66,9 @@ func moveStoryFile(todir, path string, info os.FileInfo) (err error) {
 	return
 }
 
+// MoveExpiredStory moves all expired stories to another directory.
+// Here "expired" means older than one day.
+// Stories means file containing "-story-" in the filename.
 func MoveExpiredStory(storydir, todir string) (err error) {
 	err = filepath.Walk(storydir, func(path string, info os.FileInfo, e error) error {
 		if e != nil {
@@ -75,6 +78,28 @@ func MoveExpiredStory(storydir, todir string) (err error) {
 		if info.Mode().IsRegular() {
 			if strings.Contains(info.Name(), "-story-") {
 				e2 := moveStoryFile(todir, path, info)
+				if e2 != nil {
+					return e2
+				}
+			}
+		}
+
+		return nil
+	})
+	return
+}
+
+// MovePost moves all files containing "-post-" in the filename to another
+// directory.
+func MovePost(fromdir, todir string) (err error) {
+	err = filepath.Walk(fromdir, func(path string, info os.FileInfo, e error) error {
+		if e != nil {
+			fmt.Printf("prevent panic by handling failure accessing a path %q: %v\n", path, e)
+			return e
+		}
+		if info.Mode().IsRegular() {
+			if strings.Contains(info.Name(), "-post-") {
+				e2 := MoveFileToDir(todir, path, info)
 				if e2 != nil {
 					return e2
 				}
