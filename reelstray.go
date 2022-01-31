@@ -65,7 +65,7 @@ func removePride(b []byte) []byte {
 }
 
 func removeLunar(b []byte) []byte {
-	pattern := regexp.MustCompile(`{"id":"election:lunar_new_year:.+?"hide_from_feed_unit":true},`)
+	pattern := regexp.MustCompile(`{"id":"election:lunar_new_year:.+?"is_cacheable":true},`)
 	return []byte(pattern.ReplaceAllString(string(b), ""))
 }
 
@@ -85,6 +85,6 @@ func (m *IGApiManager) GetReelsTray() (r IGReelsTray, err error) {
 		SaveRawJsonByte("reels_tray-", b)
 	}
 
-	err = json.Unmarshal(removeRamadan(b), &r)
+	err = json.Unmarshal(removeLunar(b), &r)
 	return
 }
