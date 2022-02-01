@@ -65,7 +65,7 @@ func removePride(b []byte) []byte {
 }
 
 func removeLunar(b []byte) []byte {
-	pattern := regexp.MustCompile(`{"id":"election:lunar_new_year:.+?"is_cacheable":true},`)
+	pattern := regexp.MustCompile(`{"id":"election:lunar_new_year:.+?"ring_spec":null},`)
 	return []byte(pattern.ReplaceAllString(string(b), ""))
 }
 
