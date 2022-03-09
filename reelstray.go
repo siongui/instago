@@ -79,6 +79,11 @@ func removeRamadan(b []byte) []byte {
 	return []byte(pattern.ReplaceAllString(string(b), ""))
 }
 
+func removeWomensDay(b []byte) []byte {
+	pattern := regexp.MustCompile(`{"id":"election:international_womens_day:.+?"is_cacheable":true},`)
+	return []byte(pattern.ReplaceAllString(string(b), ""))
+}
+
 func (m *IGApiManager) GetReelsTray() (r IGReelsTray, err error) {
 	b, err := m.getHTTPResponse(urlReelsTray, "GET")
 	if err != nil {
@@ -90,6 +95,6 @@ func (m *IGApiManager) GetReelsTray() (r IGReelsTray, err error) {
 		SaveRawJsonByte("reels_tray-", b)
 	}
 
-	err = json.Unmarshal(removeValentinesDay(b), &r)
+	err = json.Unmarshal(removeWomensDay(b), &r)
 	return
 }
